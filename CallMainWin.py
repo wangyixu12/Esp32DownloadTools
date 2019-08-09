@@ -2,7 +2,7 @@
 @Author: Yixu Wang
 @Date: 2019-08-06 14:12:40
 @LastEditors: Yixu Wang
-@LastEditTime: 2019-08-09 09:46:35
+@LastEditTime: 2019-08-09 10:30:18
 @Description: 调用ui函数
 '''
 import os
@@ -20,16 +20,23 @@ from Ui_childrenForm import Ui_Form
 class MyMainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None):
         super(MyMainWindow, self).__init__(parent)
+        self.setupUi(self)
         # self.yaml = optYaml()
         self._defaultYamlName = 'configDefault.yml'
         self._userYamlName = 'configUser.yml'
+
+        self._winName = 'mainForm'
+        self._winEditDict = {
+            self.custFwEdit: 'custFwEdit',
+            self.pieFwEdit: 'pieFwEdit',
+        }
         self.loadYaml()
-        
+        self.setWin()
         
     
         layout = QVBoxLayout()
         
-        self.setupUi(self)
+        # self.setupUi(self)
         self.child = ChildrenForm()
         self.actOriFw.triggered.connect(self.childShow)
         self.custFwOptBtn.clicked.connect(self.openDir)
@@ -41,10 +48,10 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         else:
             self.configFile = codecs.open(self._userYamlName, 'w+', encoding='utf-8')
         self.config = yaml.load(self.configFile, yaml.Loader)                
-        print(self.config)
 
-    # def setWin(self):
-        
+    def setWin(self):
+        for key, file in self._winEditDict.items():
+            key.setText(self.config[self._winName][file])
 
     def openDir(self):
         btn_dict = {self.custFwOptBtn: self.custFwEdit, self.pieFwOptBtn: self.pieFwEdit}
