@@ -1,0 +1,34 @@
+mainForm:
+  custFwEdit: None
+  pieFwEdit: None
+childrenForm:
+  custBin:
+    custBinDir_1: None
+    custBinDir_2: None
+    custBinDir_3: None
+    custBinDir_4: None
+
+    custBinOffset_1: None
+    custBinOffset_2: None
+    custBinOffset_3: None
+    custBinOffset_4: None
+
+    custBinChkBox_1: False
+    custBinChkBox_2: False
+    custBinChkBox_3: False
+    custBinChkBox_4: False
+  pieBin:
+    pieBinDir_1: None
+    pieBinDir_2: None
+    pieBinDir_3: None
+    pieBinDir_4: None
+
+    pieBinOffset_1: None
+    pieBinOffset_2: None
+    pieBinOffset_3: None
+    pieBinOffset_4: None
+
+    pieBinChkBox_1: False
+    pieBinChkBox_2: False
+    pieBinChkBox_3: False
+    pieBinChkBox_4: False

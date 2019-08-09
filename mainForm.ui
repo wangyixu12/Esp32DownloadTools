@@ -229,7 +229,7 @@
         <widget class="QLineEdit" name="custFwEdit"/>
        </item>
        <item>
-        <widget class="QToolButton" name="toolButton">
+        <widget class="QToolButton" name="custFwOptBtn">
          <property name="text">
           <string>...</string>
          </property>
@@ -250,7 +250,7 @@
         <widget class="QLineEdit" name="pieFwEdit"/>
        </item>
        <item>
-        <widget class="QToolButton" name="toolButton_2">
+        <widget class="QToolButton" name="pieFwOptBtn">
          <property name="text">
           <string>...</string>
          </property>

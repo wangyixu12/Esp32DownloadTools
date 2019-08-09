@@ -65,7 +65,7 @@
     <string>offset</string>
    </property>
   </widget>
-  <widget class="QDialogButtonBox" name="portConnBtnBox">
+  <widget class="QDialogButtonBox" name="binFileComfirm">
    <property name="geometry">
     <rect>
      <x>180</x>
@@ -91,10 +91,10 @@
     <item>
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
-       <widget class="QLineEdit" name="lineEdit"/>
+       <widget class="QLineEdit" name="custBinDir_1"/>
       </item>
       <item>
-       <widget class="QLineEdit" name="lineEdit_2">
+       <widget class="QLineEdit" name="custBinDir_2">
         <property name="minimumSize">
          <size>
           <width>390</width>
@@ -104,38 +104,38 @@
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="lineEdit_4"/>
+       <widget class="QLineEdit" name="custBinDir_3"/>
       </item>
       <item>
-       <widget class="QLineEdit" name="lineEdit_3"/>
+       <widget class="QLineEdit" name="custBinDir_4"/>
       </item>
      </layout>
     </item>
     <item>
      <layout class="QVBoxLayout" name="verticalLayout_3">
       <item>
-       <widget class="QToolButton" name="toolButton">
+       <widget class="QToolButton" name="custBinOptBtn_1">
         <property name="text">
          <string>...</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QToolButton" name="toolButton_2">
+       <widget class="QToolButton" name="custBinOptBtn_2">
         <property name="text">
          <string>...</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QToolButton" name="toolButton_3">
+       <widget class="QToolButton" name="custBinOptBtn_3">
         <property name="text">
          <string>...</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QToolButton" name="toolButton_4">
+       <widget class="QToolButton" name="custBinOptBtn_4">
         <property name="text">
          <string>...</string>
         </property>
@@ -149,7 +149,7 @@
        <enum>QLayout::SetNoConstraint</enum>
       </property>
       <item>
-       <widget class="QLineEdit" name="lineEdit_5">
+       <widget class="QLineEdit" name="custBinOffset_1">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
           <horstretch>0</horstretch>
@@ -171,7 +171,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="lineEdit_6">
+       <widget class="QLineEdit" name="custBinOffset_2">
         <property name="maximumSize">
          <size>
           <width>80</width>
@@ -184,7 +184,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="lineEdit_7">
+       <widget class="QLineEdit" name="custBinOffset_3">
         <property name="maximumSize">
          <size>
           <width>80</width>
@@ -197,7 +197,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="lineEdit_8">
+       <widget class="QLineEdit" name="custBinOffset_4">
         <property name="maximumSize">
          <size>
           <width>80</width>
@@ -214,28 +214,28 @@
     <item>
      <layout class="QVBoxLayout" name="verticalLayout_4">
       <item>
-       <widget class="QCheckBox" name="checkBox">
+       <widget class="QCheckBox" name="custBinChkBox_1">
         <property name="text">
          <string/>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QCheckBox" name="checkBox_2">
+       <widget class="QCheckBox" name="custBinChkBox_2">
         <property name="text">
          <string/>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QCheckBox" name="checkBox_3">
+       <widget class="QCheckBox" name="custBinChkBox_3">
         <property name="text">
          <string/>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QCheckBox" name="checkBox_4">
+       <widget class="QCheckBox" name="custBinChkBox_4">
         <property name="text">
          <string/>
         </property>
@@ -260,10 +260,10 @@
       <item>
        <layout class="QVBoxLayout" name="verticalLayout_7">
         <item>
-         <widget class="QLineEdit" name="lineEdit_17"/>
+         <widget class="QLineEdit" name="pieBinDir_1"/>
         </item>
         <item>
-         <widget class="QLineEdit" name="lineEdit_18">
+         <widget class="QLineEdit" name="pieBinDir_2">
           <property name="minimumSize">
            <size>
             <width>390</width>
@@ -273,38 +273,38 @@
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="lineEdit_19"/>
+         <widget class="QLineEdit" name="pieBinDir_3"/>
         </item>
         <item>
-         <widget class="QLineEdit" name="lineEdit_20"/>
+         <widget class="QLineEdit" name="pieBinDir_4"/>
         </item>
        </layout>
       </item>
       <item>
        <layout class="QVBoxLayout" name="verticalLayout_8">
         <item>
-         <widget class="QToolButton" name="toolButton_9">
+         <widget class="QToolButton" name="pieBinOptBtn_1">
           <property name="text">
            <string>...</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QToolButton" name="toolButton_10">
+         <widget class="QToolButton" name="pieBinOptBtn_2">
           <property name="text">
            <string>...</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QToolButton" name="toolButton_11">
+         <widget class="QToolButton" name="pieBinOptBtn_3">
           <property name="text">
            <string>...</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QToolButton" name="toolButton_12">
+         <widget class="QToolButton" name="pieBinOptBtn_4">
           <property name="text">
            <string>...</string>
           </property>
@@ -318,7 +318,7 @@
          <enum>QLayout::SetNoConstraint</enum>
         </property>
         <item>
-         <widget class="QLineEdit" name="lineEdit_21">
+         <widget class="QLineEdit" name="pieBinOffset_1">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
             <horstretch>0</horstretch>
@@ -337,7 +337,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="lineEdit_22">
+         <widget class="QLineEdit" name="pieBinOffset_2">
           <property name="maximumSize">
            <size>
             <width>80</width>
@@ -350,7 +350,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="lineEdit_23">
+         <widget class="QLineEdit" name="pieBinOffset_3">
           <property name="maximumSize">
            <size>
             <width>80</width>
@@ -363,7 +363,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="lineEdit_24">
+         <widget class="QLineEdit" name="pieBinOffset_4">
           <property name="maximumSize">
            <size>
             <width>80</width>
@@ -382,28 +382,28 @@
     <item>
      <layout class="QVBoxLayout" name="verticalLayout_5">
       <item>
-       <widget class="QCheckBox" name="checkBox_5">
+       <widget class="QCheckBox" name="pieBinChkBox_1">
         <property name="text">
          <string/>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QCheckBox" name="checkBox_6">
+       <widget class="QCheckBox" name="pieBinChkBox_2">
         <property name="text">
          <string/>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QCheckBox" name="checkBox_7">
+       <widget class="QCheckBox" name="pieBinChkBox_3">
         <property name="text">
          <string/>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QCheckBox" name="checkBox_8">
+       <widget class="QCheckBox" name="pieBinChkBox_4">
         <property name="text">
          <string/>
         </property>
@@ -414,6 +414,40 @@
    </layout>
   </widget>
  </widget>
+ <tabstops>
+  <tabstop>custBinDir_1</tabstop>
+  <tabstop>custBinOptBtn_1</tabstop>
+  <tabstop>custBinOffset_1</tabstop>
+  <tabstop>custBinChkBox_1</tabstop>
+  <tabstop>custBinDir_2</tabstop>
+  <tabstop>custBinOptBtn_2</tabstop>
+  <tabstop>custBinOffset_2</tabstop>
+  <tabstop>custBinChkBox_2</tabstop>
+  <tabstop>custBinDir_3</tabstop>
+  <tabstop>custBinOptBtn_3</tabstop>
+  <tabstop>custBinOffset_3</tabstop>
+  <tabstop>custBinChkBox_3</tabstop>
+  <tabstop>custBinDir_4</tabstop>
+  <tabstop>custBinOptBtn_4</tabstop>
+  <tabstop>custBinOffset_4</tabstop>
+  <tabstop>custBinChkBox_4</tabstop>
+  <tabstop>pieBinDir_1</tabstop>
+  <tabstop>pieBinOptBtn_1</tabstop>
+  <tabstop>pieBinOffset_1</tabstop>
+  <tabstop>pieBinChkBox_1</tabstop>
+  <tabstop>pieBinDir_2</tabstop>
+  <tabstop>pieBinOptBtn_2</tabstop>
+  <tabstop>pieBinOffset_2</tabstop>
+  <tabstop>pieBinChkBox_2</tabstop>
+  <tabstop>pieBinDir_3</tabstop>
+  <tabstop>pieBinOptBtn_3</tabstop>
+  <tabstop>pieBinOffset_3</tabstop>
+  <tabstop>pieBinChkBox_3</tabstop>
+  <tabstop>pieBinDir_4</tabstop>
+  <tabstop>pieBinOptBtn_4</tabstop>
+  <tabstop>pieBinOffset_4</tabstop>
+  <tabstop>pieBinChkBox_4</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>
