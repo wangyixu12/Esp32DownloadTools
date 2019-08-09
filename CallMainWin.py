@@ -2,13 +2,14 @@
 @Author: Yixu Wang
 @Date: 2019-08-06 14:12:40
 @LastEditors: Yixu Wang
-@LastEditTime: 2019-08-09 10:30:18
+@LastEditTime: 2019-08-09 13:24:21
 @Description: 调用ui函数
 '''
 import os
 import sys
 import yaml
 import codecs
+import shutil
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
@@ -43,11 +44,19 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.pieFwOptBtn.clicked.connect(self.openDir)
 
     def loadYaml(self):
-        if os._exists(self._userYamlName) == False:
-            self.configFile = codecs.open(self._defaultYamlName, 'r', encoding='utf-8')
-        else:
-            self.configFile = codecs.open(self._userYamlName, 'w+', encoding='utf-8')
-        self.config = yaml.load(self.configFile, yaml.Loader)                
+        if os.path.exists(self._userYamlName) == False:
+            shutil.copyfile(self._defaultYamlName, self._userYamlName)
+        self.configFile = codecs.open(self._userYamlName, 'r', encoding='utf-8')
+        self.config = yaml.load(self.configFile, yaml.Loader)         
+
+    def editYaml(self, winName, key, value):
+        configFileEdit = codecs.open(self._userYamlName, 'w', encoding='utf-8')
+        data = self.config
+        print(data)
+        data[winName][key] = value
+        data.update()
+        yaml.dump(data, configFileEdit, yaml.SafeDumper)
+        configFileEdit.close()
 
     def setWin(self):
         for key, file in self._winEditDict.items():
@@ -56,8 +65,9 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
     def openDir(self):
         btn_dict = {self.custFwOptBtn: self.custFwEdit, self.pieFwOptBtn: self.pieFwEdit}
         assert(self.sender() in btn_dict.keys())
-        file, ok= QFileDialog.getOpenFileName(self, "Open", "~/", "Binary Files(*.bin)")
+        file, ok= QFileDialog.getOpenFileName(self, "Open", "./", "Binary Files(*.bin)")
         btn_dict[self.sender()].setText(file)
+        self.editYaml(self._winName, self._winEditDict[btn_dict[self.sender()]], file)
         
     def openMsg(self,):
         file, ok = QFileDialog.getOpenFileName(self, "Open", "~/", "All Files (*);;Text Files (*.txt)")

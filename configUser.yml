@@ -1,0 +1,30 @@
+childrenForm:
+  custBin:
+    custBinChkBox_1: false
+    custBinChkBox_2: false
+    custBinChkBox_3: false
+    custBinChkBox_4: false
+    custBinDir_1: null
+    custBinDir_2: null
+    custBinDir_3: null
+    custBinDir_4: null
+    custBinOffset_1: null
+    custBinOffset_2: null
+    custBinOffset_3: null
+    custBinOffset_4: null
+  pieBin:
+    pieBinChkBox_1: false
+    pieBinChkBox_2: false
+    pieBinChkBox_3: false
+    pieBinChkBox_4: false
+    pieBinDir_1: null
+    pieBinDir_2: null
+    pieBinDir_3: null
+    pieBinDir_4: null
+    pieBinOffset_1: null
+    pieBinOffset_2: null
+    pieBinOffset_3: null
+    pieBinOffset_4: null
+mainForm:
+  custFwEdit: /home/pi/Documents/Espressif/esptool_ui/data/oralb_turing_seagate_v0.2.5-1.bin
+  pieFwEdit: null
