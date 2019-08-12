@@ -2,7 +2,7 @@
 @Author: Yixu Wang
 @Date: 2019-08-06 14:12:40
 @LastEditors: Yixu Wang
-@LastEditTime: 2019-08-12 11:57:17
+@LastEditTime: 2019-08-12 14:18:46
 @Description: 调用ui函数
 '''
 import os
@@ -10,6 +10,8 @@ import sys
 import yaml
 import codecs
 import shutil
+# import PyQt5.QtSerialPort
+from PyQt5.QtSerialPort import QSerialPortInfo
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
@@ -38,6 +40,22 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.actOriFw.triggered.connect(self.childShow)
         self.custFwOptBtn.clicked.connect(self.openDir)
         self.pieFwOptBtn.clicked.connect(self.openDir)
+        self.searchPortBtn.clicked.connect(self.searchVarPort)
+        self.portComBox.currentIndexChanged.connect(self.selectComPort)
+
+    def searchVarPort(self):
+        varifyPort = QSerialPortInfo.availablePorts()
+        if varifyPort == None:
+            return
+        self.portComBox.clear()
+        for serPortInfo in varifyPort:
+            if 'USB' not in serPortInfo.portName():
+                continue
+            self.portComBox.addItem(serPortInfo.portName())
+
+    def selectComPort(self):
+        curPort = QSerialPortInfo(self.portComBox.currentText())
+        self.curPortLocation = curPort.systemLocation()
 
     def loadYaml(self):
         if os.path.exists(self._userYamlName) == False:

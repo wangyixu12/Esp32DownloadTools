@@ -109,53 +109,6 @@
     <property name="geometry">
      <rect>
       <x>290</x>
-      <y>160</y>
-      <width>221</width>
-      <height>28</height>
-     </rect>
-    </property>
-    <layout class="QHBoxLayout" name="horizontalLayout_3">
-     <property name="spacing">
-      <number>0</number>
-     </property>
-     <item>
-      <widget class="QLabel" name="label_3">
-       <property name="maximumSize">
-        <size>
-         <width>40</width>
-         <height>16777215</height>
-        </size>
-       </property>
-       <property name="text">
-        <string>&amp;PORT</string>
-       </property>
-       <property name="buddy">
-        <cstring>portComBox</cstring>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QComboBox" name="portComBox">
-       <property name="minimumSize">
-        <size>
-         <width>96</width>
-         <height>26</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>300</width>
-         <height>26</height>
-        </size>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
-   <widget class="QWidget" name="layoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>290</x>
       <y>20</y>
       <width>221</width>
       <height>101</height>
@@ -203,7 +156,10 @@
      </rect>
     </property>
     <property name="standardButtons">
-     <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     <set>QDialogButtonBox::Close|QDialogButtonBox::Open</set>
+    </property>
+    <property name="centerButtons">
+     <bool>true</bool>
     </property>
    </widget>
    <widget class="QWidget" name="layoutWidget">
@@ -257,6 +213,70 @@
         </widget>
        </item>
       </layout>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="">
+    <property name="geometry">
+     <rect>
+      <x>290</x>
+      <y>160</y>
+      <width>213</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout_5">
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_3">
+       <property name="spacing">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="QLabel" name="label_3">
+         <property name="maximumSize">
+          <size>
+           <width>40</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>&amp;PORT</string>
+         </property>
+         <property name="buddy">
+          <cstring>portComBox</cstring>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QComboBox" name="portComBox">
+         <property name="minimumSize">
+          <size>
+           <width>50</width>
+           <height>26</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>300</width>
+           <height>26</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <widget class="QPushButton" name="searchPortBtn">
+       <property name="maximumSize">
+        <size>
+         <width>60</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Search</string>
+       </property>
+      </widget>
      </item>
     </layout>
    </widget>
