@@ -2,7 +2,7 @@
 @Author: Yixu Wang
 @Date: 2019-08-06 14:12:40
 @LastEditors: Yixu Wang
-@LastEditTime: 2019-08-12 17:31:38
+@LastEditTime: 2019-08-12 17:37:46
 @Description: 调用ui函数
 '''
 import os
@@ -30,6 +30,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
     ERASE_PASS = "Erase flash ------> PASS\n"
     ERASE_FAIL = "Erase flash ------> FAIL\n"
     FLASH_PASS = "Flash flash ------> PASS\n"
+    FLASH_FAIL = "Flash flash ------> FAIL\n"
         
     BAUD = 1152000
 
@@ -45,9 +46,6 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
             self.custFwEdit: 'custFwEdit',
             self.pieFwEdit: 'pieFwEdit',
         }
-        # layout = QVBoxLayout()
-        
-        # self.setupUi(self)
         
         self.port=''
 
@@ -72,6 +70,11 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.flashProcessBar.setValue(33)
 
     def writeFlash(self, binFilePath):
+        try:
+            assert(binFilePath != '')
+        except:
+            self.resultTextEdit.append(self.FLASH_FAIL+'Please set firmware path!\n')
+            return
         command = ['--chip', 'esp32', '--port', str(self.port), '--baud', str(self.BAUD),\
             '--before', 'default_reset', '--after', 'hard_reset', 'write_flash', '0x0000', binFilePath]
         esptool.main(command)
@@ -241,25 +244,6 @@ class ChildrenForm(QWidget, Ui_Form):
     def run(self):
         self.loadYaml()
         self.setWin()
-
-# 1class esptoolOpt(object):
-#     PORT_BAUD = 1152000
-
-#     def __init__(self, port='/dev/ttyUSB0', ):
-#         self.port = port
-#         return super().__init__()
-
-#     def erase_flash(self):
-#         command = '--port' + self.port + 'erase_flash'
-#         self.esp32.main(command)
-
-#     def __del__(self):
-#         print("__del__ esptoolOpt class")
-
-def flashESP32():
-    PORT_BAUD = 1152000
-    # espOpt = esptool.
-    pass
 
 def main():
     app = QApplication(sys.argv)
