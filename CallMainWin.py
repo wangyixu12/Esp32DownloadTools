@@ -2,7 +2,7 @@
 @Author: Yixu Wang
 @Date: 2019-08-06 14:12:40
 @LastEditors: Yixu Wang
-@LastEditTime: 2019-08-12 17:37:46
+@LastEditTime: 2019-08-12 17:42:40
 @Description: 调用ui函数
 '''
 import os
@@ -18,7 +18,8 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
-from esptool import esptool
+# from esptool import esptool
+import esptool
 
 # from editYaml import optYaml
 from Ui_mainForm import Ui_MainWindow
