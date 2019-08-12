@@ -68,14 +68,17 @@
   <widget class="QDialogButtonBox" name="binFileComfirm">
    <property name="geometry">
     <rect>
-     <x>180</x>
+     <x>130</x>
      <y>330</y>
-     <width>176</width>
+     <width>251</width>
      <height>26</height>
     </rect>
    </property>
    <property name="standardButtons">
-    <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+    <set>QDialogButtonBox::Discard|QDialogButtonBox::Save</set>
+   </property>
+   <property name="centerButtons">
+    <bool>true</bool>
    </property>
   </widget>
   <widget class="QWidget" name="layoutWidget">

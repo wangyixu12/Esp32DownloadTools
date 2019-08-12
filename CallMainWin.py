@@ -2,7 +2,7 @@
 @Author: Yixu Wang
 @Date: 2019-08-06 14:12:40
 @LastEditors: Yixu Wang
-@LastEditTime: 2019-08-12 10:33:34
+@LastEditTime: 2019-08-12 11:57:17
 @Description: 调用ui函数
 '''
 import os
@@ -43,9 +43,21 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         if os.path.exists(self._userYamlName) == False:
             shutil.copyfile(self._defaultYamlName, self._userYamlName)
         self.configFile = codecs.open(self._userYamlName, 'r', encoding='utf-8')
-        self.config = yaml.load(self.configFile, yaml.Loader)         
+        self.config = yaml.load(self.configFile, yaml.Loader)
+
+        defConfigFile = codecs.open(self._defaultYamlName, 'r', encoding='utf-8')           
+        defConfig = yaml.load(defConfigFile, yaml.Loader)
+
+        for winName, secondDict in defConfig.items():
+            for editLine in secondDict.keys():
+                if editLine not in self.config[winName].keys():
+                    shutil.copyfile(self._defaultYamlName, self._userYamlName)
+                    self.configFile = codecs.open(self._userYamlName, 'r', encoding='utf-8')
+                    self.config = yaml.load(self.configFile, yaml.Loader)
+                    return 
 
     def editYaml(self, winName, key, value):
+        # self.config = yaml.load(self.configFile, yaml.Loader)
         configFileEdit = codecs.open(self._userYamlName, 'w', encoding='utf-8')
         data = self.config
         data[winName][key] = value
@@ -117,8 +129,20 @@ class ChildrenForm(QWidget, Ui_Form):
         self.pieBinOptBtn_3.clicked.connect(self.openDir)
         self.pieBinOptBtn_4.clicked.connect(self.openDir)
         
+        self.binFileComfirm.button(self.binFileComfirm.Save).clicked.connect(self._save)
+        self.binFileComfirm.button(self.binFileComfirm.Discard).clicked.connect(self._discard)        
+
+    def _save(self):
+        for editKey in self._winEditDict.keys():
+            text = editKey.text()
+            self.editYaml(self._winName, self._winEditDict[editKey], text)
+        self.close()
+
+    def _discard(self):
+        self.close()
 
     def editYaml(self, winName, key, value):
+        # self.config = yaml.load(self.configFile, yaml.Loader)
         configFileEdit = codecs.open(self._userYamlName, 'w', encoding='utf-8')
         data = self.config
         data[winName][key] = value
@@ -141,7 +165,7 @@ class ChildrenForm(QWidget, Ui_Form):
         assert(self.sender() in btn_dict.keys())
         file, ok = QFileDialog.getOpenFileName(self, "Open", './', 'Binary Files(*.bin)')
         btn_dict[self.sender()].setText(file)
-        self.editYaml(self._winName, self._winEditDict[btn_dict[self.sender()]], file)
+        # self.editYaml(self._winName, self._winEditDict[btn_dict[self.sender()]], file)
         
     def setWin(self):
         for key, file in self._winEditDict.items():
