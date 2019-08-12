@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>566</width>
+    <width>548</width>
     <height>368</height>
    </rect>
   </property>
@@ -83,7 +83,7 @@
     <rect>
      <x>12</x>
      <y>32</y>
-     <width>544</width>
+     <width>521</width>
      <height>122</height>
     </rect>
    </property>
@@ -211,38 +211,6 @@
       </item>
      </layout>
     </item>
-    <item>
-     <layout class="QVBoxLayout" name="verticalLayout_4">
-      <item>
-       <widget class="QCheckBox" name="custBinChkBox_1">
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QCheckBox" name="custBinChkBox_2">
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QCheckBox" name="custBinChkBox_3">
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QCheckBox" name="custBinChkBox_4">
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </item>
    </layout>
   </widget>
   <widget class="QWidget" name="layoutWidget">
@@ -250,7 +218,7 @@
     <rect>
      <x>11</x>
      <y>190</y>
-     <width>546</width>
+     <width>521</width>
      <height>124</height>
     </rect>
    </property>
@@ -379,38 +347,6 @@
       </item>
      </layout>
     </item>
-    <item>
-     <layout class="QVBoxLayout" name="verticalLayout_5">
-      <item>
-       <widget class="QCheckBox" name="pieBinChkBox_1">
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QCheckBox" name="pieBinChkBox_2">
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QCheckBox" name="pieBinChkBox_3">
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QCheckBox" name="pieBinChkBox_4">
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </item>
    </layout>
   </widget>
  </widget>
@@ -418,35 +354,27 @@
   <tabstop>custBinDir_1</tabstop>
   <tabstop>custBinOptBtn_1</tabstop>
   <tabstop>custBinOffset_1</tabstop>
-  <tabstop>custBinChkBox_1</tabstop>
   <tabstop>custBinDir_2</tabstop>
   <tabstop>custBinOptBtn_2</tabstop>
   <tabstop>custBinOffset_2</tabstop>
-  <tabstop>custBinChkBox_2</tabstop>
   <tabstop>custBinDir_3</tabstop>
   <tabstop>custBinOptBtn_3</tabstop>
   <tabstop>custBinOffset_3</tabstop>
-  <tabstop>custBinChkBox_3</tabstop>
   <tabstop>custBinDir_4</tabstop>
   <tabstop>custBinOptBtn_4</tabstop>
   <tabstop>custBinOffset_4</tabstop>
-  <tabstop>custBinChkBox_4</tabstop>
   <tabstop>pieBinDir_1</tabstop>
   <tabstop>pieBinOptBtn_1</tabstop>
   <tabstop>pieBinOffset_1</tabstop>
-  <tabstop>pieBinChkBox_1</tabstop>
   <tabstop>pieBinDir_2</tabstop>
   <tabstop>pieBinOptBtn_2</tabstop>
   <tabstop>pieBinOffset_2</tabstop>
-  <tabstop>pieBinChkBox_2</tabstop>
   <tabstop>pieBinDir_3</tabstop>
   <tabstop>pieBinOptBtn_3</tabstop>
   <tabstop>pieBinOffset_3</tabstop>
-  <tabstop>pieBinChkBox_3</tabstop>
   <tabstop>pieBinDir_4</tabstop>
   <tabstop>pieBinOptBtn_4</tabstop>
   <tabstop>pieBinOffset_4</tabstop>
-  <tabstop>pieBinChkBox_4</tabstop>
  </tabstops>
  <resources/>
  <connections/>

@@ -27,4 +27,4 @@ childrenForm:
     pieBinOffset_4: null
 mainForm:
   custFwEdit: /home/pi/Documents/Espressif/esptool_ui/data/oralb_turing_seagate_v0.2.5-1.bin
-  pieFwEdit: null
+  pieFwEdit: /home/pi/Documents/Espressif/esptool_ui/data/oralb_turing_seagate_v0.2.5-1.bin
