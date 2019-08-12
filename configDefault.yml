@@ -3,33 +3,22 @@ mainForm:
   pieFwEdit: 
     
 childrenForm:
-  custBin:
-    custBinDir_1: 
-    custBinDir_2: 
-    custBinDir_3: 
-    custBinDir_4: 
+  custBinDir_1: 
+  custBinDir_2: 
+  custBinDir_3: 
+  custBinDir_4: 
 
-    custBinOffset_1: 
-    custBinOffset_2: 
-    custBinOffset_3: 
-    custBinOffset_4: 
+  custBinOffset_1: 
+  custBinOffset_2: 
+  custBinOffset_3: 
+  custBinOffset_4: 
 
-    custBinChkBox_1: False
-    custBinChkBox_2: False
-    custBinChkBox_3: False
-    custBinChkBox_4: False
-  pieBin:
-    pieBinDir_1: 
-    pieBinDir_2: 
-    pieBinDir_3: 
-    pieBinDir_4: 
+  pieBinDir_1:
+  pieBinDir_2: 
+  pieBinDir_3: 
+  pieBinDir_4: 
 
-    pieBinOffset_1: 
-    pieBinOffset_2: 
-    pieBinOffset_3: 
-    pieBinOffset_4: 
-
-    pieBinChkBox_1: False
-    pieBinChkBox_2: False
-    pieBinChkBox_3: False
-    pieBinChkBox_4: False
+  pieBinOffset_1: 
+  pieBinOffset_2: 
+  pieBinOffset_3: 
+  pieBinOffset_4: 

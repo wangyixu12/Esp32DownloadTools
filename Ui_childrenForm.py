@@ -193,7 +193,7 @@ class Ui_Form(object):
 
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
-        Form.setWindowTitle(_translate("Form", "Form"))
+        Form.setWindowTitle(_translate("Form", "Origin Bin Firmware Setting"))
         self.label_2.setText(_translate("Form", "Pie file dir"))
         self.label.setText(_translate("Form", "Customer file dir"))
         self.label_3.setText(_translate("Form", "offset"))
