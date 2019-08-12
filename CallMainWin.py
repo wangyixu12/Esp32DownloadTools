@@ -2,7 +2,7 @@
 @Author: Yixu Wang
 @Date: 2019-08-06 14:12:40
 @LastEditors: Yixu Wang
-@LastEditTime: 2019-08-12 14:18:46
+@LastEditTime: 2019-08-12 17:31:38
 @Description: 调用ui函数
 '''
 import os
@@ -10,17 +10,29 @@ import sys
 import yaml
 import codecs
 import shutil
-# import PyQt5.QtSerialPort
+import time
+import threading
+
 from PyQt5.QtSerialPort import QSerialPortInfo
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
+from esptool import esptool
+
 # from editYaml import optYaml
 from Ui_mainForm import Ui_MainWindow
 from Ui_childrenForm import Ui_Form
 
+
 class MyMainWindow(QMainWindow, Ui_MainWindow):
+    
+    ERASE_PASS = "Erase flash ------> PASS\n"
+    ERASE_FAIL = "Erase flash ------> FAIL\n"
+    FLASH_PASS = "Flash flash ------> PASS\n"
+        
+    BAUD = 1152000
+
     def __init__(self, parent=None):
         super(MyMainWindow, self).__init__(parent)
         self.setupUi(self)
@@ -36,12 +48,42 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         # layout = QVBoxLayout()
         
         # self.setupUi(self)
+        
+        self.port=''
+
         self.child = ChildrenForm()
+        self.resultTextEdit.setReadOnly(True)
         self.actOriFw.triggered.connect(self.childShow)
         self.custFwOptBtn.clicked.connect(self.openDir)
         self.pieFwOptBtn.clicked.connect(self.openDir)
+        self.custFlashBtn.clicked.connect(self.custFlash)
         self.searchPortBtn.clicked.connect(self.searchVarPort)
         self.portComBox.currentIndexChanged.connect(self.selectComPort)
+
+    def eraseFlash(self):
+        try:
+            assert(self.port != '')
+        except:
+            self.resultTextEdit.setPlainText(self.ERASE_FAIL+"Please set port!\n")
+            return
+        command = ['--port', str(self.port), 'erase_flash']
+        esptool.main(command)
+        self.resultTextEdit.setPlainText(self.ERASE_PASS)
+        self.flashProcessBar.setValue(33)
+
+    def writeFlash(self, binFilePath):
+        command = ['--chip', 'esp32', '--port', str(self.port), '--baud', str(self.BAUD),\
+            '--before', 'default_reset', '--after', 'hard_reset', 'write_flash', '0x0000', binFilePath]
+        esptool.main(command)
+        
+
+
+    def custFlash(self):
+        self.flashProcessBar.setValue(0)
+        self.resultTextEdit.clear()
+        # time.sleep(2)
+        self.eraseFlash()
+        self.writeFlash(self.custFwEdit.text())
 
     def searchVarPort(self):
         varifyPort = QSerialPortInfo.availablePorts()
@@ -56,6 +98,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
     def selectComPort(self):
         curPort = QSerialPortInfo(self.portComBox.currentText())
         self.curPortLocation = curPort.systemLocation()
+        self.port = self.curPortLocation
 
     def loadYaml(self):
         if os.path.exists(self._userYamlName) == False:
@@ -199,10 +242,32 @@ class ChildrenForm(QWidget, Ui_Form):
         self.loadYaml()
         self.setWin()
 
-if __name__ == '__main__':
+# 1class esptoolOpt(object):
+#     PORT_BAUD = 1152000
+
+#     def __init__(self, port='/dev/ttyUSB0', ):
+#         self.port = port
+#         return super().__init__()
+
+#     def erase_flash(self):
+#         command = '--port' + self.port + 'erase_flash'
+#         self.esp32.main(command)
+
+#     def __del__(self):
+#         print("__del__ esptoolOpt class")
+
+def flashESP32():
+    PORT_BAUD = 1152000
+    # espOpt = esptool.
+    pass
+
+def main():
     app = QApplication(sys.argv)
     myWin = MyMainWindow()
     myWin.run()
     myWin.show()
     sys.exit(app.exec_())
+
+if __name__ == '__main__':
+    main()
     
