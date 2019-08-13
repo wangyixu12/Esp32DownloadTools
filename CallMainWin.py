@@ -2,7 +2,7 @@
 @Author: Yixu Wang
 @Date: 2019-08-06 14:12:40
 @LastEditors: Yixu Wang
-@LastEditTime: 2019-08-13 16:44:39
+@LastEditTime: 2019-08-13 17:06:09
 @Description: 调用ui函数
 '''
 import os
@@ -34,8 +34,8 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
     ERASE_FAIL = "Erase flash ------> FAIL\n"
     WRITE_PASS = "Write flash ------> PASS\n"
     WRITE_FAIL = "Write flash ------> FAIL\n"
-    VARI_PASS = "Varify flash ------> PASS\n"
-    VARI_FAIL = "Varify flash ------> FAIL\n"
+    VARI_PASS = "Verify flash ------> PASS\n"
+    VARI_FAIL = "Verify flash ------> FAIL\n"
         
     BAUD = 1152000
 
@@ -158,11 +158,12 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
                 continue
             cmd.append(yamlConfig['childrenForm'][offset])
             cmd.append(yamlConfig['childrenForm'][binDir])
+        print(cmd)
         try:
             esptool.main(cmd)
-        except:
-            print("Unexpected error:", sys.exc_info()[0])
-            self.resultTextBrowser.append(self.VARI_FAIL+str(sys.exc_info()[0]))
+        except Exception as e:
+            print("Unexpected error:", e)
+            self.resultTextBrowser.append(self.VARI_FAIL+str(e))
         else:
             self.resultTextBrowser.append(self.VARI_PASS)
             self.flashProcessBar.setValue(100)
@@ -182,6 +183,19 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.writeFlash(self.custFwEdit.text())
         self.verifyFlash(self.CUST_FLASH)
         # return ret
+
+    @pyqtSlot()
+    def on_pieFlashBtn_clicked(self):
+        ret = True
+        self.resultTextBrowser.clear()
+        self.flashProcessBar.setValue(0)
+        if self.checkSetting(self.TEST_FLASH) == False:
+            ret = False
+            return ret
+        # return ret
+        self.eraseFlash()
+        self.writeFlash(self.pieFwEdit.text())
+        self.verifyFlash(self.TEST_FLASH)
 
     def searchVarPort(self):
         varifyPort = QSerialPortInfo.availablePorts()
