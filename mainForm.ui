@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>532</width>
-    <height>260</height>
+    <height>263</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -45,6 +45,25 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_2">
        <item>
+        <widget class="QPushButton" name="pieFlashBtn">
+         <property name="minimumSize">
+          <size>
+           <width>121</width>
+           <height>51</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>121</width>
+           <height>51</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>Test Flash</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QPushButton" name="custFlashBtn">
          <property name="minimumSize">
           <size>
@@ -60,25 +79,6 @@
          </property>
          <property name="text">
           <string>Customer Flash</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="pieFlashBtn">
-         <property name="minimumSize">
-          <size>
-           <width>121</width>
-           <height>51</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>121</width>
-           <height>51</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>Pie Flash</string>
          </property>
         </widget>
        </item>
@@ -163,19 +163,19 @@
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_2">
      <item>
-      <widget class="QLabel" name="label">
+      <widget class="QLabel" name="label_2">
        <property name="text">
-        <string>Customer Firmware</string>
+        <string>Test Firmware</string>
        </property>
       </widget>
      </item>
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
-        <widget class="QLineEdit" name="custFwEdit"/>
+        <widget class="QLineEdit" name="pieFwEdit"/>
        </item>
        <item>
-        <widget class="QToolButton" name="custFwOptBtn">
+        <widget class="QToolButton" name="pieFwOptBtn">
          <property name="text">
           <string>...</string>
          </property>
@@ -184,19 +184,19 @@
       </layout>
      </item>
      <item>
-      <widget class="QLabel" name="label_2">
+      <widget class="QLabel" name="label">
        <property name="text">
-        <string>Pie Firmware</string>
+        <string>Customer Firmware</string>
        </property>
       </widget>
      </item>
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_4">
        <item>
-        <widget class="QLineEdit" name="pieFwEdit"/>
+        <widget class="QLineEdit" name="custFwEdit"/>
        </item>
        <item>
-        <widget class="QToolButton" name="pieFwOptBtn">
+        <widget class="QToolButton" name="custFwOptBtn">
          <property name="text">
           <string>...</string>
          </property>
@@ -309,10 +309,6 @@
   </action>
  </widget>
  <tabstops>
-  <tabstop>custFwEdit</tabstop>
-  <tabstop>pieFwEdit</tabstop>
-  <tabstop>custFlashBtn</tabstop>
-  <tabstop>pieFlashBtn</tabstop>
   <tabstop>resultTextEdit</tabstop>
  </tabstops>
  <resources/>

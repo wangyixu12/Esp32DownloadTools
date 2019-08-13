@@ -2,7 +2,7 @@
 @Author: Yixu Wang
 @Date: 2019-08-06 14:12:40
 @LastEditors: Yixu Wang
-@LastEditTime: 2019-08-12 17:42:40
+@LastEditTime: 2019-08-13 10:07:32
 @Description: 调用ui函数
 '''
 import os
@@ -30,10 +30,13 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
     
     ERASE_PASS = "Erase flash ------> PASS\n"
     ERASE_FAIL = "Erase flash ------> FAIL\n"
-    FLASH_PASS = "Flash flash ------> PASS\n"
-    FLASH_FAIL = "Flash flash ------> FAIL\n"
+    WRITE_PASS = "Write flash ------> PASS\n"
+    WRITE_FAIL = "Write flash ------> FAIL\n"
         
     BAUD = 1152000
+
+    TEST_FLASH = 'test'
+    CUST_FLASH = 'customer'
 
     def __init__(self, parent=None):
         super(MyMainWindow, self).__init__(parent)
@@ -51,6 +54,8 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.port=''
 
         self.child = ChildrenForm()
+        self.pieFwEdit.setReadOnly(True)
+        self.custFwEdit.setReadOnly(True)
         self.resultTextEdit.setReadOnly(True)
         self.actOriFw.triggered.connect(self.childShow)
         self.custFwOptBtn.clicked.connect(self.openDir)
@@ -59,33 +64,52 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.searchPortBtn.clicked.connect(self.searchVarPort)
         self.portComBox.currentIndexChanged.connect(self.selectComPort)
 
-    def eraseFlash(self):
+    def checkSetting(self, choose):
+        assert((choose == self.CUST_FLASH) | (choose == self.TEST_FLASH))
+        ret = True
         try:
             assert(self.port != '')
         except:
-            self.resultTextEdit.setPlainText(self.ERASE_FAIL+"Please set port!\n")
-            return
+            self.resultTextEdit.setPlainText(self.ERASE_FAIL+"E: Port not set\n")
+            ret = False
+
+        if choose == 'test':
+            try:
+                assert(self.pieFwEdit.text() != '')
+            except:
+                self.resultTextEdit.append(self.WRITE_FAIL+'E: Test Fw not set\n')
+                ret = ret & False
+        elif choose == self.CUST_FLASH:
+            try:
+                assert(self.custFwEdit.text() != '')
+            except:
+                self.resultTextEdit.append(self.WRITE_FAIL+'E: Customer Fw not set\n')
+                ret = ret & False
+        return ret
+
+    def eraseFlash(self):
         command = ['--port', str(self.port), 'erase_flash']
         esptool.main(command)
         self.resultTextEdit.setPlainText(self.ERASE_PASS)
-        self.flashProcessBar.setValue(33)
+        self.flashProcessBar.setValue(10)
 
     def writeFlash(self, binFilePath):
-        try:
-            assert(binFilePath != '')
-        except:
-            self.resultTextEdit.append(self.FLASH_FAIL+'Please set firmware path!\n')
-            return
         command = ['--chip', 'esp32', '--port', str(self.port), '--baud', str(self.BAUD),\
             '--before', 'default_reset', '--after', 'hard_reset', 'write_flash', '0x0000', binFilePath]
         esptool.main(command)
+        self.resultTextEdit.append(self.ERASE_PASS)
+        self.flashProcessBar.setValue(40)
+
+    def varifyFlash(self):
+        pass
         
 
 
     def custFlash(self):
         self.flashProcessBar.setValue(0)
         self.resultTextEdit.clear()
-        # time.sleep(2)
+        if self.checkSetting(self.CUST_FLASH) == False:
+            return
         self.eraseFlash()
         self.writeFlash(self.custFwEdit.text())
 
