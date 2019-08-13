@@ -2,7 +2,7 @@
 @Author: Yixu Wang
 @Date: 2019-08-06 14:12:40
 @LastEditors: Yixu Wang
-@LastEditTime: 2019-08-13 14:37:24
+@LastEditTime: 2019-08-13 16:44:39
 @Description: 调用ui函数
 '''
 import os
@@ -78,7 +78,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         yamlConfig = yaml.load(configFile, yaml.Loader)
         configFile.close()
 
-        OriBinDict = {
+        self.OriBinDict = {
             self.TEST_FLASH : {
                 'pieBinDir_1': 'pieBinOffset_1',
                 'pieBinDir_2': 'pieBinOffset_2',
@@ -114,10 +114,10 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
                 ret = ret & False
 
         isContent = False
-        for binDir, offset in OriBinDict[choose].items():
-            # print( 'binDir:', yamlConfig[self.child._winName][binDir], " offset: ", offset)
+        for binDir, offset in self.OriBinDict[choose].items():
             isContent = isContent | bool(yamlConfig[self.child._winName][binDir])
             try:
+                
                 assert(bool(yamlConfig[self.child._winName][binDir])==bool(yamlConfig[self.child._winName][offset]))
             except:
                 self.resultTextBrowser.append(self.VARI_FAIL+
@@ -145,10 +145,27 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
             '--before', 'default_reset', '--after', 'hard_reset', 'write_flash', '0x0000', binFilePath]
         esptool.main(command)
         self.resultTextBrowser.append(self.WRITE_PASS)
-        self.flashProcessBar.setValue(40)
+        self.flashProcessBar.setValue(80)
 
-    def varifyFlash(self, choose):
-        assert((choose == self.CUST_FLASH) | (choose == self.TEST_FLASH))
+    def verifyFlash(self, choose):
+        cmd = ['--chip', 'esp32', '--port', str(self.port), '--baud', str(self.BAUD), \
+            'verify_flash']
+        configFile = codecs.open(self._userYamlName, 'r', encoding='utf-8')
+        yamlConfig = yaml.load(configFile, yaml.Loader)
+        configFile.close()
+        for binDir, offset in self.OriBinDict[choose].items():
+            if yamlConfig['childrenForm'][binDir] == '':
+                continue
+            cmd.append(yamlConfig['childrenForm'][offset])
+            cmd.append(yamlConfig['childrenForm'][binDir])
+        try:
+            esptool.main(cmd)
+        except:
+            print("Unexpected error:", sys.exc_info()[0])
+            self.resultTextBrowser.append(self.VARI_FAIL+str(sys.exc_info()[0]))
+        else:
+            self.resultTextBrowser.append(self.VARI_PASS)
+            self.flashProcessBar.setValue(100)
         
 
     @pyqtSlot()
@@ -163,7 +180,8 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         # return ret
         self.eraseFlash()
         self.writeFlash(self.custFwEdit.text())
-        return ret
+        self.verifyFlash(self.CUST_FLASH)
+        # return ret
 
     def searchVarPort(self):
         varifyPort = QSerialPortInfo.availablePorts()
