@@ -2,7 +2,7 @@
 @Author: Yixu Wang
 @Date: 2019-08-06 14:12:40
 @LastEditors: Yixu Wang
-@LastEditTime: 2019-08-13 10:07:32
+@LastEditTime: 2019-08-13 14:37:24
 @Description: 调用ui函数
 '''
 import os
@@ -13,10 +13,12 @@ import shutil
 import time
 import threading
 
+from PyQt5.QtCore import pyqtSlot
 from PyQt5.QtSerialPort import QSerialPortInfo
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
+
 
 # from esptool import esptool
 import esptool
@@ -32,6 +34,8 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
     ERASE_FAIL = "Erase flash ------> FAIL\n"
     WRITE_PASS = "Write flash ------> PASS\n"
     WRITE_FAIL = "Write flash ------> FAIL\n"
+    VARI_PASS = "Varify flash ------> PASS\n"
+    VARI_FAIL = "Varify flash ------> FAIL\n"
         
     BAUD = 1152000
 
@@ -54,69 +58,118 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.port=''
 
         self.child = ChildrenForm()
+
         self.pieFwEdit.setReadOnly(True)
         self.custFwEdit.setReadOnly(True)
-        self.resultTextEdit.setReadOnly(True)
+        self.resultTextBrowser.setReadOnly(True)
+        
         self.actOriFw.triggered.connect(self.childShow)
         self.custFwOptBtn.clicked.connect(self.openDir)
         self.pieFwOptBtn.clicked.connect(self.openDir)
-        self.custFlashBtn.clicked.connect(self.custFlash)
+        # self.custFlashBtn.clicked.connect(self.custFlash)
         self.searchPortBtn.clicked.connect(self.searchVarPort)
         self.portComBox.currentIndexChanged.connect(self.selectComPort)
 
     def checkSetting(self, choose):
         assert((choose == self.CUST_FLASH) | (choose == self.TEST_FLASH))
         ret = True
+        child = self.child
+        configFile = codecs.open(self._userYamlName, 'r', encoding='utf-8')
+        yamlConfig = yaml.load(configFile, yaml.Loader)
+        configFile.close()
+
+        OriBinDict = {
+            self.TEST_FLASH : {
+                'pieBinDir_1': 'pieBinOffset_1',
+                'pieBinDir_2': 'pieBinOffset_2',
+                'pieBinDir_3': 'pieBinOffset_3',
+                'pieBinDir_4': 'pieBinOffset_4',
+            },
+            self.CUST_FLASH : {
+                'custBinDir_1': 'custBinOffset_1',
+                'custBinDir_2': 'custBinOffset_2',
+                'custBinDir_3': 'custBinOffset_3',
+                'custBinDir_4': 'custBinOffset_4',
+            }
+        }
+
         try:
             assert(self.port != '')
         except:
-            self.resultTextEdit.setPlainText(self.ERASE_FAIL+"E: Port not set\n")
+            self.resultTextBrowser.setPlainText(self.ERASE_FAIL+"E: Port not set\n")
             ret = False
 
         if choose == 'test':
             try:
                 assert(self.pieFwEdit.text() != '')
             except:
-                self.resultTextEdit.append(self.WRITE_FAIL+'E: Test Fw not set\n')
+                self.resultTextBrowser.append(self.WRITE_FAIL+'E: Test Fw not set\n')
                 ret = ret & False
+
         elif choose == self.CUST_FLASH:
             try:
                 assert(self.custFwEdit.text() != '')
             except:
-                self.resultTextEdit.append(self.WRITE_FAIL+'E: Customer Fw not set\n')
+                self.resultTextBrowser.append(self.WRITE_FAIL+'E: Customer Fw not set\n')
                 ret = ret & False
+
+        isContent = False
+        for binDir, offset in OriBinDict[choose].items():
+            # print( 'binDir:', yamlConfig[self.child._winName][binDir], " offset: ", offset)
+            isContent = isContent | bool(yamlConfig[self.child._winName][binDir])
+            try:
+                assert(bool(yamlConfig[self.child._winName][binDir])==bool(yamlConfig[self.child._winName][offset]))
+            except:
+                self.resultTextBrowser.append(self.VARI_FAIL+
+                'E: Origin bin file setting is error:\nPlease check '+ binDir)
+                ret = ret & False
+                break
+        else:
+            try:
+                assert(isContent)
+            except:
+                self.resultTextBrowser.append(self.VARI_FAIL+'E: Origin bin file setting is error\n')
+                ret = ret & False
+
         return ret
+        
 
     def eraseFlash(self):
         command = ['--port', str(self.port), 'erase_flash']
         esptool.main(command)
-        self.resultTextEdit.setPlainText(self.ERASE_PASS)
+        self.resultTextBrowser.setPlainText(self.ERASE_PASS)
         self.flashProcessBar.setValue(10)
 
     def writeFlash(self, binFilePath):
         command = ['--chip', 'esp32', '--port', str(self.port), '--baud', str(self.BAUD),\
             '--before', 'default_reset', '--after', 'hard_reset', 'write_flash', '0x0000', binFilePath]
         esptool.main(command)
-        self.resultTextEdit.append(self.ERASE_PASS)
+        self.resultTextBrowser.append(self.WRITE_PASS)
         self.flashProcessBar.setValue(40)
 
-    def varifyFlash(self):
-        pass
+    def varifyFlash(self, choose):
+        assert((choose == self.CUST_FLASH) | (choose == self.TEST_FLASH))
         
 
-
-    def custFlash(self):
+    @pyqtSlot()
+    def on_custFlashBtn_clicked(self):
+        # print("custFlash")
+        ret = True
+        self.resultTextBrowser.clear()
         self.flashProcessBar.setValue(0)
-        self.resultTextEdit.clear()
         if self.checkSetting(self.CUST_FLASH) == False:
-            return
+            ret = False
+            return ret
+        # return ret
         self.eraseFlash()
         self.writeFlash(self.custFwEdit.text())
+        return ret
 
     def searchVarPort(self):
         varifyPort = QSerialPortInfo.availablePorts()
         if varifyPort == None:
             return
+        self.resultTextBrowser.clear()
         self.portComBox.clear()
         for serPortInfo in varifyPort:
             if 'USB' not in serPortInfo.portName():
@@ -133,9 +186,11 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
             shutil.copyfile(self._defaultYamlName, self._userYamlName)
         self.configFile = codecs.open(self._userYamlName, 'r', encoding='utf-8')
         self.config = yaml.load(self.configFile, yaml.Loader)
+        self.configFile.close()
 
         defConfigFile = codecs.open(self._defaultYamlName, 'r', encoding='utf-8')           
         defConfig = yaml.load(defConfigFile, yaml.Loader)
+        defConfigFile.close()
 
         for winName, secondDict in defConfig.items():
             for editLine in secondDict.keys():
@@ -143,10 +198,10 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
                     shutil.copyfile(self._defaultYamlName, self._userYamlName)
                     self.configFile = codecs.open(self._userYamlName, 'r', encoding='utf-8')
                     self.config = yaml.load(self.configFile, yaml.Loader)
+                    self.configFile.close()
                     return 
 
     def editYaml(self, winName, key, value):
-        # self.config = yaml.load(self.configFile, yaml.Loader)
         configFileEdit = codecs.open(self._userYamlName, 'w', encoding='utf-8')
         data = self.config
         data[winName][key] = value
@@ -207,6 +262,8 @@ class ChildrenForm(QWidget, Ui_Form):
             self.pieBinOffset_3: "pieBinOffset_3",
             self.pieBinOffset_4: "pieBinOffset_4",
         }
+
+        self.loadYaml()
         
         self.custBinOptBtn_1.clicked.connect(self.openDir)
         self.custBinOptBtn_2.clicked.connect(self.openDir)
@@ -265,9 +322,9 @@ class ChildrenForm(QWidget, Ui_Form):
             shutil.copyfile(self._defaultYamlName, self._userYamlName)
         self.configFile = codecs.open(self._userYamlName, 'r', encoding='utf-8')
         self.config = yaml.load(self.configFile, yaml.Loader)
+        self.configFile.close()
 
     def run(self):
-        self.loadYaml()
         self.setWin()
 
 def main():
