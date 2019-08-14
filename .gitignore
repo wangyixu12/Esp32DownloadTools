@@ -1,2 +1,4 @@
 *.bin
 *.yml
+/pyinstrument
+/__pycache__
