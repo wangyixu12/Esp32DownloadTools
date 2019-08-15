@@ -2,7 +2,7 @@
 @Author: Yixu Wang
 @Date: 2019-08-06 14:12:40
 @LastEditors: Yixu Wang
-@LastEditTime: 2019-08-14 09:29:04
+@LastEditTime: 2019-08-15 10:47:50
 @Description: 调用ui函数
 '''
 import os
@@ -66,7 +66,6 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.actOriFw.triggered.connect(self.childShow)
         self.custFwOptBtn.clicked.connect(self.openDir)
         self.pieFwOptBtn.clicked.connect(self.openDir)
-        # self.custFlashBtn.clicked.connect(self.custFlash)
         self.searchPortBtn.clicked.connect(self.searchVarPort)
         self.portComBox.currentIndexChanged.connect(self.selectComPort)
 
@@ -117,7 +116,6 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         for binDir, offset in self.OriBinDict[choose].items():
             isContent = isContent | bool(yamlConfig[self.child._winName][binDir])
             try:
-                
                 assert(bool(yamlConfig[self.child._winName][binDir])==bool(yamlConfig[self.child._winName][offset]))
             except:
                 self.resultTextBrowser.append(self.VARI_FAIL+
@@ -141,6 +139,11 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.flashProcessBar.setValue(10)
 
     def writeFlash(self, binFilePath):
+        try:
+            assert(os.path.exists(binFilePath) == True)
+        except:
+            self.resultTextBrowser.append('E: '+binFilePath+' is error')
+            return
         command = ['--chip', 'esp32', '--port', str(self.port), '--baud', str(self.BAUD),\
             '--before', 'default_reset', '--after', 'hard_reset', 'write_flash', '0x0000', binFilePath]
         esptool.main(command)
@@ -156,6 +159,11 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         for binDir, offset in self.OriBinDict[choose].items():
             if yamlConfig['childrenForm'][binDir] == '':
                 continue
+            try:
+                assert(os.path.exists(yamlConfig['childrenForm'][binDir])==True)
+            except:
+                self.resultTextBrowser.append('E: '+ yamlConfig['childrenForm'][binDir]+ ' is error')
+                return
             cmd.append(yamlConfig['childrenForm'][offset])
             cmd.append(yamlConfig['childrenForm'][binDir])
         print(cmd)
