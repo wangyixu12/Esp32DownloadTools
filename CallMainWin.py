@@ -2,7 +2,7 @@
 @Author: Yixu Wang
 @Date: 2019-08-06 14:12:40
 @LastEditors: Yixu Wang
-@LastEditTime: 2019-08-15 10:47:50
+@LastEditTime: 2019-08-15 14:09:00
 @Description: 调用ui函数
 '''
 import os
@@ -134,21 +134,32 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
 
     def eraseFlash(self):
         command = ['--port', str(self.port), 'erase_flash']
-        esptool.main(command)
+        try:
+            esptool.main(command)
+        except Exception as e:
+            self.resultTextBrowser.setPlainText(self.ERASE_FAIL+'E: '+str(e))
+            return False
         self.resultTextBrowser.setPlainText(self.ERASE_PASS)
         self.flashProcessBar.setValue(10)
+        return True
 
     def writeFlash(self, binFilePath):
         try:
             assert(os.path.exists(binFilePath) == True)
         except:
             self.resultTextBrowser.append('E: '+binFilePath+' is error')
-            return
+            return False
         command = ['--chip', 'esp32', '--port', str(self.port), '--baud', str(self.BAUD),\
             '--before', 'default_reset', '--after', 'hard_reset', 'write_flash', '0x0000', binFilePath]
-        esptool.main(command)
+        try:
+            esptool.main(command)
+        except Exception as e:
+            self.resultTextBrowser.append(self.ERASE_FAIL+'E: '+str(e))
+            return False
+
         self.resultTextBrowser.append(self.WRITE_PASS)
         self.flashProcessBar.setValue(80)
+        return True
 
     def verifyFlash(self, choose):
         cmd = ['--chip', 'esp32', '--port', str(self.port), '--baud', str(self.BAUD), \
@@ -163,47 +174,64 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
                 assert(os.path.exists(yamlConfig['childrenForm'][binDir])==True)
             except:
                 self.resultTextBrowser.append('E: '+ yamlConfig['childrenForm'][binDir]+ ' is error')
-                return
+                return False
             cmd.append(yamlConfig['childrenForm'][offset])
             cmd.append(yamlConfig['childrenForm'][binDir])
-        print(cmd)
         try:
             esptool.main(cmd)
         except Exception as e:
             print("Unexpected error:", e)
             self.resultTextBrowser.append(self.VARI_FAIL+str(e))
+            return False
         else:
             self.resultTextBrowser.append(self.VARI_PASS)
             self.flashProcessBar.setValue(100)
-        
+            return True
+
+    def flashProcess(self, choose, binFilePath):
+        self.resultTextBrowser.clear()
+        self.flashProcessBar.setValue(0)
+        if self.checkSetting(choose) == False:
+            return False
+        if self.eraseFlash() == True:
+            if self.writeFlash(binFilePath) == True:
+                if self.verifyFlash(choose) == True:
+                    self.resultTextBrowser.setHtml("<img src='./PASS.png'>")
+                    return True
+                    # add PASS COMMIT
+        # add FAIL COMMIT
+        self.resultTextBrowser.setHtml("<img src='./FAIL.png'>")
+        return False
 
     @pyqtSlot()
     def on_custFlashBtn_clicked(self):
         # print("custFlash")
-        ret = True
-        self.resultTextBrowser.clear()
-        self.flashProcessBar.setValue(0)
-        if self.checkSetting(self.CUST_FLASH) == False:
-            ret = False
-            return ret
+        # ret = True
+        # self.resultTextBrowser.clear()
+        # self.flashProcessBar.setValue(0)
+        # if self.checkSetting(self.CUST_FLASH) == False:
+        #     ret = False
+        #     return ret
+        # # return ret
+        # self.eraseFlash()
+        # self.writeFlash(self.custFwEdit.text())
+        # self.verifyFlash(self.CUST_FLASH)
         # return ret
-        self.eraseFlash()
-        self.writeFlash(self.custFwEdit.text())
-        self.verifyFlash(self.CUST_FLASH)
-        # return ret
+        self.flashProcess(self.CUST_FLASH, self.custFwEdit.text())
 
     @pyqtSlot()
     def on_pieFlashBtn_clicked(self):
-        ret = True
-        self.resultTextBrowser.clear()
-        self.flashProcessBar.setValue(0)
-        if self.checkSetting(self.TEST_FLASH) == False:
-            ret = False
-            return ret
+        # ret = True
+        # self.resultTextBrowser.clear()
+        # self.flashProcessBar.setValue(0)
+        # if self.checkSetting(self.TEST_FLASH) == False:
+            # ret = False
+            # return ret
         # return ret
-        self.eraseFlash()
-        self.writeFlash(self.pieFwEdit.text())
-        self.verifyFlash(self.TEST_FLASH)
+        # self.eraseFlash()
+        # self.writeFlash(self.pieFwEdit.text())
+        # self.verifyFlash(self.TEST_FLASH)
+        self.flashProcess(self.TEST_FLASH, self.pieFwEdit.text())
 
     def searchVarPort(self):
         varifyPort = QSerialPortInfo.availablePorts()
@@ -304,6 +332,16 @@ class ChildrenForm(QWidget, Ui_Form):
         }
 
         self.loadYaml()
+        
+        self.custBinDir_1.setReadOnly(True)
+        self.custBinDir_2.setReadOnly(True)
+        self.custBinDir_3.setReadOnly(True)
+        self.custBinDir_4.setReadOnly(True)
+
+        self.pieBinDir_1.setReadOnly(True)
+        self.pieBinDir_2.setReadOnly(True)
+        self.pieBinDir_3.setReadOnly(True)
+        self.pieBinDir_4.setReadOnly(True)
         
         self.custBinOptBtn_1.clicked.connect(self.openDir)
         self.custBinOptBtn_2.clicked.connect(self.openDir)
