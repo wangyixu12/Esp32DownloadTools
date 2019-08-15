@@ -2,3 +2,5 @@
 *.yml
 /pyinstrument
 /__pycache__
+configUser.yml
+requirements.txt
