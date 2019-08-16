@@ -2,7 +2,7 @@
 @Author: Yixu Wang
 @Date: 2019-08-06 14:12:40
 @LastEditors: Yixu Wang
-@LastEditTime: 2019-08-15 14:09:00
+@LastEditTime: 2019-08-16 14:23:37
 @Description: 调用ui函数
 '''
 import os
@@ -205,32 +205,10 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
 
     @pyqtSlot()
     def on_custFlashBtn_clicked(self):
-        # print("custFlash")
-        # ret = True
-        # self.resultTextBrowser.clear()
-        # self.flashProcessBar.setValue(0)
-        # if self.checkSetting(self.CUST_FLASH) == False:
-        #     ret = False
-        #     return ret
-        # # return ret
-        # self.eraseFlash()
-        # self.writeFlash(self.custFwEdit.text())
-        # self.verifyFlash(self.CUST_FLASH)
-        # return ret
         self.flashProcess(self.CUST_FLASH, self.custFwEdit.text())
 
     @pyqtSlot()
     def on_pieFlashBtn_clicked(self):
-        # ret = True
-        # self.resultTextBrowser.clear()
-        # self.flashProcessBar.setValue(0)
-        # if self.checkSetting(self.TEST_FLASH) == False:
-            # ret = False
-            # return ret
-        # return ret
-        # self.eraseFlash()
-        # self.writeFlash(self.pieFwEdit.text())
-        # self.verifyFlash(self.TEST_FLASH)
         self.flashProcess(self.TEST_FLASH, self.pieFwEdit.text())
 
     def searchVarPort(self):
