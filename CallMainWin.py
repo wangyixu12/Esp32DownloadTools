@@ -2,7 +2,7 @@
 @Author: Yixu Wang
 @Date: 2019-08-06 14:12:40
 @LastEditors: Yixu Wang
-@LastEditTime: 2019-08-20 16:38:33
+@LastEditTime: 2019-08-20 17:30:19
 @Description: 调用ui函数
 '''
 import os
@@ -12,6 +12,8 @@ import codecs
 import shutil
 import time
 import threading
+
+from enum import Enum
 
 from PyQt5.QtCore import pyqtSlot
 from PyQt5.QtSerialPort import QSerialPortInfo
@@ -42,6 +44,11 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
     TEST_FLASH = 'test'
     CUST_FLASH = 'customer'
 
+    erase = 0
+    write = 1
+    verify = 2
+    over = 3
+
     def __init__(self, parent=None):
         super(MyMainWindow, self).__init__(parent)
         self.setupUi(self)
@@ -56,10 +63,11 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         }
         
         self.port=''
+        self.processTimes = 0
 
         self.child = ChildrenForm()
         self.thread = flashWorkerThread()
-        self.thread.finish.connect(self.slot)
+        self.thread.finish.connect(self.flash_thread)
 
 
         self.pieFwEdit.setReadOnly(True)
@@ -71,9 +79,6 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.pieFwOptBtn.clicked.connect(self.openDir)
         self.searchPortBtn.clicked.connect(self.searchVarPort)
         self.portComBox.currentIndexChanged.connect(self.selectComPort)
-
-    def slot(self):
-        print("thread")
 
     def checkSetting(self, choose):
         assert((choose == self.CUST_FLASH) | (choose == self.TEST_FLASH))
@@ -137,6 +142,17 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
 
         return ret
         
+    def flash_thread(self):
+
+        processDict = {
+            self.erase: self.eraseFlash(),
+            self.write: self.writeFlash(),
+            self.verify: self.verifyFlash(),
+        }
+        if self.erase <= self.processTimes <= self.verify:
+            processDict[self.processTimes]()
+            self.processTimes += 1
+            
 
     def eraseFlash(self):
         command = ['--port', str(self.port), 'erase_flash']
@@ -154,11 +170,12 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
             return False
         command = ['--chip', 'esp32', '--port', str(self.port), '--baud', str(self.BAUD),\
             '--before', 'default_reset', '--after', 'hard_reset', 'write_flash', '0x0000', binFilePath]
-        try:
-            esptool.main(command)
-        except Exception as e:
-            self.resultTextBrowser.append(self.ERASE_FAIL+'E: '+str(e))
-            return False
+        self.thread(command)
+        # try:
+        #     esptool.main(command)
+        # except Exception as e:
+        #     self.resultTextBrowser.append(self.ERASE_FAIL+'E: '+str(e))
+        #     return False
 
         self.resultTextBrowser.append(self.WRITE_PASS)
         self.flashProcessBar.setValue(80)
@@ -180,28 +197,31 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
                 return False
             cmd.append(yamlConfig['childrenForm'][offset])
             cmd.append(yamlConfig['childrenForm'][binDir])
-        try:
-            esptool.main(cmd)
-        except Exception as e:
-            print("Unexpected error:", e)
-            self.resultTextBrowser.append(self.VARI_FAIL+str(e))
-            return False
-        else:
-            self.resultTextBrowser.append(self.VARI_PASS)
-            self.flashProcessBar.setValue(100)
-            return True
+        self.thread(cmd)
+        # try:
+        #     esptool.main(cmd)
+        # except Exception as e:
+        #     print("Unexpected error:", e)
+        #     self.resultTextBrowser.append(self.VARI_FAIL+str(e))
+        #     return False
+        # else:
+        #     self.resultTextBrowser.append(self.VARI_PASS)
+        #     self.flashProcessBar.setValue(100)
+        #     return True
 
     def flashProcess(self, choose, binFilePath):
         self.resultTextBrowser.clear()
         self.flashProcessBar.setValue(0)
         if self.checkSetting(choose) == False:
             return False
-            
-        if self.eraseFlash() == True:
-            if self.writeFlash(binFilePath) == True:
-                if self.verifyFlash(choose) == True:
-                    self.resultTextBrowser.setHtml("<img src='./PASS.png'>")
-                    return True
+        
+        self.flash_thread()
+
+        # if self.eraseFlash() == True:
+        #     if self.writeFlash(binFilePath) == True:
+        #         if self.verifyFlash(choose) == True:
+        #             self.resultTextBrowser.setHtml("<img src='./PASS.png'>")
+        #             return True
                     # add PASS COMMIT
         # add FAIL COMMIT
         # self.resultTextBrowser.setHtml("<img src='./FAIL.png'>")
