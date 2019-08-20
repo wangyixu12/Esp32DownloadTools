@@ -2,7 +2,7 @@
 @Author: Yixu Wang
 @Date: 2019-08-06 14:12:40
 @LastEditors: Yixu Wang
-@LastEditTime: 2019-08-16 14:23:37
+@LastEditTime: 2019-08-20 16:38:33
 @Description: 调用ui函数
 '''
 import os
@@ -58,6 +58,9 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.port=''
 
         self.child = ChildrenForm()
+        self.thread = flashWorkerThread()
+        self.thread.finish.connect(self.slot)
+
 
         self.pieFwEdit.setReadOnly(True)
         self.custFwEdit.setReadOnly(True)
@@ -68,6 +71,9 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.pieFwOptBtn.clicked.connect(self.openDir)
         self.searchPortBtn.clicked.connect(self.searchVarPort)
         self.portComBox.currentIndexChanged.connect(self.selectComPort)
+
+    def slot(self):
+        print("thread")
 
     def checkSetting(self, choose):
         assert((choose == self.CUST_FLASH) | (choose == self.TEST_FLASH))
@@ -134,11 +140,8 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
 
     def eraseFlash(self):
         command = ['--port', str(self.port), 'erase_flash']
-        try:
-            esptool.main(command)
-        except Exception as e:
-            self.resultTextBrowser.setPlainText(self.ERASE_FAIL+'E: '+str(e))
-            return False
+        self.thread.command = command
+        self.thread.start()
         self.resultTextBrowser.setPlainText(self.ERASE_PASS)
         self.flashProcessBar.setValue(10)
         return True
@@ -193,6 +196,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.flashProcessBar.setValue(0)
         if self.checkSetting(choose) == False:
             return False
+            
         if self.eraseFlash() == True:
             if self.writeFlash(binFilePath) == True:
                 if self.verifyFlash(choose) == True:
@@ -200,7 +204,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
                     return True
                     # add PASS COMMIT
         # add FAIL COMMIT
-        self.resultTextBrowser.setHtml("<img src='./FAIL.png'>")
+        # self.resultTextBrowser.setHtml("<img src='./FAIL.png'>")
         return False
 
     @pyqtSlot()
@@ -278,6 +282,22 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
     def run(self):
         self.loadYaml()
         self.setWin()
+
+class flashWorkerThread(QThread):
+    finish = pyqtSignal(str)
+    command = None
+
+    def __init__(self):
+        return super().__init__()
+
+    def run(self):
+        try:
+            esptool.main(self.command)
+        except Exception as e:
+            print("E: %s\n", e)
+            self.finish.emit('error')
+    
+        self.finish.emit('finish')
 
 class ChildrenForm(QWidget, Ui_Form):
     def __init__(self, *args, **kwargs):
