@@ -2,7 +2,7 @@
 @Author: Yixu Wang
 @Date: 2019-08-06 14:12:40
 @LastEditors: Yixu Wang
-@LastEditTime: 2019-08-21 16:09:06
+@LastEditTime: 2019-08-21 17:07:06
 @Description: 调用ui函数
 '''
 import os
@@ -61,6 +61,21 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
             self.pieFwEdit: 'pieFwEdit',
         }
 
+        self.OriBinDict = {
+            self.TEST_FLASH : {
+                'pieBinDir_1': 'pieBinOffset_1',
+                'pieBinDir_2': 'pieBinOffset_2',
+                'pieBinDir_3': 'pieBinOffset_3',
+                'pieBinDir_4': 'pieBinOffset_4',
+            },
+            self.CUST_FLASH : {
+                'custBinDir_1': 'custBinOffset_1',
+                'custBinDir_2': 'custBinOffset_2',
+                'custBinDir_3': 'custBinOffset_3',
+                'custBinDir_4': 'custBinOffset_4',
+            }
+        }
+
         self._transitions = {
             states.CHECK.value : self.checkConf,
             states.ERASE.value : self.eraseFlash,
@@ -92,10 +107,16 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
 
     def flash_thread(self, opt, data = None):
         print(opt, data)
-        if opt == states.RESULT.value:
-            self._transitions[opt](data)
+        if data == 'FAIL':
+            # 显示fail
+            self.resultTextBrowser.append(opt.name + ' --> FAIL')
+        elif data == 'PASS':
+            # 显示PASS
+            self.resultTextBrowser.append(opt.name + ' --> PASS')
+        if opt == states.VERIFY:
+            self._transitions[opt.value + 1](data)
         else: 
-            self._transitions[opt]()
+            self._transitions[opt.value + 1]()
 
     def checkConf(self):
         choose = self.optChoose
@@ -106,20 +127,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         yamlConfig = yaml.load(configFile, yaml.Loader)
         configFile.close()
 
-        self.OriBinDict = {
-            self.TEST_FLASH : {
-                'pieBinDir_1': 'pieBinOffset_1',
-                'pieBinDir_2': 'pieBinOffset_2',
-                'pieBinDir_3': 'pieBinOffset_3',
-                'pieBinDir_4': 'pieBinOffset_4',
-            },
-            self.CUST_FLASH : {
-                'custBinDir_1': 'custBinOffset_1',
-                'custBinDir_2': 'custBinOffset_2',
-                'custBinDir_3': 'custBinOffset_3',
-                'custBinDir_4': 'custBinOffset_4',
-            }
-        }
+        
 
         try:
             assert(self.port != '')
@@ -159,18 +167,17 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
                 ret = ret & False
 
         if ret == False:
-            self.flash_thread(states.RESULT.value, 'Fail')
+            self.flash_thread(states.RESULT, 'Fail')
         else:
-            self.flash_thread(states.ERASE.value)
+            self.flash_thread(states.ERASE)
         
     def eraseFlash(self):
         command = ['--port', str(self.port), 'erase_flash']
-        self.thread.state = states.ERASE.value
+        self.thread.state = states.ERASE
         self.thread.command = command
         self.thread.start()
-        self.resultTextBrowser.setPlainText(self.ERASE_PASS)
-        self.flashProcessBar.setValue(10)
-        # return True
+        # self.resultTextBrowser.setPlainText(self.ERASE_PASS)
+        # self.flashProcessBar.setValue(10)
 
     def writeFlash(self):
         binFilePath = self.optBinDir
@@ -181,13 +188,13 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
             return False
         command = ['--chip', 'esp32', '--port', str(self.port), '--baud', str(self.BAUD),\
             '--before', 'default_reset', '--after', 'hard_reset', 'write_flash', '0x0000', binFilePath]
-        self.thread.state = states.WRITE.value
+        self.thread.state = states.WRITE
         self.thread.command = command
         self.thread.start()
 
-        self.resultTextBrowser.append(self.WRITE_PASS)
-        self.flashProcessBar.setValue(80)
-        return True
+        # self.resultTextBrowser.append(self.WRITE_PASS)
+        # self.flashProcessBar.setValue(80)
+        # return True
 
     def verifyFlash(self):
         choose = self.optChoose
@@ -206,7 +213,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
                 return False
             cmd.append(yamlConfig['childrenForm'][offset])
             cmd.append(yamlConfig['childrenForm'][binDir])
-        self.thread.state = states.VERIFY.value
+        self.thread.state = states.VERIFY
         self.thread.command = cmd
         self.thread.start()
 
@@ -214,7 +221,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.resultTextBrowser.clear()
         self.flashProcessBar.setValue(0)
         
-        self.flash_thread(states.CHECK.value)
+        self.flash_thread(states.CHECK)
         return False
 
     @pyqtSlot()
@@ -298,8 +305,8 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.setWin()
 
 class flashWorkerThread(QThread):
-    finish = pyqtSignal(int, str)
-    state = states.CHECK.value
+    finish = pyqtSignal(Enum, str)
+    state = states.CHECK
     command = None
 
     def __init__(self):
@@ -310,10 +317,10 @@ class flashWorkerThread(QThread):
             esptool.main(self.command)
         except Exception as e:
             print("E: %s\n", e)
-            self.finish.emit(states.RESULT.value, "False")
+            self.finish.emit(self.state, "FAIL")
             return
     
-        self.finish.emit(self.state+1, 'pass')
+        self.finish.emit(self.state, 'PASS')
 
 class ChildrenForm(QWidget, Ui_Form):
     def __init__(self, *args, **kwargs):
