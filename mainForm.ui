@@ -35,79 +35,6 @@
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>130</y>
-      <width>253</width>
-      <height>84</height>
-     </rect>
-    </property>
-    <layout class="QVBoxLayout" name="verticalLayout_5">
-     <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_2">
-       <item>
-        <widget class="QPushButton" name="pieFlashBtn">
-         <property name="minimumSize">
-          <size>
-           <width>121</width>
-           <height>51</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>121</width>
-           <height>51</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>Test Flash</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="custFlashBtn">
-         <property name="minimumSize">
-          <size>
-           <width>121</width>
-           <height>51</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>121</width>
-           <height>51</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>Customer Flash</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </item>
-     <item>
-      <widget class="QProgressBar" name="flashProcessBar">
-       <property name="minimumSize">
-        <size>
-         <width>251</width>
-         <height>20</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>251</width>
-         <height>25</height>
-        </size>
-       </property>
-       <property name="value">
-        <number>0</number>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
-   <widget class="QWidget" name="layoutWidget">
-    <property name="geometry">
-     <rect>
       <x>290</x>
       <y>20</y>
       <width>221</width>
@@ -270,6 +197,61 @@
      </item>
     </layout>
    </widget>
+   <widget class="QWidget" name="">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>160</y>
+      <width>250</width>
+      <height>53</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <widget class="QPushButton" name="pieFlashBtn">
+       <property name="minimumSize">
+        <size>
+         <width>121</width>
+         <height>51</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>121</width>
+         <height>51</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Test Flash</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="custFlashBtn">
+       <property name="minimumSize">
+        <size>
+         <width>121</width>
+         <height>51</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>121</width>
+         <height>51</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Customer Flash</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <zorder>layoutWidget</zorder>
+   <zorder>layoutWidget</zorder>
+   <zorder>layoutWidget</zorder>
+   <zorder>layoutWidget</zorder>
+   <zorder>custFlashBtn</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -284,7 +266,8 @@
     <property name="title">
      <string>setting</string>
     </property>
-    <addaction name="actOriFw"/>
+    <addaction name="actVeriFw"/>
+    <addaction name="actFlashFw"/>
    </widget>
    <addaction name="menuSetting"/>
   </widget>
@@ -302,9 +285,14 @@
     <string>Customer</string>
    </property>
   </action>
-  <action name="actOriFw">
+  <action name="actVeriFw">
    <property name="text">
-    <string>OriginFirmware</string>
+    <string>Verify Firmware</string>
+   </property>
+  </action>
+  <action name="actFlashFw">
+   <property name="text">
+    <string>Flash Firmware</string>
    </property>
   </action>
  </widget>

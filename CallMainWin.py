@@ -2,7 +2,7 @@
 @Author: Yixu Wang
 @Date: 2019-08-06 14:12:40
 @LastEditors: Yixu Wang
-@LastEditTime: 2019-08-21 17:07:06
+@LastEditTime: 2019-08-21 17:12:49
 @Description: 调用ui函数
 '''
 import os
@@ -96,7 +96,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.custFwEdit.setReadOnly(True)
         self.resultTextBrowser.setReadOnly(True)
         
-        self.actOriFw.triggered.connect(self.childShow)
+        self.actVeriFw.triggered.connect(self.childShow)
         self.custFwOptBtn.clicked.connect(self.openDir)
         self.pieFwOptBtn.clicked.connect(self.openDir)
         self.searchPortBtn.clicked.connect(self.searchVarPort)
@@ -126,8 +126,6 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         configFile = codecs.open(self._userYamlName, 'r', encoding='utf-8')
         yamlConfig = yaml.load(configFile, yaml.Loader)
         configFile.close()
-
-        
 
         try:
             assert(self.port != '')
@@ -176,8 +174,6 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.thread.state = states.ERASE
         self.thread.command = command
         self.thread.start()
-        # self.resultTextBrowser.setPlainText(self.ERASE_PASS)
-        # self.flashProcessBar.setValue(10)
 
     def writeFlash(self):
         binFilePath = self.optBinDir
@@ -191,10 +187,6 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.thread.state = states.WRITE
         self.thread.command = command
         self.thread.start()
-
-        # self.resultTextBrowser.append(self.WRITE_PASS)
-        # self.flashProcessBar.setValue(80)
-        # return True
 
     def verifyFlash(self):
         choose = self.optChoose
@@ -219,7 +211,6 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
 
     def flashProcess(self):
         self.resultTextBrowser.clear()
-        self.flashProcessBar.setValue(0)
         
         self.flash_thread(states.CHECK)
         return False
