@@ -2,7 +2,7 @@
 @Author: Yixu Wang
 @Date: 2019-08-06 14:12:40
 @LastEditors: Yixu Wang
-@LastEditTime: 2019-08-22 15:48:28
+@LastEditTime: 2019-08-22 16:06:22
 @Description: 调用ui函数
 '''
 import os
@@ -86,6 +86,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.child.CloseSignal.connect(self._enableBtn)
 
         self.flashSet = FwSetForm()
+        self.flashSet.CloseSignal.connect(self._enableBtn)
         
         self.thread = flashWorkerThread()
         self.thread.finish.connect(self.flash_thread)
@@ -125,6 +126,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
 
     def _dispResult(self, result):
         # if result == 'FAIL':
+        self._enableBtn()
         self.resultBrowser.setHtml("<img src='./"+result+".png'>")
 
     def flash_thread(self, opt, data = None):
@@ -242,6 +244,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
 
     @pyqtSlot()
     def on_custFlashBtn_clicked(self):
+        self._disableBtn()
         self.optChoose = self.CUST_FLASH
 
         configFile = codecs.open(self._userYamlName, 'r', encoding='utf-8')
@@ -254,6 +257,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
 
     @pyqtSlot()
     def on_pieFlashBtn_clicked(self):
+        self._disableBtn()
         self.optChoose = self.TEST_FLASH
 
         configFile = codecs.open(self._userYamlName, 'r', encoding='utf-8')
@@ -307,6 +311,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
 
     def flashSetShow(self):
         self.flashSet.show()
+        self._disableBtn()
         self.flashSet.run()
 
     def run(self):
@@ -454,9 +459,12 @@ class EmittingStream(QObject):
         pass
 
 class FwSetForm(QWidget, Ui_flashSetForm):
+    CloseSignal = pyqtSignal()
     def __init__(self, *args, **kwargs):
         super(FwSetForm, self).__init__()
         self.setupUi(self)
+        self.setWindowFlags(Qt.WindowMinimizeButtonHint)
+        self.setFixedSize(self.width(),self.height())
         self._defaultYamlName = 'configDefault.yml'
         self._userYamlName = 'configUser.yml'
 
@@ -477,14 +485,24 @@ class FwSetForm(QWidget, Ui_flashSetForm):
         self.binFileComfirm.button(self.binFileComfirm.Save).clicked.connect(self._save)
         self.binFileComfirm.button(self.binFileComfirm.Discard).clicked.connect(self._discard)
 
+    def __del__(self):
+        self.close()
+        self.CloseSignal.emit()
+
     def _save(self):
         for editKey in self._winEditDict.keys():
             text = editKey.text()
             self.editYaml(self._winName, self._winEditDict[editKey], text)
-        self.close()
+        # self.close()
+        self._closeWin()
 
     def _discard(self):
+        # self.close()
+        self._closeWin()
+
+    def _closeWin(self):
         self.close()
+        self.CloseSignal.emit()
     
     def editYaml(self, winName, key, value):
         configFileEdit = codecs.open(self._userYamlName, 'w', encoding='utf-8')
@@ -520,7 +538,8 @@ def main():
     myWin = MyMainWindow()
     myWin.run()
     myWin.show()
-    sys.exit(app.exec_())
+    app.exec_()
+    # sys.exit(0)
 
 if __name__ == '__main__':
     main()
