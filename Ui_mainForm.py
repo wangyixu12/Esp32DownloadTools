@@ -128,7 +128,7 @@ class Ui_MainWindow(object):
         self.custFlashBtn.setText(_translate("MainWindow", "Flash\n"
 "Customer FW"))
         self.label_5.setText(_translate("MainWindow", "Result"))
-        self.menuSetting.setTitle(_translate("MainWindow", "setting"))
+        self.menuSetting.setTitle(_translate("MainWindow", "set"))
         self.setPieFwDir.setText(_translate("MainWindow", "Pie"))
         self.setPieFwDir.setShortcut(_translate("MainWindow", "Ctrl+S, Ctrl+P"))
         self.setCoutFwDir.setText(_translate("MainWindow", "Customer"))
