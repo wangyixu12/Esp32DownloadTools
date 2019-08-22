@@ -2,7 +2,7 @@
 @Author: Yixu Wang
 @Date: 2019-08-06 14:12:40
 @LastEditors: Yixu Wang
-@LastEditTime: 2019-08-22 15:11:57
+@LastEditTime: 2019-08-22 15:48:28
 @Description: 调用ui函数
 '''
 import os
@@ -83,6 +83,8 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         sys.stdout = EmittingStream(textWritten = self.outputWritten)
 
         self.child = ChildrenForm()
+        self.child.CloseSignal.connect(self._enableBtn)
+
         self.flashSet = FwSetForm()
         
         self.thread = flashWorkerThread()
@@ -99,6 +101,20 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
     def __del__(self):
         sys.stdout = sys.__stdout__
     
+    def _enableBtn(self):
+        self.pieFlashBtn.setEnabled(True)
+        self.custFlashBtn.setEnabled(True)
+        self.searchPortBtn.setEnabled(True)
+        self.actVeriFw.setEnabled(True)
+        self.actFlashFw.setEnabled(True)
+
+    def _disableBtn(self):
+        self.pieFlashBtn.setEnabled(False)
+        self.custFlashBtn.setEnabled(False)
+        self.searchPortBtn.setEnabled(False)
+        self.actVeriFw.setEnabled(False)
+        self.actFlashFw.setEnabled(False)
+
     def outputWritten(self, text):
         cursor = self.resultTextBrowser.textCursor()
         cursor.movePosition(QTextCursor.End)
@@ -284,7 +300,9 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
                     self.configFile.close()
 
     def childShow(self):
+        
         self.child.show()
+        self._disableBtn()
         self.child.run()
 
     def flashSetShow(self):
@@ -313,6 +331,7 @@ class flashWorkerThread(QThread):
         self.finish.emit(self.state, 'PASS')
 
 class ChildrenForm(QWidget, Ui_Form):
+    CloseSignal = pyqtSignal()
     def __init__(self, *args, **kwargs):
         super(ChildrenForm, self).__init__()
         self.setupUi(self)
@@ -374,10 +393,16 @@ class ChildrenForm(QWidget, Ui_Form):
         for editKey in self._winEditDict.keys():
             text = editKey.text()
             self.editYaml(self._winName, self._winEditDict[editKey], text)
-        self.close()
+        # self.close()
+        self._closeWin()
 
     def _discard(self):
+        # self.close()
+        self._closeWin()
+
+    def _closeWin(self):
         self.close()
+        self.CloseSignal.emit()
 
     def editYaml(self, winName, key, value):
         # self.config = yaml.load(self.configFile, yaml.Loader)
