@@ -2,7 +2,7 @@
 @Author: Yixu Wang
 @Date: 2019-08-06 14:12:40
 @LastEditors: Yixu Wang
-@LastEditTime: 2019-08-22 14:02:00
+@LastEditTime: 2019-08-22 15:11:57
 @Description: 调用ui函数
 '''
 import os
@@ -112,10 +112,12 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.resultBrowser.setHtml("<img src='./"+result+".png'>")
 
     def flash_thread(self, opt, data = None):
-        print(opt, data)
+        # print(opt, data)
         if data == 'FAIL':
             # 显示fail
             self.resultTextBrowser.append(opt.name + ' --> FAIL')
+            self._transitions[states.RESULT.value]("FAIL")
+            return
         elif data == 'PASS':
             # 显示PASS
             self.resultTextBrowser.append(opt.name + ' --> PASS')
@@ -304,7 +306,7 @@ class flashWorkerThread(QThread):
         try:
             esptool.main(self.command)
         except Exception as e:
-            print("E: %s\n", e)
+            print("E:", e)
             self.finish.emit(self.state, "FAIL")
             return
     
@@ -341,6 +343,9 @@ class ChildrenForm(QWidget, Ui_Form):
         }
 
         self.loadYaml()
+
+        self.setWindowFlags(Qt.WindowMinimizeButtonHint)
+        self.setFixedSize(self.width(),self.height())
         
         self.custBinDir_1.setReadOnly(True)
         self.custBinDir_2.setReadOnly(True)
@@ -469,7 +474,7 @@ class FwSetForm(QWidget, Ui_flashSetForm):
         assert(self.sender() in btn_dict.keys())
         file, ok= QFileDialog.getOpenFileName(self, "Open", "./", "Binary Files(*.bin)")
         btn_dict[self.sender()].setText(file)
-        self.editYaml(self._winName, self._winEditDict[btn_dict[self.sender()]], file)
+        # self.editYaml(self._winName, self._winEditDict[btn_dict[self.sender()]], file)
 
     def _setWin(self):
         for key, file in self._winEditDict.items():

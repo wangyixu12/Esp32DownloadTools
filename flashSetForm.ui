@@ -10,6 +10,18 @@
     <height>167</height>
    </rect>
   </property>
+  <property name="minimumSize">
+   <size>
+    <width>291</width>
+    <height>167</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>291</width>
+    <height>167</height>
+   </size>
+  </property>
   <property name="windowTitle">
    <string>Flash Setting</string>
   </property>
@@ -26,7 +38,7 @@
     <item>
      <widget class="QLabel" name="label_2">
       <property name="text">
-       <string>Test Firmware</string>
+       <string>Tester Firmware</string>
       </property>
      </widget>
     </item>

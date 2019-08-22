@@ -10,6 +10,18 @@
     <height>362</height>
    </rect>
   </property>
+  <property name="minimumSize">
+   <size>
+    <width>548</width>
+    <height>362</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>548</width>
+    <height>362</height>
+   </size>
+  </property>
   <property name="windowTitle">
    <string>Origin Bin Firmware Setting</string>
   </property>
@@ -18,12 +30,12 @@
     <rect>
      <x>10</x>
      <y>10</y>
-     <width>111</width>
+     <width>141</width>
      <height>16</height>
     </rect>
    </property>
    <property name="text">
-    <string>Test bin file dir</string>
+    <string>Tester bin file dir</string>
    </property>
   </widget>
   <widget class="QLabel" name="label">
