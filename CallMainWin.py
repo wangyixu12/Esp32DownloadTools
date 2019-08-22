@@ -2,7 +2,7 @@
 @Author: Yixu Wang
 @Date: 2019-08-06 14:12:40
 @LastEditors: Yixu Wang
-@LastEditTime: 2019-08-22 11:09:26
+@LastEditTime: 2019-08-22 14:02:00
 @Description: 调用ui函数
 '''
 import os
@@ -80,6 +80,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         
         self.port=''
         self.processTimes = 0
+        sys.stdout = EmittingStream(textWritten = self.outputWritten)
 
         self.child = ChildrenForm()
         self.flashSet = FwSetForm()
@@ -95,8 +96,20 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.searchPortBtn.clicked.connect(self.searchVarPort)
         self.portComBox.currentIndexChanged.connect(self.selectComPort)
 
+    def __del__(self):
+        sys.stdout = sys.__stdout__
+    
+    def outputWritten(self, text):
+        cursor = self.resultTextBrowser.textCursor()
+        cursor.movePosition(QTextCursor.End)
+        cursor.insertText(text)
+        self.resultTextBrowser.setTextCursor(cursor)
+        self.resultTextBrowser.ensureCursorVisible()
+        
+
     def _dispResult(self, result):
-        print(result)
+        # if result == 'FAIL':
+        self.resultBrowser.setHtml("<img src='./"+result+".png'>")
 
     def flash_thread(self, opt, data = None):
         print(opt, data)
@@ -158,7 +171,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
                 ret = ret & False
 
         if ret == False:
-            self.flash_thread(states.RESULT, 'Fail')
+            self.flash_thread(states.RESULT, 'FAIL')
         else:
             self.flash_thread(states.ERASE)
         
@@ -204,6 +217,8 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
 
     def flashProcess(self):
         self.resultTextBrowser.clear()
+        self.resultBrowser.clear()
+        self.resultBrowser.setHtml("<img src='./LOADING.png'>")
         self.flash_thread(states.CHECK)
         return False
 
@@ -398,6 +413,15 @@ class ChildrenForm(QWidget, Ui_Form):
 
     def run(self):
         self.setWin()
+
+class EmittingStream(QObject):
+    textWritten = pyqtSignal(str)
+    
+    def write(self, text):
+        self.textWritten.emit(str(text))
+    
+    def flush(self):
+        pass
 
 class FwSetForm(QWidget, Ui_flashSetForm):
     def __init__(self, *args, **kwargs):
