@@ -229,7 +229,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QTextBrowser" name="resultTextBrowser_2">
+      <widget class="QTextBrowser" name="resultBrowser">
        <property name="maximumSize">
         <size>
          <width>250</width>

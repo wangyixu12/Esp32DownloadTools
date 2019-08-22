@@ -11,7 +11,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_flashSetForm(object):
     def setupUi(self, flashSetForm):
         flashSetForm.setObjectName("flashSetForm")
-        flashSetForm.resize(291, 166)
+        flashSetForm.resize(291, 167)
         self.layoutWidget = QtWidgets.QWidget(flashSetForm)
         self.layoutWidget.setGeometry(QtCore.QRect(20, 10, 251, 104))
         self.layoutWidget.setObjectName("layoutWidget")
