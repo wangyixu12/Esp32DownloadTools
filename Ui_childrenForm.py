@@ -12,11 +12,13 @@ class Ui_Form(object):
     def setupUi(self, Form):
         Form.setObjectName("Form")
         Form.resize(548, 362)
+        Form.setMinimumSize(QtCore.QSize(548, 362))
+        Form.setMaximumSize(QtCore.QSize(548, 362))
         self.label_2 = QtWidgets.QLabel(Form)
-        self.label_2.setGeometry(QtCore.QRect(10, 10, 111, 16))
+        self.label_2.setGeometry(QtCore.QRect(10, 10, 141, 16))
         self.label_2.setObjectName("label_2")
         self.label = QtWidgets.QLabel(Form)
-        self.label.setGeometry(QtCore.QRect(10, 170, 141, 16))
+        self.label.setGeometry(QtCore.QRect(10, 170, 151, 16))
         self.label.setObjectName("label")
         self.label_3 = QtWidgets.QLabel(Form)
         self.label_3.setGeometry(QtCore.QRect(470, 10, 41, 16))
@@ -195,7 +197,7 @@ class Ui_Form(object):
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
         Form.setWindowTitle(_translate("Form", "Origin Bin Firmware Setting"))
-        self.label_2.setText(_translate("Form", "Test bin file dir"))
+        self.label_2.setText(_translate("Form", "Tester bin file dir"))
         self.label.setText(_translate("Form", "Customer bin file dir"))
         self.label_3.setText(_translate("Form", "offset"))
         self.label_4.setText(_translate("Form", "offset"))

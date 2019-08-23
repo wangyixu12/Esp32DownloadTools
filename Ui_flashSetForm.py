@@ -12,6 +12,8 @@ class Ui_flashSetForm(object):
     def setupUi(self, flashSetForm):
         flashSetForm.setObjectName("flashSetForm")
         flashSetForm.resize(291, 167)
+        flashSetForm.setMinimumSize(QtCore.QSize(291, 167))
+        flashSetForm.setMaximumSize(QtCore.QSize(291, 167))
         self.layoutWidget = QtWidgets.QWidget(flashSetForm)
         self.layoutWidget.setGeometry(QtCore.QRect(20, 10, 251, 104))
         self.layoutWidget.setObjectName("layoutWidget")
@@ -54,7 +56,7 @@ class Ui_flashSetForm(object):
     def retranslateUi(self, flashSetForm):
         _translate = QtCore.QCoreApplication.translate
         flashSetForm.setWindowTitle(_translate("flashSetForm", "Flash Setting"))
-        self.label_2.setText(_translate("flashSetForm", "Test Firmware"))
+        self.label_2.setText(_translate("flashSetForm", "Tester Firmware"))
         self.pieFwOptBtn.setText(_translate("flashSetForm", "..."))
         self.label.setText(_translate("flashSetForm", "Customer Firmware"))
         self.custFwOptBtn.setText(_translate("flashSetForm", "..."))
