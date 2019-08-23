@@ -2,7 +2,7 @@
 @Author: Yixu Wang
 @Date: 2019-08-06 14:12:40
 @LastEditors: Yixu Wang
-@LastEditTime: 2019-08-22 16:06:22
+@LastEditTime: 2019-08-23 10:26:17
 @Description: 调用ui函数
 '''
 import os
@@ -141,6 +141,8 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
             self.resultTextBrowser.append(opt.name + ' --> PASS')
         if opt == states.VERIFY:
             self._transitions[opt.value + 1](data)
+        elif opt == states.CHECK:
+            self._transitions[opt.value]()
         else: 
             self._transitions[opt.value + 1]()
 
@@ -156,21 +158,21 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         try:
             assert(self.port != '')
         except:
-            self.resultTextBrowser.setPlainText(self.ERASE_FAIL+"E: Port not set\n")
+            self.resultTextBrowser.setPlainText(self.ERASE_FAIL+"Err: Port not set\n")
             ret = False
 
         if choose == self.TEST_FLASH:
             try:
-                assert(self.pieFwEdit.text() != '')
+                assert(yamlConfig["mainForm"]["pieFwEdit"] != '')
             except:
-                self.resultTextBrowser.append(self.WRITE_FAIL+'E: Test Fw not set\n')
+                self.resultTextBrowser.append(self.WRITE_FAIL+'Err: Test Fw not set\n')
                 ret = ret & False
 
         elif choose == self.CUST_FLASH:
             try:
-                assert(self.custFwEdit.text() != '')
+                assert(yamlConfig["mainForm"]["custFwEdit"] != '')
             except:
-                self.resultTextBrowser.append(self.WRITE_FAIL+'E: Customer Fw not set\n')
+                self.resultTextBrowser.append(self.WRITE_FAIL+'Err: Customer Fw not set\n')
                 ret = ret & False
 
         isContent = False
@@ -206,7 +208,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         try:
             assert(os.path.exists(binFilePath) == True)
         except:
-            self.resultTextBrowser.append('E: '+binFilePath+' is error')
+            self.resultTextBrowser.append('Err: Flash bin path is error')
             return False
         command = ['--chip', 'esp32', '--port', str(self.port), '--baud', str(self.BAUD),\
             '--before', 'default_reset', '--after', 'hard_reset', 'write_flash', '0x0000', binFilePath]
@@ -227,7 +229,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
             try:
                 assert(os.path.exists(yamlConfig['childrenForm'][binDir])==True)
             except:
-                self.resultTextBrowser.append('E: '+ yamlConfig['childrenForm'][binDir]+ ' is error')
+                self.resultTextBrowser.append('E: '+ str(binDir) + ' is error')
                 return False
             cmd.append(yamlConfig['childrenForm'][offset])
             cmd.append(yamlConfig['childrenForm'][binDir])
@@ -304,7 +306,6 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
                     self.configFile.close()
 
     def childShow(self):
-        
         self.child.show()
         self._disableBtn()
         self.child.run()
@@ -329,7 +330,7 @@ class flashWorkerThread(QThread):
         try:
             esptool.main(self.command)
         except Exception as e:
-            print("E:", e)
+            print(str(self.state.name)," Error:", e)
             self.finish.emit(self.state, "FAIL")
             return
     
