@@ -2,7 +2,7 @@
 @Author: Yixu Wang
 @Date: 2019-08-06 14:12:40
 @LastEditors: Yixu Wang
-@LastEditTime: 2019-08-23 10:26:17
+@LastEditTime: 2019-08-23 15:14:30
 @Description: 调用ui函数
 '''
 import os
@@ -367,7 +367,7 @@ class ChildrenForm(QWidget, Ui_Form):
             self.pieBinOffset_4: "pieBinOffset_4",
         }
 
-        self.loadYaml()
+        # self.loadYaml()
 
         self.setWindowFlags(Qt.WindowMinimizeButtonHint)
         self.setFixedSize(self.width(),self.height())
@@ -448,6 +448,7 @@ class ChildrenForm(QWidget, Ui_Form):
         self.configFile.close()
 
     def run(self):
+        self.loadYaml()
         self.setWin()
 
 class EmittingStream(QObject):
@@ -475,7 +476,7 @@ class FwSetForm(QWidget, Ui_flashSetForm):
             self.pieFwEdit: 'pieFwEdit',
         }
 
-        self.loadYaml()
+        # self.loadYaml()
 
         self.pieFwEdit.setReadOnly(True)
         self.custFwEdit.setReadOnly(True)
@@ -532,6 +533,7 @@ class FwSetForm(QWidget, Ui_flashSetForm):
         self.configFile.close()
     
     def run(self):
+        self.loadYaml()
         self._setWin()
 
 def main():
