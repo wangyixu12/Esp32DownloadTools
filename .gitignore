@@ -1,8 +1,11 @@
 *.bin
 *.yml
 /pyinstrument
-/__pycache__
+__pycache__/*
 configUser.yml
 requirements.txt
-/.vscode
-.vscode/settings.json
+build/*
+dist/*
+.vscode/*
+CallMainWin
+CallMainWin.spec
