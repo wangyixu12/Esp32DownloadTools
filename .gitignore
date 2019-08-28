@@ -5,3 +5,4 @@
 configUser.yml
 requirements.txt
 /.vscode
+.vscode/settings.json
