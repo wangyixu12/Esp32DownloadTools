@@ -9,3 +9,5 @@ dist/*
 .vscode/*
 main.spec
 espressif_icon.ico
+doc/*
+main

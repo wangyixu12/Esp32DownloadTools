@@ -2,7 +2,7 @@
 @Author: Yixu Wang
 @Date: 2019-08-06 14:12:40
 @LastEditors: Yixu Wang
-@LastEditTime: 2019-08-23 10:26:17
+@LastEditTime: 2019-08-29 15:33:02
 @Description: The ESP32 Download tool GUI
 '''
 import os
@@ -340,7 +340,7 @@ class FlashWorkerThread(QThread):
         try:
             esptool.main(self.command)
         except Exception as e:
-            print(str(self.state.name)+" Error:"+e)
+            print(str(self.state.name)+" Error:"+str(e))
             self.finish.emit(self.state, "FAIL")
             return
 
