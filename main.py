@@ -7,11 +7,10 @@
 '''
 import os
 import sys
-import yaml
 import codecs
 import shutil
-
 from enum import Enum
+import yaml
 
 from PyQt5.QtCore import pyqtSlot
 from PyQt5.QtCore import QThread
@@ -24,10 +23,6 @@ from PyQt5.QtWidgets import QWidget
 from PyQt5.QtWidgets import QApplication
 from PyQt5.QtWidgets import QFileDialog
 from PyQt5.QtGui import QTextCursor
-
-# from PyQt5.QtCore import *
-# from PyQt5.QtGui import *
-# from PyQt5.QtWidgets import *
 
 import esptool
 
@@ -65,6 +60,10 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.setupUi(self)
         self._default_yaml_name = './config/configDefault.yml'
         self._user_yaml_name = './config/configUser.yml'
+        self.opt_choose = None
+        self.opt_bin_dir = None
+        self.cur_port_location = None
+        self.config = None
 
         self.ver_bin_dict = {
             self.TEST_FLASH : {
@@ -82,27 +81,27 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         }
 
         self._transitions = {
-            States.CHECK.value : self.checkConf,
-            States.ERASE.value : self.eraseFlash,
-            States.WRITE.value : self.writeFlash,
-            States.VERIFY.value : self.verifyFlash,
-            States.RESULT.value : self._dispResult
+            States.CHECK.value : self.check_conf,
+            States.ERASE.value : self.erase_flash,
+            States.WRITE.value : self.write_flash,
+            States.VERIFY.value : self.verify_flash,
+            States.RESULT.value : self._disp_result
         }
         self.port = ''
-        sys.stdout = EmittingStream(textWritten = self.outputWritten)
+        sys.stdout = EmittingStream(textWritten=self.output_written)
 
         self.child = ChildrenForm()
-        self.child.CloseSignal.connect(self._enableBtn)
+        self.child.CloseSignal.connect(self._enable_btn)
 
-        self.flashSet = FwSetForm()
-        self.flashSet.CloseSignal.connect(self._enableBtn)
-        
-        self.thread = flashWorkerThread()
+        self.flash_set = FwSetForm()
+        self.flash_set.CloseSignal.connect(self._enable_btn)
+
+        self.thread = FlashWorkerThread()
         self.thread.finish.connect(self.flash_thread)
 
         self.resultTextBrowser.setReadOnly(True)
         self.resultBrowser.setReadOnly(True)
-        
+
         self.actVeriFw.triggered.connect(self.childShow)
         self.actFlashFw.triggered.connect(self.flashSetShow)
         self.searchPortBtn.clicked.connect(self.searchVarPort)
@@ -110,166 +109,142 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
 
     def __del__(self):
         sys.stdout = sys.__stdout__
-    
-    def _enableBtn(self):
+
+    def _enable_btn(self):
         self.pieFlashBtn.setEnabled(True)
         self.custFlashBtn.setEnabled(True)
         self.searchPortBtn.setEnabled(True)
         self.actVeriFw.setEnabled(True)
         self.actFlashFw.setEnabled(True)
 
-    def _disableBtn(self):
+    def _disable_btn(self):
         self.pieFlashBtn.setEnabled(False)
         self.custFlashBtn.setEnabled(False)
         self.searchPortBtn.setEnabled(False)
         self.actVeriFw.setEnabled(False)
         self.actFlashFw.setEnabled(False)
 
-    def outputWritten(self, text):
+    def output_written(self, text):
         cursor = self.resultTextBrowser.textCursor()
         cursor.movePosition(QTextCursor.End)
         cursor.insertText(text)
         self.resultTextBrowser.setTextCursor(cursor)
         self.resultTextBrowser.ensureCursorVisible()
-        
 
-    def _dispResult(self, result):
+    def _disp_result(self, result):
         # if result == 'FAIL':
-        self._enableBtn()
+        self._enable_btn()
         self.resultBrowser.setHtml("<img src='./"+result+".png'>")
 
-    def flash_thread(self, opt, data = None):
+    def flash_thread(self, opt, data=None):
         # print(opt, data)
         if data == 'FAIL':
-            # 显示fail
             self.resultTextBrowser.append(opt.name + ' --> FAIL')
             self._transitions[States.RESULT.value]("FAIL")
             return
         elif data == 'PASS':
-            # 显示PASS
             self.resultTextBrowser.append(opt.name + ' --> PASS')
         if opt == States.VERIFY:
             self._transitions[opt.value + 1](data)
         elif opt == States.CHECK:
             self._transitions[opt.value]()
-        else: 
+        else:
             self._transitions[opt.value + 1]()
 
-    def checkConf(self):
-        choose = self.optChoose
-        assert((choose == self.CUST_FLASH) | (choose == self.TEST_FLASH))
+    def check_conf(self):
+        choose = self.opt_choose
+        assert(choose == self.CUST_FLASH) | (choose == self.TEST_FLASH)
         ret = True
         config_file = codecs.open(self._user_yaml_name, 'r', encoding='utf-8')
         yaml_config = yaml.load(config_file, yaml.Loader)
         config_file.close()
 
-        if (self.port == ''):
+        if self.port == '':
             self.resultTextBrowser.setPlainText(self.ERASE_FAIL+"Err: Serial port isn't set\n")
             ret = False
-        # try:
-        #     assert(self.port != '')
-        # except:
-        #     self.resultTextBrowser.setPlainText(self.ERASE_FAIL+"Err: Port not set\n")
-        #     ret = False
 
         if choose == self.TEST_FLASH:
-            if (yaml_config["mainForm"]["pieFwEdit"] == ''):
+            if yaml_config["mainForm"]["pieFwEdit"] == '':
                 self.resultTextBrowser.append(self.WRITE_FAIL+"Err: Tester firmware isn't set\n")
                 ret = ret & False
-            # try:
-            #     assert(yaml_config["mainForm"]["pieFwEdit"] != '')
-            # except:
-            #     self.resultTextBrowser.append(self.WRITE_FAIL+'Err: Test Fw not set\n')
-            #     ret = ret & False
 
         elif choose == self.CUST_FLASH:
-            if (yaml_config["mainForm"]["custFwEdit"] == ''):
+            if yaml_config["mainForm"]["custFwEdit"] == '':
                 self.resultTextBrowser.append(self.WRITE_FAIL+"Err: Customer firmware isn't set\n")
                 ret = ret & False
-            # try:
-            #     assert(yaml_config["mainForm"]["custFwEdit"] != '')
-            # except:
-            #     self.resultTextBrowser.append(self.WRITE_FAIL+'Err: Customer Fw not set\n')
-            #     ret = ret & False
 
-        isContent = False
-        for binDir, offset in self.ver_bin_dict[choose].items():
-            isContent = isContent | bool(yaml_config[self.child.winName][binDir])
-            if (bool(yaml_config[self.child.winName][binDir]) != bool(yaml_config[self.child.winName][offset])):
+        is_content = False
+        for bin_dir, offset in self.ver_bin_dict[choose].items():
+            is_content = is_content | bool(yaml_config[self.child.winName][bin_dir])
+            if (
+                    bool(yaml_config[self.child.winName][bin_dir]) !=
+                    bool(yaml_config[self.child.winName][offset])
+            ):
                 self.resultTextBrowser.append(self.VARI_FAIL + 'Err: Verify bin file setting error')
                 ret = ret & False
                 break
-            # try:
-            #     assert(bool(yaml_config[self.child.winName][binDir])==bool(yaml_config[self.child.winName][offset]))
-            # except:
-            #     self.resultTextBrowser.append(self.VARI_FAIL+
-            #     'E: Origin bin file setting is error:\nPlease check '+ binDir)
-            #     ret = ret & False
-            #     break
         else:
-            if (isContent != True):
+            if not is_content:
                 self.resultTextBrowser.append(self.VARI_FAIL+'Err: Verify bin file setting error\n')
                 ret = ret & False
-            # try:
-            #     assert(isContent)
-            # except:
-            #     self.resultTextBrowser.append(self.VARI_FAIL+'E: Origin bin file setting is error\n')
-            #     ret = ret & False
 
-        if ret == False:
+        if not ret:
             self.flash_thread(States.RESULT, 'FAIL')
         else:
             self.flash_thread(States.ERASE)
-        
-    def eraseFlash(self):
+
+    def erase_flash(self):
         command = ['--port', str(self.port), 'erase_flash']
         self.thread.state = States.ERASE
         self.thread.command = command
         self.thread.start()
 
-    def writeFlash(self):
+    def write_flash(self):
         bin_file_path = self.opt_bin_dir
-        # if (os.path.exists(bin_file_path) != True):
-        #     self.resultTextBrowser.append('Err: Flash bin path is error')
-        #     return False
         try:
-            assert(os.path.exists(bin_file_path) == True)
-        except:
-            self.resultTextBrowser.append('Err: Flash bin path is error.'+bin_file_path+' is error')
+            assert os.path.exists(bin_file_path)
+        except OSError:
+            self.resultTextBrowser.append('Err: Flash bin path is error.')
+            self.flash_thread(States.WRITE, "FAIL")
+            return False
+        except Exception as e:
+            self.resultTextBrowser.append('Err: Flash bin path is error.\n'+"Err: "+str(e))
             self.flash_thread(States.WRITE, "FAIL")
             return False
         command = ['--chip', 'esp32', '--port', str(self.port), '--baud', str(self.BAUD),\
-            '--before', 'default_reset', '--after', 'hard_reset', 'write_flash', '0x0000', bin_file_path]
+                    '--before', 'default_reset', '--after', 'hard_reset', 'write_flash',\
+                    '0x0000', bin_file_path]
         self.thread.state = States.WRITE
         self.thread.command = command
         self.thread.start()
 
-    def verifyFlash(self):
-        choose = self.optChoose
+    def verify_flash(self):
+        choose = self.opt_choose
         cmd = ['--chip', 'esp32', '--port', str(self.port), '--baud', str(self.BAUD), \
             'verify_flash']
         config_file = codecs.open(self._user_yaml_name, 'r', encoding='utf-8')
         yaml_config = yaml.load(config_file, yaml.Loader)
         config_file.close()
-        for binDir, offset in self.ver_bin_dict[choose].items():
-            if yaml_config['childrenForm'][binDir] == '':
+        for bin_dir, offset in self.ver_bin_dict[choose].items():
+            if yaml_config['childrenForm'][bin_dir] == '':
                 continue
-            # if (os.path.exists(yaml_config['childrenForm'][binDir])!=True):
-            #     self.resultTextBrowser.append('E: '+ str(binDir) + ' is error')
-            #     return False
             try:
-                assert(os.path.exists(yaml_config['childrenForm'][binDir])==True)
-            except:
-                self.resultTextBrowser.append('E: '+ str(binDir) + ' is error')
+                assert os.path.exists(yaml_config['childrenForm'][bin_dir])
+            except OSError:
+                self.resultTextBrowser.append('Err: Verify bin file is error')
+                self.flash_thread(States.VERIFY, "FAIL")
+                return False
+            except Exception as e:
+                self.resultTextBrowser.append('Err: '+str(e))
                 self.flash_thread(States.VERIFY, "FAIL")
                 return False
             cmd.append(yaml_config['childrenForm'][offset])
-            cmd.append(yaml_config['childrenForm'][binDir])
+            cmd.append(yaml_config['childrenForm'][bin_dir])
         self.thread.state = States.VERIFY
         self.thread.command = cmd
         self.thread.start()
 
-    def flashProcess(self):
+    def flash_process(self):
         self.resultTextBrowser.clear()
         self.resultBrowser.clear()
         self.resultBrowser.setHtml("<img src='./LOADING.png'>")
@@ -278,8 +253,8 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
 
     @pyqtSlot()
     def on_custFlashBtn_clicked(self):
-        self._disableBtn()
-        self.optChoose = self.CUST_FLASH
+        self._disable_btn()
+        self.opt_choose = self.CUST_FLASH
 
         config_file = codecs.open(self._user_yaml_name, 'r', encoding='utf-8')
         yaml_config = yaml.load(config_file, yaml.Loader)
@@ -287,21 +262,21 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         config_file.close()
 
         # self.opt_bin_dir = self.custFwEdit.text()
-        self.opt_bin_dir = yaml_config[self.flashSet.winName]["custFwEdit"]
-        self.flashProcess()
+        self.opt_bin_dir = yaml_config[self.flash_set.winName]["custFwEdit"]
+        self.flash_process()
 
     @pyqtSlot()
     def on_pieFlashBtn_clicked(self):
-        self._disableBtn()
-        self.optChoose = self.TEST_FLASH
+        self._disable_btn()
+        self.opt_choose = self.TEST_FLASH
 
         config_file = codecs.open(self._user_yaml_name, 'r', encoding='utf-8')
         yaml_config = yaml.load(config_file, yaml.Loader)
         config_file.close()
         
         # self.opt_bin_dir = self.pieFwEdit.text()
-        self.opt_bin_dir = yaml_config[self.flashSet.winName]["pieFwEdit"]
-        self.flashProcess()
+        self.opt_bin_dir = yaml_config[self.flash_set.winName]["pieFwEdit"]
+        self.flash_process()
 
     def searchVarPort(self):
         varifyPort = QSerialPortInfo.availablePorts()
@@ -315,16 +290,16 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
             self.portComBox.addItem(serPortInfo.portName())
 
     def selectComPort(self):
-        curPort = QSerialPortInfo(self.portComBox.currentText())
-        self.curPortLocation = curPort.systemLocation()
-        self.port = self.curPortLocation
+        cur_port = QSerialPortInfo(self.portComBox.currentText())
+        self.cur_port_location = cur_port.systemLocation()
+        self.port = self.cur_port_location
 
     def loadYaml(self):
         if os.path.exists(self._user_yaml_name) == False:
             shutil.copyfile(self._default_yaml_name, self._user_yaml_name)
-        self.config_file = codecs.open(self._user_yaml_name, 'r', encoding='utf-8')
-        self.config = yaml.load(self.config_file, yaml.Loader)
-        self.config_file.close()
+        config_file = codecs.open(self._user_yaml_name, 'r', encoding='utf-8')
+        self.config = yaml.load(config_file, yaml.Loader)
+        config_file.close()
 
         defConfig_file = codecs.open(self._default_yaml_name, 'r', encoding='utf-8')           
         defConfig = yaml.load(defConfig_file, yaml.Loader)
@@ -334,30 +309,32 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
             for editLine in secondDict.keys():
                 if editLine not in self.config[winName].keys():
                     shutil.copyfile(self._default_yaml_name, self._user_yaml_name)
-                    self.config_file = codecs.open(self._user_yaml_name, 'r', encoding='utf-8')
-                    self.config = yaml.load(self.config_file, yaml.Loader)
-                    self.config_file.close()
+                    config_file = codecs.open(self._user_yaml_name, 'r', encoding='utf-8')
+                    self.config = yaml.load(config_file, yaml.Loader)
+                    config_file.close()
 
     def childShow(self):
         self.child.show()
-        self._disableBtn()
+        self._disable_btn()
         self.child.run()
 
     def flashSetShow(self):
-        self.flashSet.show()
-        self._disableBtn()
-        self.flashSet.run()
+        self.flash_set.show()
+        self._disable_btn()
+        self.flash_set.run()
 
     def run(self):
         self.loadYaml()
 
-class flashWorkerThread(QThread):
+class FlashWorkerThread(QThread):
+    ''' The thread for GUI
+    '''
     finish = pyqtSignal(Enum, str)
     state = States.CHECK
     command = None
 
-    def __init__(self):
-        return super().__init__()
+    # def __init__(self):
+    #     super(FlashWorkerThread, self).__init__()
 
     def run(self):
         try:
@@ -371,7 +348,7 @@ class flashWorkerThread(QThread):
 
 class ChildrenForm(QWidget, Ui_Form):
     CloseSignal = pyqtSignal()
-    def __init__(self, *args, **kwargs):
+    def __init__(self):
         super(ChildrenForm, self).__init__()
         self.setupUi(self)
         self._default_yaml_name = 'config/configDefault.yml'
@@ -494,7 +471,7 @@ class EmittingStream(QObject):
 
 class FwSetForm(QWidget, Ui_flashSetForm):
     CloseSignal = pyqtSignal()
-    def __init__(self, *args, **kwargs):
+    def __init__(self):
         super(FwSetForm, self).__init__()
         self.setupUi(self)
         self.setWindowFlags(Qt.WindowMinimizeButtonHint)
