@@ -3,24 +3,31 @@
 @Date: 2019-08-06 14:12:40
 @LastEditors: Yixu Wang
 @LastEditTime: 2019-08-23 10:26:17
-@Description: 调用ui函数
+@Description: The ESP32 Download tool GUI
 '''
 import os
 import sys
 import yaml
 import codecs
 import shutil
-import time
-import threading
 
 from enum import Enum
 
 from PyQt5.QtCore import pyqtSlot
+from PyQt5.QtCore import QThread
+from PyQt5.QtCore import pyqtSignal
+from PyQt5.QtCore import QObject
+from PyQt5.QtCore import Qt
 from PyQt5.QtSerialPort import QSerialPortInfo
-from PyQt5.QtCore import *
-from PyQt5.QtGui import *
-from PyQt5.QtWidgets import *
+from PyQt5.QtWidgets import QMainWindow
+from PyQt5.QtWidgets import QWidget
+from PyQt5.QtWidgets import QApplication
+from PyQt5.QtWidgets import QFileDialog
+from PyQt5.QtGui import QTextCursor
 
+# from PyQt5.QtCore import *
+# from PyQt5.QtGui import *
+# from PyQt5.QtWidgets import *
 
 import esptool
 
@@ -28,7 +35,9 @@ from Ui_mainForm import Ui_MainWindow
 from Ui_childrenForm import Ui_Form
 from Ui_flashSetForm import Ui_flashSetForm
 
-class states(Enum):
+class States(Enum):
+    ''' State machine's states enumeration.
+    '''
     CHECK = 0
     ERASE = 1
     WRITE = 2
@@ -36,14 +45,16 @@ class states(Enum):
     RESULT = 4
 
 class MyMainWindow(QMainWindow, Ui_MainWindow):
-    
+    ''' Main window's class
+    '''
+
     ERASE_PASS = "Erase flash ------> PASS\n"
     ERASE_FAIL = "Erase flash ------> FAIL\n"
     WRITE_PASS = "Write flash ------> PASS\n"
     WRITE_FAIL = "Write flash ------> FAIL\n"
     VARI_PASS = "Verify flash ------> PASS\n"
     VARI_FAIL = "Verify flash ------> FAIL\n"
-        
+
     BAUD = 1152000
 
     TEST_FLASH = 'test'
@@ -52,10 +63,10 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None):
         super(MyMainWindow, self).__init__(parent)
         self.setupUi(self)
-        self._defaultYamlName = 'configDefault.yml'
-        self._userYamlName = 'configUser.yml'
+        self._default_yaml_name = './config/configDefault.yml'
+        self._user_yaml_name = './config/configUser.yml'
 
-        self.OriBinDict = {
+        self.ver_bin_dict = {
             self.TEST_FLASH : {
                 'pieBinDir_1': 'pieBinOffset_1',
                 'pieBinDir_2': 'pieBinOffset_2',
@@ -71,15 +82,13 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         }
 
         self._transitions = {
-            states.CHECK.value : self.checkConf,
-            states.ERASE.value : self.eraseFlash,
-            states.WRITE.value : self.writeFlash,
-            states.VERIFY.value : self.verifyFlash,
-            states.RESULT.value : self._dispResult
+            States.CHECK.value : self.checkConf,
+            States.ERASE.value : self.eraseFlash,
+            States.WRITE.value : self.writeFlash,
+            States.VERIFY.value : self.verifyFlash,
+            States.RESULT.value : self._dispResult
         }
-        
-        self.port=''
-        self.processTimes = 0
+        self.port = ''
         sys.stdout = EmittingStream(textWritten = self.outputWritten)
 
         self.child = ChildrenForm()
@@ -134,14 +143,14 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         if data == 'FAIL':
             # 显示fail
             self.resultTextBrowser.append(opt.name + ' --> FAIL')
-            self._transitions[states.RESULT.value]("FAIL")
+            self._transitions[States.RESULT.value]("FAIL")
             return
         elif data == 'PASS':
             # 显示PASS
             self.resultTextBrowser.append(opt.name + ' --> PASS')
-        if opt == states.VERIFY:
+        if opt == States.VERIFY:
             self._transitions[opt.value + 1](data)
-        elif opt == states.CHECK:
+        elif opt == States.CHECK:
             self._transitions[opt.value]()
         else: 
             self._transitions[opt.value + 1]()
@@ -150,69 +159,88 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         choose = self.optChoose
         assert((choose == self.CUST_FLASH) | (choose == self.TEST_FLASH))
         ret = True
-        child = self.child
-        configFile = codecs.open(self._userYamlName, 'r', encoding='utf-8')
-        yamlConfig = yaml.load(configFile, yaml.Loader)
-        configFile.close()
+        config_file = codecs.open(self._user_yaml_name, 'r', encoding='utf-8')
+        yaml_config = yaml.load(config_file, yaml.Loader)
+        config_file.close()
 
-        try:
-            assert(self.port != '')
-        except:
-            self.resultTextBrowser.setPlainText(self.ERASE_FAIL+"Err: Port not set\n")
+        if (self.port == ''):
+            self.resultTextBrowser.setPlainText(self.ERASE_FAIL+"Err: Serial port isn't set\n")
             ret = False
+        # try:
+        #     assert(self.port != '')
+        # except:
+        #     self.resultTextBrowser.setPlainText(self.ERASE_FAIL+"Err: Port not set\n")
+        #     ret = False
 
         if choose == self.TEST_FLASH:
-            try:
-                assert(yamlConfig["mainForm"]["pieFwEdit"] != '')
-            except:
-                self.resultTextBrowser.append(self.WRITE_FAIL+'Err: Test Fw not set\n')
+            if (yaml_config["mainForm"]["pieFwEdit"] == ''):
+                self.resultTextBrowser.append(self.WRITE_FAIL+"Err: Tester firmware isn't set\n")
                 ret = ret & False
+            # try:
+            #     assert(yaml_config["mainForm"]["pieFwEdit"] != '')
+            # except:
+            #     self.resultTextBrowser.append(self.WRITE_FAIL+'Err: Test Fw not set\n')
+            #     ret = ret & False
 
         elif choose == self.CUST_FLASH:
-            try:
-                assert(yamlConfig["mainForm"]["custFwEdit"] != '')
-            except:
-                self.resultTextBrowser.append(self.WRITE_FAIL+'Err: Customer Fw not set\n')
+            if (yaml_config["mainForm"]["custFwEdit"] == ''):
+                self.resultTextBrowser.append(self.WRITE_FAIL+"Err: Customer firmware isn't set\n")
                 ret = ret & False
+            # try:
+            #     assert(yaml_config["mainForm"]["custFwEdit"] != '')
+            # except:
+            #     self.resultTextBrowser.append(self.WRITE_FAIL+'Err: Customer Fw not set\n')
+            #     ret = ret & False
 
         isContent = False
-        for binDir, offset in self.OriBinDict[choose].items():
-            isContent = isContent | bool(yamlConfig[self.child._winName][binDir])
-            try:
-                assert(bool(yamlConfig[self.child._winName][binDir])==bool(yamlConfig[self.child._winName][offset]))
-            except:
-                self.resultTextBrowser.append(self.VARI_FAIL+
-                'E: Origin bin file setting is error:\nPlease check '+ binDir)
+        for binDir, offset in self.ver_bin_dict[choose].items():
+            isContent = isContent | bool(yaml_config[self.child.winName][binDir])
+            if (bool(yaml_config[self.child.winName][binDir]) != bool(yaml_config[self.child.winName][offset])):
+                self.resultTextBrowser.append(self.VARI_FAIL + 'Err: Verify bin file setting error')
                 ret = ret & False
                 break
+            # try:
+            #     assert(bool(yaml_config[self.child.winName][binDir])==bool(yaml_config[self.child.winName][offset]))
+            # except:
+            #     self.resultTextBrowser.append(self.VARI_FAIL+
+            #     'E: Origin bin file setting is error:\nPlease check '+ binDir)
+            #     ret = ret & False
+            #     break
         else:
-            try:
-                assert(isContent)
-            except:
-                self.resultTextBrowser.append(self.VARI_FAIL+'E: Origin bin file setting is error\n')
+            if (isContent != True):
+                self.resultTextBrowser.append(self.VARI_FAIL+'Err: Verify bin file setting error\n')
                 ret = ret & False
+            # try:
+            #     assert(isContent)
+            # except:
+            #     self.resultTextBrowser.append(self.VARI_FAIL+'E: Origin bin file setting is error\n')
+            #     ret = ret & False
 
         if ret == False:
-            self.flash_thread(states.RESULT, 'FAIL')
+            self.flash_thread(States.RESULT, 'FAIL')
         else:
-            self.flash_thread(states.ERASE)
+            self.flash_thread(States.ERASE)
         
     def eraseFlash(self):
         command = ['--port', str(self.port), 'erase_flash']
-        self.thread.state = states.ERASE
+        self.thread.state = States.ERASE
         self.thread.command = command
         self.thread.start()
 
     def writeFlash(self):
-        binFilePath = self.optBinDir
+        bin_file_path = self.opt_bin_dir
+        # if (os.path.exists(bin_file_path) != True):
+        #     self.resultTextBrowser.append('Err: Flash bin path is error')
+        #     return False
         try:
-            assert(os.path.exists(binFilePath) == True)
+            assert(os.path.exists(bin_file_path) == True)
         except:
-            self.resultTextBrowser.append('Err: Flash bin path is error')
+            self.resultTextBrowser.append('Err: Flash bin path is error.'+bin_file_path+' is error')
+            self.flash_thread(States.WRITE, "FAIL")
             return False
         command = ['--chip', 'esp32', '--port', str(self.port), '--baud', str(self.BAUD),\
-            '--before', 'default_reset', '--after', 'hard_reset', 'write_flash', '0x0000', binFilePath]
-        self.thread.state = states.WRITE
+            '--before', 'default_reset', '--after', 'hard_reset', 'write_flash', '0x0000', bin_file_path]
+        self.thread.state = States.WRITE
         self.thread.command = command
         self.thread.start()
 
@@ -220,20 +248,24 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         choose = self.optChoose
         cmd = ['--chip', 'esp32', '--port', str(self.port), '--baud', str(self.BAUD), \
             'verify_flash']
-        configFile = codecs.open(self._userYamlName, 'r', encoding='utf-8')
-        yamlConfig = yaml.load(configFile, yaml.Loader)
-        configFile.close()
-        for binDir, offset in self.OriBinDict[choose].items():
-            if yamlConfig['childrenForm'][binDir] == '':
+        config_file = codecs.open(self._user_yaml_name, 'r', encoding='utf-8')
+        yaml_config = yaml.load(config_file, yaml.Loader)
+        config_file.close()
+        for binDir, offset in self.ver_bin_dict[choose].items():
+            if yaml_config['childrenForm'][binDir] == '':
                 continue
+            # if (os.path.exists(yaml_config['childrenForm'][binDir])!=True):
+            #     self.resultTextBrowser.append('E: '+ str(binDir) + ' is error')
+            #     return False
             try:
-                assert(os.path.exists(yamlConfig['childrenForm'][binDir])==True)
+                assert(os.path.exists(yaml_config['childrenForm'][binDir])==True)
             except:
                 self.resultTextBrowser.append('E: '+ str(binDir) + ' is error')
+                self.flash_thread(States.VERIFY, "FAIL")
                 return False
-            cmd.append(yamlConfig['childrenForm'][offset])
-            cmd.append(yamlConfig['childrenForm'][binDir])
-        self.thread.state = states.VERIFY
+            cmd.append(yaml_config['childrenForm'][offset])
+            cmd.append(yaml_config['childrenForm'][binDir])
+        self.thread.state = States.VERIFY
         self.thread.command = cmd
         self.thread.start()
 
@@ -241,7 +273,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.resultTextBrowser.clear()
         self.resultBrowser.clear()
         self.resultBrowser.setHtml("<img src='./LOADING.png'>")
-        self.flash_thread(states.CHECK)
+        self.flash_thread(States.CHECK)
         return False
 
     @pyqtSlot()
@@ -249,12 +281,13 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self._disableBtn()
         self.optChoose = self.CUST_FLASH
 
-        configFile = codecs.open(self._userYamlName, 'r', encoding='utf-8')
-        yamlConfig = yaml.load(configFile, yaml.Loader)
-        configFile.close()
+        config_file = codecs.open(self._user_yaml_name, 'r', encoding='utf-8')
+        yaml_config = yaml.load(config_file, yaml.Loader)
+        print(yaml_config)
+        config_file.close()
 
-        # self.optBinDir = self.custFwEdit.text()
-        self.optBinDir = yamlConfig[self.flashSet._winName]["custFwEdit"]
+        # self.opt_bin_dir = self.custFwEdit.text()
+        self.opt_bin_dir = yaml_config[self.flashSet.winName]["custFwEdit"]
         self.flashProcess()
 
     @pyqtSlot()
@@ -262,12 +295,12 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self._disableBtn()
         self.optChoose = self.TEST_FLASH
 
-        configFile = codecs.open(self._userYamlName, 'r', encoding='utf-8')
-        yamlConfig = yaml.load(configFile, yaml.Loader)
-        configFile.close()
+        config_file = codecs.open(self._user_yaml_name, 'r', encoding='utf-8')
+        yaml_config = yaml.load(config_file, yaml.Loader)
+        config_file.close()
         
-        # self.optBinDir = self.pieFwEdit.text()
-        self.optBinDir = yamlConfig[self.flashSet._winName]["pieFwEdit"]
+        # self.opt_bin_dir = self.pieFwEdit.text()
+        self.opt_bin_dir = yaml_config[self.flashSet.winName]["pieFwEdit"]
         self.flashProcess()
 
     def searchVarPort(self):
@@ -287,23 +320,23 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.port = self.curPortLocation
 
     def loadYaml(self):
-        if os.path.exists(self._userYamlName) == False:
-            shutil.copyfile(self._defaultYamlName, self._userYamlName)
-        self.configFile = codecs.open(self._userYamlName, 'r', encoding='utf-8')
-        self.config = yaml.load(self.configFile, yaml.Loader)
-        self.configFile.close()
+        if os.path.exists(self._user_yaml_name) == False:
+            shutil.copyfile(self._default_yaml_name, self._user_yaml_name)
+        self.config_file = codecs.open(self._user_yaml_name, 'r', encoding='utf-8')
+        self.config = yaml.load(self.config_file, yaml.Loader)
+        self.config_file.close()
 
-        defConfigFile = codecs.open(self._defaultYamlName, 'r', encoding='utf-8')           
-        defConfig = yaml.load(defConfigFile, yaml.Loader)
-        defConfigFile.close()
+        defConfig_file = codecs.open(self._default_yaml_name, 'r', encoding='utf-8')           
+        defConfig = yaml.load(defConfig_file, yaml.Loader)
+        defConfig_file.close()
 
         for winName, secondDict in defConfig.items():
             for editLine in secondDict.keys():
                 if editLine not in self.config[winName].keys():
-                    shutil.copyfile(self._defaultYamlName, self._userYamlName)
-                    self.configFile = codecs.open(self._userYamlName, 'r', encoding='utf-8')
-                    self.config = yaml.load(self.configFile, yaml.Loader)
-                    self.configFile.close()
+                    shutil.copyfile(self._default_yaml_name, self._user_yaml_name)
+                    self.config_file = codecs.open(self._user_yaml_name, 'r', encoding='utf-8')
+                    self.config = yaml.load(self.config_file, yaml.Loader)
+                    self.config_file.close()
 
     def childShow(self):
         self.child.show()
@@ -320,7 +353,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
 
 class flashWorkerThread(QThread):
     finish = pyqtSignal(Enum, str)
-    state = states.CHECK
+    state = States.CHECK
     command = None
 
     def __init__(self):
@@ -341,10 +374,10 @@ class ChildrenForm(QWidget, Ui_Form):
     def __init__(self, *args, **kwargs):
         super(ChildrenForm, self).__init__()
         self.setupUi(self)
-        self._defaultYamlName = 'configDefault.yml'
-        self._userYamlName = 'configUser.yml'
+        self._default_yaml_name = 'config/configDefault.yml'
+        self._user_yaml_name = 'config/configUser.yml'
 
-        self._winName = 'childrenForm'
+        self.winName = 'childrenForm'
         self._winEditDict = {
             self.custBinDir_1: "custBinDir_1",
             self.custBinDir_2: "custBinDir_2",
@@ -367,7 +400,6 @@ class ChildrenForm(QWidget, Ui_Form):
             self.pieBinOffset_4: "pieBinOffset_4",
         }
 
-        self.loadYaml()
 
         self.setWindowFlags(Qt.WindowMinimizeButtonHint)
         self.setFixedSize(self.width(),self.height())
@@ -398,7 +430,7 @@ class ChildrenForm(QWidget, Ui_Form):
     def _save(self):
         for editKey in self._winEditDict.keys():
             text = editKey.text()
-            self.editYaml(self._winName, self._winEditDict[editKey], text)
+            self.editYaml(self.winName, self._winEditDict[editKey], text)
         # self.close()
         self._closeWin()
 
@@ -411,13 +443,13 @@ class ChildrenForm(QWidget, Ui_Form):
         self.CloseSignal.emit()
 
     def editYaml(self, winName, key, value):
-        # self.config = yaml.load(self.configFile, yaml.Loader)
-        configFileEdit = codecs.open(self._userYamlName, 'w', encoding='utf-8')
+        # self.config = yaml.load(self.config_file, yaml.Loader)
+        config_fileEdit = codecs.open(self._user_yaml_name, 'w', encoding='utf-8')
         data = self.config
         data[winName][key] = value
         data.update()
-        yaml.dump(data, configFileEdit, yaml.SafeDumper)
-        configFileEdit.close()
+        yaml.dump(data, config_fileEdit, yaml.SafeDumper)
+        config_fileEdit.close()
 
     def openDir(self):
         btn_dict = {
@@ -434,20 +466,21 @@ class ChildrenForm(QWidget, Ui_Form):
         assert(self.sender() in btn_dict.keys())
         file, ok = QFileDialog.getOpenFileName(self, "Open", './', 'Binary Files(*.bin)')
         btn_dict[self.sender()].setText(file)
-        # self.editYaml(self._winName, self._winEditDict[btn_dict[self.sender()]], file)
+        # self.editYaml(self.winName, self._winEditDict[btn_dict[self.sender()]], file)
         
     def setWin(self):
         for key, file in self._winEditDict.items():
-            key.setText(self.config[self._winName][file])
+            key.setText(self.config[self.winName][file])
 
     def loadYaml(self):
-        if os.path.exists(self._userYamlName) == False:
-            shutil.copyfile(self._defaultYamlName, self._userYamlName)
-        self.configFile = codecs.open(self._userYamlName, 'r', encoding='utf-8')
-        self.config = yaml.load(self.configFile, yaml.Loader)
-        self.configFile.close()
+        if os.path.exists(self._user_yaml_name) == False:
+            shutil.copyfile(self._default_yaml_name, self._user_yaml_name)
+        self.config_file = codecs.open(self._user_yaml_name, 'r', encoding='utf-8')
+        self.config = yaml.load(self.config_file, yaml.Loader)
+        self.config_file.close()
 
     def run(self):
+        self.loadYaml()
         self.setWin()
 
 class EmittingStream(QObject):
@@ -466,16 +499,15 @@ class FwSetForm(QWidget, Ui_flashSetForm):
         self.setupUi(self)
         self.setWindowFlags(Qt.WindowMinimizeButtonHint)
         self.setFixedSize(self.width(),self.height())
-        self._defaultYamlName = 'configDefault.yml'
-        self._userYamlName = 'configUser.yml'
+        self._default_yaml_name = 'config/configDefault.yml'
+        self._user_yaml_name = 'config/configUser.yml'
 
-        self._winName = 'mainForm'
+        self.winName = 'mainForm'
         self._winEditDict = {
             self.custFwEdit: 'custFwEdit',
             self.pieFwEdit: 'pieFwEdit',
         }
 
-        self.loadYaml()
 
         self.pieFwEdit.setReadOnly(True)
         self.custFwEdit.setReadOnly(True)
@@ -493,7 +525,7 @@ class FwSetForm(QWidget, Ui_flashSetForm):
     def _save(self):
         for editKey in self._winEditDict.keys():
             text = editKey.text()
-            self.editYaml(self._winName, self._winEditDict[editKey], text)
+            self.editYaml(self.winName, self._winEditDict[editKey], text)
         # self.close()
         self._closeWin()
 
@@ -506,32 +538,33 @@ class FwSetForm(QWidget, Ui_flashSetForm):
         self.CloseSignal.emit()
     
     def editYaml(self, winName, key, value):
-        configFileEdit = codecs.open(self._userYamlName, 'w', encoding='utf-8')
+        config_fileEdit = codecs.open(self._user_yaml_name, 'w', encoding='utf-8')
         data = self.config
         data[winName][key] = value
         data.update()
-        yaml.dump(data, configFileEdit, yaml.SafeDumper)
-        configFileEdit.close()
+        yaml.dump(data, config_fileEdit, yaml.SafeDumper)
+        config_fileEdit.close()
 
     def _openDir(self):
         btn_dict = {self.custFwOptBtn: self.custFwEdit, self.pieFwOptBtn: self.pieFwEdit}
         assert(self.sender() in btn_dict.keys())
         file, ok= QFileDialog.getOpenFileName(self, "Open", "./", "Binary Files(*.bin)")
         btn_dict[self.sender()].setText(file)
-        # self.editYaml(self._winName, self._winEditDict[btn_dict[self.sender()]], file)
+        # self.editYaml(self.winName, self._winEditDict[btn_dict[self.sender()]], file)
 
     def _setWin(self):
         for key, file in self._winEditDict.items():
-            key.setText(self.config[self._winName][file])
+            key.setText(self.config[self.winName][file])
 
     def loadYaml(self):
-        if os.path.exists(self._userYamlName) == False:
-            shutil.copyfile(self._defaultYamlName, self._userYamlName)
-        self.configFile = codecs.open(self._userYamlName, 'r', encoding='utf-8')
-        self.config = yaml.load(self.configFile, yaml.Loader)
-        self.configFile.close()
+        if os.path.exists(self._user_yaml_name) == False:
+            shutil.copyfile(self._default_yaml_name, self._user_yaml_name)
+        self.config_file = codecs.open(self._user_yaml_name, 'r', encoding='utf-8')
+        self.config = yaml.load(self.config_file, yaml.Loader)
+        self.config_file.close()
     
     def run(self):
+        self.loadYaml()
         self._setWin()
 
 def main():

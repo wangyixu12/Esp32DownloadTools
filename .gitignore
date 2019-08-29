@@ -7,5 +7,5 @@ requirements.txt
 build/*
 dist/*
 .vscode/*
-CallMainWin
-CallMainWin.spec
+main.spec
+espressif_icon.ico
