@@ -2,7 +2,7 @@
 @Author: Yixu Wang
 @Date: 2019-08-06 14:12:40
 @LastEditors: Yixu Wang
-@LastEditTime: 2019-08-29 15:33:02
+@LastEditTime: 2019-08-29 15:51:34
 @Description: The ESP32 Download tool GUI
 '''
 import os
@@ -134,7 +134,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
     def _disp_result(self, result):
         # if result == 'FAIL':
         self._enable_btn()
-        self.resultBrowser.setHtml("<img src='./"+result+".png'>")
+        self.resultBrowser.setHtml("<img src='./img/"+result+".png'>")
 
     def flash_thread(self, opt, data=None):
         # print(opt, data)
@@ -247,7 +247,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
     def flash_process(self):
         self.resultTextBrowser.clear()
         self.resultBrowser.clear()
-        self.resultBrowser.setHtml("<img src='./LOADING.png'>")
+        self.resultBrowser.setHtml("<img src='./img/LOADING.png'>")
         self.flash_thread(States.CHECK)
         return False
 
