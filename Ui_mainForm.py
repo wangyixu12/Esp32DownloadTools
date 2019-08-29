@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '/home/pi/Documents/Espressif/esptool_ui/mainForm.ui'
+# Form implementation generated from reading ui file '/home/wyx/Documents/Esp32DownloadTools/mainForm.ui'
 #
-# Created by: PyQt5 UI code generator 5.9.2
+# Created by: PyQt5 UI code generator 5.13.0
 #
 # WARNING! All changes made in this file will be lost!
 
+
 from PyQt5 import QtCore, QtGui, QtWidgets
+
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -94,7 +96,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_2.addWidget(self.resultBrowser)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 532, 23))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 532, 20))
         self.menubar.setObjectName("menubar")
         self.menuSetting = QtWidgets.QMenu(self.menubar)
         self.menuSetting.setObjectName("menuSetting")
@@ -128,10 +130,9 @@ class Ui_MainWindow(object):
         self.custFlashBtn.setText(_translate("MainWindow", "Flash\n"
 "Customer FW"))
         self.label_5.setText(_translate("MainWindow", "Result"))
-        self.menuSetting.setTitle(_translate("MainWindow", "set"))
+        self.menuSetting.setTitle(_translate("MainWindow", "Configure"))
         self.setPieFwDir.setText(_translate("MainWindow", "Pie"))
         self.setPieFwDir.setShortcut(_translate("MainWindow", "Ctrl+S, Ctrl+P"))
         self.setCoutFwDir.setText(_translate("MainWindow", "Customer"))
         self.actVeriFw.setText(_translate("MainWindow", "Verify Firmware"))
         self.actFlashFw.setText(_translate("MainWindow", "Flash Firmware"))
-

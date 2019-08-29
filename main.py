@@ -110,6 +110,8 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
     def __del__(self):
         sys.stdout = sys.__stdout__
 
+    
+
     def _enable_btn(self):
         self.pieFlashBtn.setEnabled(True)
         self.custFlashBtn.setEnabled(True)
@@ -188,10 +190,11 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
                 self.resultTextBrowser.append(self.VARI_FAIL+'Err: Verify bin file setting error\n')
                 ret = ret & False
 
-        if not ret:
-            self.flash_thread(States.RESULT, 'FAIL')
+        if ret:
+            # self.flash_thread(States.ERASE)
+            self.erase_flash()
         else:
-            self.flash_thread(States.ERASE)
+            self.flash_thread(States.RESULT, "FAIL")
 
     def erase_flash(self):
         command = ['--port', str(self.port), 'erase_flash']
@@ -332,9 +335,6 @@ class FlashWorkerThread(QThread):
     finish = pyqtSignal(Enum, str)
     state = States.CHECK
     command = None
-
-    # def __init__(self):
-    #     super(FlashWorkerThread, self).__init__()
 
     def run(self):
         try:
@@ -546,11 +546,11 @@ class FwSetForm(QWidget, Ui_flashSetForm):
 
 def main():
     app = QApplication(sys.argv)
+    app.aboutToQuit.connect(app.deleteLater)
     my_win = MyMainWindow()
     my_win.run()
     my_win.show()
     app.exec_()
-    # sys.exit(0)
 
 if __name__ == '__main__':
     main()

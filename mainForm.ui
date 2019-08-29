@@ -249,12 +249,12 @@ Customer FW</string>
      <x>0</x>
      <y>0</y>
      <width>532</width>
-     <height>23</height>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuSetting">
     <property name="title">
-     <string>set</string>
+     <string>Configure</string>
     </property>
     <addaction name="actVeriFw"/>
     <addaction name="actFlashFw"/>
