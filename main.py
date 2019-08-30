@@ -546,7 +546,7 @@ class FwSetForm(QWidget, Ui_flashSetForm):
 
 def main():
     app = QApplication(sys.argv)
-    app.aboutToQuit.connect(app.deleteLater)
+    # app.aboutToQuit.connect(app.deleteLater)
     my_win = MyMainWindow()
     my_win.run()
     my_win.show()
