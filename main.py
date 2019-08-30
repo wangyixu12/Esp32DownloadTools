@@ -2,7 +2,7 @@
 @Author: Yixu Wang
 @Date: 2019-08-06 14:12:40
 @LastEditors: Yixu Wang
-@LastEditTime: 2019-08-29 15:51:34
+@LastEditTime: 2019-08-30 09:27:25
 @Description: The ESP32 Download tool GUI
 '''
 import os
@@ -50,7 +50,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
     VARI_PASS = "Verify flash ------> PASS\n"
     VARI_FAIL = "Verify flash ------> FAIL\n"
 
-    BAUD = 1152000
+    BAUD = 115200
 
     TEST_FLASH = 'test'
     CUST_FLASH = 'customer'
