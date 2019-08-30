@@ -8,7 +8,7 @@
 
 ### Main Window
 
-![1566896454686](/home/pi/.config/Typora/typora-user-images/1566896454686.png)
+![Selection_025](img/readmeImg/1.png)
 
 **Windows introduction:**
 
@@ -23,11 +23,11 @@
 
 ### Setting Windows
 
-![1566897503234](/home/pi/.config/Typora/typora-user-images/1566897503234.png)
+![Screenshot from 2019-08-27 17-16-44](img/readmeImg/2.png)
 
 1. Verify Firmware Window:
 
-   ![1566897682174](/home/pi/.config/Typora/typora-user-images/1566897682174.png)
+   ![3](img/readmeImg/3.png)
 
    > 1. Bin file address display
    > 2. Choose bin file button
@@ -37,7 +37,7 @@
 
    2. Flash Firmware Window:
 
-   ![1567129166845](/home/pi/.config/Typora/typora-user-images/1567129166845.png)
+   ![4](img/readmeImg/4.png)
 
    > 1. Firmware file address display
    > 2. Choose firmware file button
