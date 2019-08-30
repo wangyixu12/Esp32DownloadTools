@@ -1,14 +1,12 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '/home/wyx/Documents/Esp32DownloadTools/mainForm.ui'
+# Form implementation generated from reading ui file '/home/pi/Documents/Espressif/esptool_ui/mainForm.ui'
 #
-# Created by: PyQt5 UI code generator 5.13.0
+# Created by: PyQt5 UI code generator 5.9.2
 #
 # WARNING! All changes made in this file will be lost!
 
-
 from PyQt5 import QtCore, QtGui, QtWidgets
-
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -40,7 +38,7 @@ class Ui_MainWindow(object):
         self.resultTextBrowser.setObjectName("resultTextBrowser")
         self.verticalLayout.addWidget(self.resultTextBrowser)
         self.layoutWidget1 = QtWidgets.QWidget(self.centralwidget)
-        self.layoutWidget1.setGeometry(QtCore.QRect(10, 400, 251, 30))
+        self.layoutWidget1.setGeometry(QtCore.QRect(10, 370, 251, 30))
         self.layoutWidget1.setObjectName("layoutWidget1")
         self.horizontalLayout_5 = QtWidgets.QHBoxLayout(self.layoutWidget1)
         self.horizontalLayout_5.setContentsMargins(0, 0, 0, 0)
@@ -63,7 +61,7 @@ class Ui_MainWindow(object):
         self.searchPortBtn.setObjectName("searchPortBtn")
         self.horizontalLayout_5.addWidget(self.searchPortBtn)
         self.layoutWidget2 = QtWidgets.QWidget(self.centralwidget)
-        self.layoutWidget2.setGeometry(QtCore.QRect(10, 330, 250, 53))
+        self.layoutWidget2.setGeometry(QtCore.QRect(10, 310, 250, 53))
         self.layoutWidget2.setObjectName("layoutWidget2")
         self.horizontalLayout_2 = QtWidgets.QHBoxLayout(self.layoutWidget2)
         self.horizontalLayout_2.setContentsMargins(0, 0, 0, 0)
@@ -94,9 +92,28 @@ class Ui_MainWindow(object):
         self.resultBrowser.setMaximumSize(QtCore.QSize(250, 100))
         self.resultBrowser.setObjectName("resultBrowser")
         self.verticalLayout_2.addWidget(self.resultBrowser)
+        self.layoutWidget3 = QtWidgets.QWidget(self.centralwidget)
+        self.layoutWidget3.setGeometry(QtCore.QRect(10, 410, 181, 27))
+        self.layoutWidget3.setObjectName("layoutWidget3")
+        self.horizontalLayout = QtWidgets.QHBoxLayout(self.layoutWidget3)
+        self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
+        self.horizontalLayout.setObjectName("horizontalLayout")
+        self.label = QtWidgets.QLabel(self.layoutWidget3)
+        self.label.setMaximumSize(QtCore.QSize(72, 16777215))
+        self.label.setObjectName("label")
+        self.horizontalLayout.addWidget(self.label)
+        self.baudComboBox = QtWidgets.QComboBox(self.layoutWidget3)
+        self.baudComboBox.setDuplicatesEnabled(False)
+        self.baudComboBox.setObjectName("baudComboBox")
+        self.baudComboBox.addItem("")
+        self.baudComboBox.addItem("")
+        self.baudComboBox.addItem("")
+        self.baudComboBox.addItem("")
+        self.baudComboBox.addItem("")
+        self.horizontalLayout.addWidget(self.baudComboBox)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 532, 20))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 532, 23))
         self.menubar.setObjectName("menubar")
         self.menuSetting = QtWidgets.QMenu(self.menubar)
         self.menuSetting.setObjectName("menuSetting")
@@ -130,9 +147,17 @@ class Ui_MainWindow(object):
         self.custFlashBtn.setText(_translate("MainWindow", "Flash\n"
 "Customer FW"))
         self.label_5.setText(_translate("MainWindow", "Result"))
+        self.label.setText(_translate("MainWindow", "Baud Rate"))
+        self.baudComboBox.setCurrentText(_translate("MainWindow", "2000000"))
+        self.baudComboBox.setItemText(0, _translate("MainWindow", "2000000"))
+        self.baudComboBox.setItemText(1, _translate("MainWindow", "1152000"))
+        self.baudComboBox.setItemText(2, _translate("MainWindow", "230400"))
+        self.baudComboBox.setItemText(3, _translate("MainWindow", "115200"))
+        self.baudComboBox.setItemText(4, _translate("MainWindow", "96000"))
         self.menuSetting.setTitle(_translate("MainWindow", "Configure"))
         self.setPieFwDir.setText(_translate("MainWindow", "Pie"))
         self.setPieFwDir.setShortcut(_translate("MainWindow", "Ctrl+S, Ctrl+P"))
         self.setCoutFwDir.setText(_translate("MainWindow", "Customer"))
         self.actVeriFw.setText(_translate("MainWindow", "Verify Firmware"))
         self.actFlashFw.setText(_translate("MainWindow", "Flash Firmware"))
+

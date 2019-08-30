@@ -2,7 +2,7 @@
 @Author: Yixu Wang
 @Date: 2019-08-06 14:12:40
 @LastEditors: Yixu Wang
-@LastEditTime: 2019-08-30 09:27:25
+@LastEditTime: 2019-08-30 17:45:17
 @Description: The ESP32 Download tool GUI
 '''
 import os
@@ -50,7 +50,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
     VARI_PASS = "Verify flash ------> PASS\n"
     VARI_FAIL = "Verify flash ------> FAIL\n"
 
-    BAUD = 115200
+    BAUD = 1152000
 
     TEST_FLASH = 'test'
     CUST_FLASH = 'customer'
@@ -141,11 +141,11 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
     def flash_thread(self, opt, data=None):
         # print(opt, data)
         if data == 'FAIL':
-            self.resultTextBrowser.append(opt.name + ' --> FAIL')
+            self.resultTextBrowser.append(opt.name + ' --> FAIL\n')
             self._transitions[States.RESULT.value]("FAIL")
             return
         elif data == 'PASS':
-            self.resultTextBrowser.append(opt.name + ' --> PASS')
+            self.resultTextBrowser.append(opt.name + ' --> PASS\n')
         if opt == States.VERIFY:
             self._transitions[opt.value + 1](data)
         elif opt == States.CHECK:
@@ -251,6 +251,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.resultTextBrowser.clear()
         self.resultBrowser.clear()
         self.resultBrowser.setHtml("<img src='./img/LOADING.png'>")
+        self.BAUD = self.baudComboBox.currentText()
         self.flash_thread(States.CHECK)
         return False
 
