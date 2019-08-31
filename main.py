@@ -110,8 +110,6 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
     def __del__(self):
         sys.stdout = sys.__stdout__
 
-    
-
     def _enable_btn(self):
         self.pieFlashBtn.setEnabled(True)
         self.custFlashBtn.setEnabled(True)
