@@ -341,9 +341,8 @@ class FlashWorkerThread(QThread):
         except Exception as e:
             print(str(self.state.name)+" Error:"+str(e))
             self.finish.emit(self.state, "FAIL")
-            return
-
-        self.finish.emit(self.state, 'PASS')
+        else:
+            self.finish.emit(self.state, 'PASS')
 
 class ChildrenForm(QWidget, Ui_Form):
     CloseSignal = pyqtSignal()
