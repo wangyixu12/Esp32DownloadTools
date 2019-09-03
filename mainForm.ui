@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>532</width>
-    <height>260</height>
+    <height>467</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -19,13 +19,13 @@
   <property name="minimumSize">
    <size>
     <width>532</width>
-    <height>246</height>
+    <height>467</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
     <width>532</width>
-    <height>520</height>
+    <height>467</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -35,130 +35,10 @@
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>130</y>
-      <width>253</width>
-      <height>84</height>
-     </rect>
-    </property>
-    <layout class="QVBoxLayout" name="verticalLayout_5">
-     <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_2">
-       <item>
-        <widget class="QPushButton" name="custFlashBtn">
-         <property name="minimumSize">
-          <size>
-           <width>121</width>
-           <height>51</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>121</width>
-           <height>51</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>Customer Flash</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="pieFlashBtn">
-         <property name="minimumSize">
-          <size>
-           <width>121</width>
-           <height>51</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>121</width>
-           <height>51</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>Pie Flash</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </item>
-     <item>
-      <widget class="QProgressBar" name="flashProcessBar">
-       <property name="minimumSize">
-        <size>
-         <width>251</width>
-         <height>20</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>251</width>
-         <height>25</height>
-        </size>
-       </property>
-       <property name="value">
-        <number>0</number>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
-   <widget class="QWidget" name="layoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>290</x>
-      <y>160</y>
-      <width>221</width>
-      <height>28</height>
-     </rect>
-    </property>
-    <layout class="QHBoxLayout" name="horizontalLayout_3">
-     <property name="spacing">
-      <number>0</number>
-     </property>
-     <item>
-      <widget class="QLabel" name="label_3">
-       <property name="maximumSize">
-        <size>
-         <width>40</width>
-         <height>16777215</height>
-        </size>
-       </property>
-       <property name="text">
-        <string>&amp;PORT</string>
-       </property>
-       <property name="buddy">
-        <cstring>portComBox</cstring>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QComboBox" name="portComBox">
-       <property name="minimumSize">
-        <size>
-         <width>96</width>
-         <height>26</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>300</width>
-         <height>26</height>
-        </size>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
-   <widget class="QWidget" name="layoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>290</x>
-      <y>20</y>
-      <width>221</width>
-      <height>101</height>
+      <x>0</x>
+      <y>0</y>
+      <width>531</width>
+      <height>311</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout">
@@ -167,6 +47,175 @@
      </property>
      <item>
       <widget class="QLabel" name="label_4">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>20</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>60</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Flow</string>
+       </property>
+       <property name="buddy">
+        <cstring>resultTextBrowser</cstring>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QTextBrowser" name="resultTextBrowser">
+       <property name="maximumSize">
+        <size>
+         <width>530</width>
+         <height>400</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="layoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>370</y>
+      <width>251</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout_5">
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_3">
+       <property name="spacing">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="QLabel" name="label_3">
+         <property name="maximumSize">
+          <size>
+           <width>40</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>&amp;PORT</string>
+         </property>
+         <property name="buddy">
+          <cstring>portComBox</cstring>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QComboBox" name="portComBox">
+         <property name="minimumSize">
+          <size>
+           <width>50</width>
+           <height>26</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>300</width>
+           <height>26</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <widget class="QPushButton" name="searchPortBtn">
+       <property name="maximumSize">
+        <size>
+         <width>60</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Search</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="layoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>310</y>
+      <width>250</width>
+      <height>53</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <widget class="QPushButton" name="pieFlashBtn">
+       <property name="minimumSize">
+        <size>
+         <width>121</width>
+         <height>51</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>121</width>
+         <height>51</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Flash
+Tester FW</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="custFlashBtn">
+       <property name="minimumSize">
+        <size>
+         <width>121</width>
+         <height>51</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>121</width>
+         <height>51</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Flash
+Customer FW</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="layoutWidget_2">
+    <property name="geometry">
+     <rect>
+      <x>290</x>
+      <y>320</y>
+      <width>221</width>
+      <height>121</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout_2">
+     <property name="spacing">
+      <number>0</number>
+     </property>
+     <item>
+      <widget class="QLabel" name="label_5">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>20</height>
+        </size>
+       </property>
        <property name="maximumSize">
         <size>
          <width>60</width>
@@ -177,86 +226,79 @@
         <string>Result</string>
        </property>
        <property name="buddy">
-        <cstring>resultTextEdit</cstring>
+        <cstring>resultTextBrowser</cstring>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QTextEdit" name="resultTextEdit">
+      <widget class="QTextBrowser" name="resultBrowser">
        <property name="maximumSize">
         <size>
          <width>250</width>
-         <height>75</height>
+         <height>100</height>
         </size>
        </property>
       </widget>
      </item>
     </layout>
    </widget>
-   <widget class="QDialogButtonBox" name="portConnBtnBox">
-    <property name="geometry">
-     <rect>
-      <x>330</x>
-      <y>130</y>
-      <width>176</width>
-      <height>26</height>
-     </rect>
-    </property>
-    <property name="standardButtons">
-     <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
-    </property>
-   </widget>
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>22</y>
-      <width>251</width>
-      <height>104</height>
+      <x>10</x>
+      <y>410</y>
+      <width>181</width>
+      <height>27</height>
      </rect>
     </property>
-    <layout class="QVBoxLayout" name="verticalLayout_2">
+    <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
       <widget class="QLabel" name="label">
+       <property name="maximumSize">
+        <size>
+         <width>72</width>
+         <height>16777215</height>
+        </size>
+       </property>
        <property name="text">
-        <string>Customer Firmware</string>
+        <string>Baud Rate</string>
        </property>
       </widget>
      </item>
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout">
-       <item>
-        <widget class="QLineEdit" name="custFwEdit"/>
-       </item>
-       <item>
-        <widget class="QToolButton" name="toolButton">
-         <property name="text">
-          <string>...</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </item>
-     <item>
-      <widget class="QLabel" name="label_2">
-       <property name="text">
-        <string>Pie Firmware</string>
+      <widget class="QComboBox" name="baudComboBox">
+       <property name="currentText">
+        <string>2000000</string>
        </property>
+       <property name="duplicatesEnabled">
+        <bool>false</bool>
+       </property>
+       <item>
+        <property name="text">
+         <string>2000000</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>1152000</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>230400</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>115200</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>96000</string>
+        </property>
+       </item>
       </widget>
-     </item>
-     <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_4">
-       <item>
-        <widget class="QLineEdit" name="pieFwEdit"/>
-       </item>
-       <item>
-        <widget class="QToolButton" name="toolButton_2">
-         <property name="text">
-          <string>...</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
      </item>
     </layout>
    </widget>
@@ -272,13 +314,13 @@
    </property>
    <widget class="QMenu" name="menuSetting">
     <property name="title">
-     <string>setting</string>
+     <string>Configure</string>
     </property>
-    <addaction name="actOriFw"/>
+    <addaction name="actVeriFw"/>
+    <addaction name="actFlashFw"/>
    </widget>
    <addaction name="menuSetting"/>
   </widget>
-  <widget class="QStatusBar" name="statusBar"/>
   <action name="setPieFwDir">
    <property name="text">
     <string>Pie</string>
@@ -292,18 +334,19 @@
     <string>Customer</string>
    </property>
   </action>
-  <action name="actOriFw">
+  <action name="actVeriFw">
    <property name="text">
-    <string>OriginFirmware</string>
+    <string>Verify Firmware</string>
+   </property>
+  </action>
+  <action name="actFlashFw">
+   <property name="text">
+    <string>Flash Firmware</string>
    </property>
   </action>
  </widget>
  <tabstops>
-  <tabstop>custFwEdit</tabstop>
-  <tabstop>pieFwEdit</tabstop>
-  <tabstop>custFlashBtn</tabstop>
-  <tabstop>pieFlashBtn</tabstop>
-  <tabstop>resultTextEdit</tabstop>
+  <tabstop>resultTextBrowser</tabstop>
  </tabstops>
  <resources/>
  <connections/>

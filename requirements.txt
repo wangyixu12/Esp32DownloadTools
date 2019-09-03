@@ -1,0 +1,16 @@
+altgraph==0.16.1
+catkin==0.6.19
+certifi==2019.6.16
+ecdsa==0.13.2
+esptool==2.7
+genmsg==0.5.8
+genpy==0.5.10
+pyaes==1.6.1
+PyInstaller==3.5
+PyQt5==5.13.0
+PyQt5-sip==4.19.18
+pyserial==3.4
+PyYAML==5.1.2
+sensor-msgs==1.11.10
+six==1.12.0
+transitions==0.7.0

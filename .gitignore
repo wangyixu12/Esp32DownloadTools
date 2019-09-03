@@ -1,0 +1,13 @@
+*.bin
+*.yml
+/pyinstrument
+__pycache__/*
+configUser.yml
+requirements.txt
+build/*
+dist/*
+.vscode/*
+main.spec
+espressif_icon.ico
+doc/*
+main
