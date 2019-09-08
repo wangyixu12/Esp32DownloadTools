@@ -1,8 +1,8 @@
 '''
 @Author: Yixu Wang
 @Date: 2019-08-06 14:12:40
-@LastEditors: Yixu Wang
-@LastEditTime: 2019-08-30 17:45:17
+@LastEditors: Please set LastEditors
+@LastEditTime: 2019-09-08 23:07:32
 @Description: The ESP32 Download tool GUI
 '''
 import os
@@ -26,6 +26,7 @@ from PyQt5.QtGui import QTextCursor
 
 import esptool
 
+from login import LoginForm
 from Ui_mainForm import Ui_MainWindow
 from Ui_childrenForm import Ui_Form
 from Ui_flashSetForm import Ui_flashSetForm
@@ -90,6 +91,11 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.port = ''
         sys.stdout = EmittingStream(textWritten=self.output_written)
 
+        self.login = LoginForm()
+        self.login.ResultSignal.connect(self.__login_in)
+        self.actVeriFw.setEnabled(False)
+        self.actFlashFw.setEnabled(False)
+
         self.child = ChildrenForm()
         self.child.CloseSignal.connect(self._enable_btn)
 
@@ -102,6 +108,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.resultTextBrowser.setReadOnly(True)
         self.resultBrowser.setReadOnly(True)
 
+        self.act_login.triggered.connect(self.login.show)
         self.actVeriFw.triggered.connect(self.child_show)
         self.actFlashFw.triggered.connect(self.flash_set_show)
         self.searchPortBtn.clicked.connect(self.search_var_port)
@@ -109,6 +116,15 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
 
     def __del__(self):
         sys.stdout = sys.__stdout__
+
+    def __login_in(self, result):
+        if result == 'login':
+            self._enable_btn()
+        elif result == 'close':
+            self.actVeriFw.setEnabled(False)
+            self.actFlashFw.setEnabled(False)
+        else:
+            self.resultTextBrowser.append("ERR: Login setting is error "+str(result))
 
     def _enable_btn(self):
         self.pieFlashBtn.setEnabled(True)

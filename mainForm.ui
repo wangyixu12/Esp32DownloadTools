@@ -309,7 +309,7 @@ Customer FW</string>
      <x>0</x>
      <y>0</y>
      <width>532</width>
-     <height>23</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuSetting">
@@ -318,6 +318,7 @@ Customer FW</string>
     </property>
     <addaction name="actVeriFw"/>
     <addaction name="actFlashFw"/>
+    <addaction name="act_login"/>
    </widget>
    <addaction name="menuSetting"/>
   </widget>
@@ -342,6 +343,11 @@ Customer FW</string>
   <action name="actFlashFw">
    <property name="text">
     <string>Flash Firmware</string>
+   </property>
+  </action>
+  <action name="act_login">
+   <property name="text">
+    <string>Login</string>
    </property>
   </action>
  </widget>
