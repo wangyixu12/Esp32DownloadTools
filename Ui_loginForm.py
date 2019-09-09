@@ -62,4 +62,4 @@ class Ui_loginForm(object):
         self.label.setText(_translate("loginForm", "USER"))
         self.label_2.setText(_translate("loginForm", "PASSWORD"))
         self.login_btn.setText(_translate("loginForm", "Login"))
-        self.cancle_btn.setText(_translate("loginForm", "Cancle"))
+        self.cancle_btn.setText(_translate("loginForm", "Cancel"))
