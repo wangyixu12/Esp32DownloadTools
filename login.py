@@ -2,8 +2,8 @@
 @Description: In User Settings Edit
 @Author: your name
 @Date: 2019-09-08 11:24:28
-@LastEditTime: 2019-09-08 22:47:48
-@LastEditors: Please set LastEditors
+@LastEditTime: 2019-09-09 13:48:07
+@LastEditors: Yixu Wang
 '''
 import sys
 
@@ -38,6 +38,7 @@ class LoginForm(QWidget, Ui_loginForm):
             self.ResultSignal.emit('login')
         else:
             self.user_name_edit.setText("ERROR")
+            self.password_edit.clear()
             # self.password_edit.setText("ERROR")
             # self.ResultSignal.emit('close')
 
