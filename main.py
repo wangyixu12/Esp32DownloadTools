@@ -1,8 +1,8 @@
 '''
 @Author: Yixu Wang
 @Date: 2019-08-06 14:12:40
-@LastEditors: Please set LastEditors
-@LastEditTime: 2019-09-08 23:07:32
+@LastEditors: Yixu Wang
+@LastEditTime: 2019-09-12 13:41:59
 @Description: The ESP32 Download tool GUI
 '''
 import os
