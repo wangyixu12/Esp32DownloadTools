@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '/home/pi/Documents/Espressif/esptool_ui/mainForm.ui'
+# Form implementation generated from reading ui file '/home/wyx/Documents/Esp32DownloadTools/mainForm.ui'
 #
-# Created by: PyQt5 UI code generator 5.9.2
+# Created by: PyQt5 UI code generator 5.13.0
 #
 # WARNING! All changes made in this file will be lost!
 
+
 from PyQt5 import QtCore, QtGui, QtWidgets
+
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -113,7 +115,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout.addWidget(self.baudComboBox)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 532, 23))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 532, 22))
         self.menubar.setObjectName("menubar")
         self.menuSetting = QtWidgets.QMenu(self.menubar)
         self.menuSetting.setObjectName("menuSetting")
@@ -126,8 +128,11 @@ class Ui_MainWindow(object):
         self.actVeriFw.setObjectName("actVeriFw")
         self.actFlashFw = QtWidgets.QAction(MainWindow)
         self.actFlashFw.setObjectName("actFlashFw")
+        self.act_login = QtWidgets.QAction(MainWindow)
+        self.act_login.setObjectName("act_login")
         self.menuSetting.addAction(self.actVeriFw)
         self.menuSetting.addAction(self.actFlashFw)
+        self.menuSetting.addAction(self.act_login)
         self.menubar.addAction(self.menuSetting.menuAction())
         self.label_4.setBuddy(self.resultTextBrowser)
         self.label_3.setBuddy(self.portComBox)
@@ -160,4 +165,4 @@ class Ui_MainWindow(object):
         self.setCoutFwDir.setText(_translate("MainWindow", "Customer"))
         self.actVeriFw.setText(_translate("MainWindow", "Verify Firmware"))
         self.actFlashFw.setText(_translate("MainWindow", "Flash Firmware"))
-
+        self.act_login.setText(_translate("MainWindow", "Login"))
