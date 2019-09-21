@@ -2,7 +2,7 @@
 @Description: In User Settings Edit
 @Author: your name
 @Date: 2019-09-08 11:24:28
-@LastEditTime: 2019-09-09 13:48:07
+@LastEditTime: 2019-09-21 09:38:33
 @LastEditors: Yixu Wang
 '''
 import sys
@@ -13,7 +13,7 @@ from PyQt5.QtWidgets import QLineEdit
 from PyQt5.QtCore import pyqtSignal
 from PyQt5.QtCore import Qt
 
-from Ui_loginForm import Ui_loginForm
+from PyQTUI.Ui_loginForm import Ui_loginForm
 
 class LoginForm(QWidget, Ui_loginForm):
     ResultSignal = pyqtSignal(str)

@@ -2,7 +2,7 @@
 @Author: Yixu Wang
 @Date: 2019-08-06 14:12:40
 @LastEditors: Yixu Wang
-@LastEditTime: 2019-09-12 13:41:59
+@LastEditTime: 2019-09-21 09:38:45
 @Description: The ESP32 Download tool GUI
 '''
 import os
@@ -10,6 +10,7 @@ import sys
 import codecs
 import shutil
 from enum import Enum
+import logging
 import yaml
 
 from PyQt5.QtCore import pyqtSlot
@@ -27,9 +28,9 @@ from PyQt5.QtGui import QTextCursor
 import esptool
 
 from login import LoginForm
-from Ui_mainForm import Ui_MainWindow
-from Ui_childrenForm import Ui_Form
-from Ui_flashSetForm import Ui_flashSetForm
+from PyQTUI.Ui_mainForm import Ui_MainWindow
+from PyQTUI.Ui_childrenForm import Ui_Form
+from PyQTUI.Ui_flashSetForm import Ui_flashSetForm
 
 class States(Enum):
     ''' State machine's states enumeration.
