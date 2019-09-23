@@ -13,3 +13,4 @@ doc/*
 main
 PyQTUI/*
 data/uuid_test_version/offset.xlsx
+*.gz
