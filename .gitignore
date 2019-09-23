@@ -11,3 +11,5 @@ main.spec
 espressif_icon.ico
 doc/*
 main
+PyQTUI/*
+data/uuid_test_version/offset.xlsx

@@ -285,6 +285,11 @@ Customer FW</string>
        </item>
        <item>
         <property name="text">
+         <string>921600</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
          <string>230400</string>
         </property>
        </item>
@@ -309,7 +314,7 @@ Customer FW</string>
      <x>0</x>
      <y>0</y>
      <width>532</width>
-     <height>22</height>
+     <height>23</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuSetting">
