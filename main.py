@@ -2,7 +2,7 @@
 @Author: Yixu Wang
 @Date: 2019-08-06 14:12:40
 @LastEditors: Yixu Wang
-@LastEditTime: 2019-09-24 17:10:56
+@LastEditTime: 2019-09-24 17:16:13
 @Description: The ESP32 Download tool GUI
 '''
 import os
@@ -103,7 +103,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.child = ChildrenForm(mode=self.__mode)
         self.child.CloseSignal.connect(self._enable_btn)
 
-        self.flash_set = FwSetForm()
+        self.flash_set = FwSetForm(self.__mode)
         self.flash_set.CloseSignal.connect(self._enable_btn)
 
         self.thread = FlashWorkerThread()
@@ -537,13 +537,14 @@ class EmittingStream(QObject):
 
 class FwSetForm(QWidget, Ui_flashSetForm):
     CloseSignal = pyqtSignal()
-    def __init__(self):
+    def __init__(self, mode):
         super(FwSetForm, self).__init__()
         self.setupUi(self)
         self.setWindowFlags(Qt.WindowMinimizeButtonHint)
         self.setFixedSize(self.width(), self.height())
         self._default_yaml_name = 'config/configDefault.yml'
         self._user_yaml_name = 'config/configUser.yml'
+        self.__mode = mode
 
         self.win_name = 'mainForm'
         self._win_edit_dict = {
@@ -609,6 +610,14 @@ class FwSetForm(QWidget, Ui_flashSetForm):
     def run(self):
         self.load_yaml()
         self._set_win()
+
+        if self.__mode == 'tester':
+            self.custFwEdit.setEnabled(False)
+            self.custFwOptBtn.setEnabled(False)
+
+        elif self.__mode == 'custer':
+            self.pieFwEdit.setEnabled(False)
+            self.pieFwOptBtn.setEnabled(False)
 
 def main():
     app = QApplication(sys.argv)
