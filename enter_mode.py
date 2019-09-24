@@ -3,12 +3,13 @@
 @Github: https://github.com/wangyixu12
 @Date: 2019-09-24 16:19:29
 @LastEditors: Yixu Wang
-@LastEditTime: 2019-09-24 16:37:52
+@LastEditTime: 2019-09-24 16:42:17
 @Description: Select download mode (1. Tester 2. Customer) 
 '''
 
 import sys
 
+from PyQt5.QtWidgets import QApplication
 from PyQt5.QtWidgets import QWidget
 from PyQt5.QtCore import Qt
 
@@ -31,3 +32,9 @@ class SelectMode(QWidget, Ui_mode_obj):
     def __select_custer(self):
         self.mode = 'custer'
         self.close()
+
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    win = SelectMode()
+    win.show()
+    app.exec_()

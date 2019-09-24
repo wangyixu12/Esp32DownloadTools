@@ -2,7 +2,7 @@
 @Author: Yixu Wang
 @Date: 2019-08-06 14:12:40
 @LastEditors: Yixu Wang
-@LastEditTime: 2019-09-21 09:38:45
+@LastEditTime: 2019-09-24 16:50:58
 @Description: The ESP32 Download tool GUI
 '''
 import os
@@ -28,9 +28,11 @@ from PyQt5.QtGui import QTextCursor
 import esptool
 
 from login import LoginForm
+from enter_mode import SelectMode
 from PyQTUI.Ui_mainForm import Ui_MainWindow
 from PyQTUI.Ui_childrenForm import Ui_Form
 from PyQTUI.Ui_flashSetForm import Ui_flashSetForm
+from PyQTUI.Ui_modeForm import Ui_mode_obj
 
 class States(Enum):
     ''' State machine's states enumeration.
@@ -45,7 +47,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
     ''' Main window's class
     '''
 
-    ERASE_PASS = "Erase flash ------> PASS\n"
+    ERASE_PASS = "LoginFormErase flash ------> PASS\n"
     ERASE_FAIL = "Erase flash ------> FAIL\n"
     WRITE_PASS = "Write flash ------> PASS\n"
     WRITE_FAIL = "Write flash ------> FAIL\n"
@@ -57,7 +59,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
     TEST_FLASH = 'test'
     CUST_FLASH = 'customer'
 
-    def __init__(self, parent=None):
+    def __init__(self, parent=None, mode=None):
         super(MyMainWindow, self).__init__(parent)
         self.setupUi(self)
         self._default_yaml_name = './config/configDefault.yml'
@@ -562,11 +564,14 @@ class FwSetForm(QWidget, Ui_flashSetForm):
 def main():
     app = QApplication(sys.argv)
     # app.aboutToQuit.connect(app.deleteLater)
-    my_win = MyMainWindow()
+    select_mode = SelectMode()
+    select_mode.show()
+    app.exec_()
+
+    my_win = MyMainWindow(mode=select_mode.mode)
     my_win.run()
     my_win.show()
     app.exec_()
 
 if __name__ == '__main__':
     main()
-    
