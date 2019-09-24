@@ -2,7 +2,7 @@
 @Author: Yixu Wang
 @Date: 2019-08-06 14:12:40
 @LastEditors: Yixu Wang
-@LastEditTime: 2019-09-24 17:02:40
+@LastEditTime: 2019-09-24 17:10:56
 @Description: The ESP32 Download tool GUI
 '''
 import os
@@ -100,7 +100,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.actVeriFw.setEnabled(False)
         self.actFlashFw.setEnabled(False)
 
-        self.child = ChildrenForm()
+        self.child = ChildrenForm(mode=self.__mode)
         self.child.CloseSignal.connect(self._enable_btn)
 
         self.flash_set = FwSetForm()
@@ -382,11 +382,13 @@ class FlashWorkerThread(QThread):
 
 class ChildrenForm(QWidget, Ui_Form):
     CloseSignal = pyqtSignal()
-    def __init__(self):
+    def __init__(self, mode):
         super(ChildrenForm, self).__init__()
         self.setupUi(self)
         self._default_yaml_name = 'config/configDefault.yml'
         self._user_yaml_name = 'config/configUser.yml'
+        
+        self.__mode = mode
 
         self.win_name = 'childrenForm'
         self._win_edit_dict = {
@@ -493,6 +495,36 @@ class ChildrenForm(QWidget, Ui_Form):
     def run(self):
         self.load_yaml()
         self.set_win()
+        if self.__mode == 'tester':
+            self.custBinOptBtn_1.setEnabled(False)
+            self.custBinOptBtn_2.setEnabled(False)
+            self.custBinOptBtn_3.setEnabled(False)
+            self.custBinOptBtn_4.setEnabled(False)
+
+            self.custBinOffset_1.setEnabled(False)
+            self.custBinOffset_2.setEnabled(False)
+            self.custBinOffset_3.setEnabled(False)
+            self.custBinOffset_4.setEnabled(False)
+
+            self.custBinDir_1.setEnabled(False)
+            self.custBinDir_2.setEnabled(False)
+            self.custBinDir_3.setEnabled(False)
+            self.custBinDir_4.setEnabled(False)
+        elif self.__mode == 'custer':
+            self.pieBinOptBtn_1.setEnabled(False)
+            self.pieBinOptBtn_2.setEnabled(False)
+            self.pieBinOptBtn_3.setEnabled(False)
+            self.pieBinOptBtn_4.setEnabled(False)
+            
+            self.pieBinOffset_1.setEnabled(False)
+            self.pieBinOffset_2.setEnabled(False)
+            self.pieBinOffset_3.setEnabled(False)
+            self.pieBinOffset_4.setEnabled(False)
+
+            self.pieBinDir_1.setEnabled(False)
+            self.pieBinDir_2.setEnabled(False)
+            self.pieBinDir_3.setEnabled(False)
+            self.pieBinDir_4.setEnabled(False)
 
 class EmittingStream(QObject):
     textWritten = pyqtSignal(str)
