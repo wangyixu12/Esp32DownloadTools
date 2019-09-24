@@ -2,7 +2,7 @@
 @Author: Yixu Wang
 @Date: 2019-08-06 14:12:40
 @LastEditors: Yixu Wang
-@LastEditTime: 2019-09-24 16:50:58
+@LastEditTime: 2019-09-24 17:02:40
 @Description: The ESP32 Download tool GUI
 '''
 import os
@@ -68,6 +68,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.opt_bin_dir = None
         self.cur_port_location = None
         self.config = None
+        self.__mode = mode
 
         self.ver_bin_dict = {
             self.TEST_FLASH : {
@@ -130,15 +131,25 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
             self.resultTextBrowser.append("ERR: Login setting is error "+str(result))
 
     def _enable_btn(self):
-        self.pieFlashBtn.setEnabled(True)
-        self.custFlashBtn.setEnabled(True)
+        if self.__mode == 'tester':
+            self.pieFlashBtn.setEnabled(True)
+        elif self.__mode == 'custer':
+            self.custFlashBtn.setEnabled(True)
+
+        # self.pieFlashBtn.setEnabled(True)
+        # self.custFlashBtn.setEnabled(True)
         self.searchPortBtn.setEnabled(True)
         self.actVeriFw.setEnabled(True)
         self.actFlashFw.setEnabled(True)
 
     def _disable_btn(self):
-        self.pieFlashBtn.setEnabled(False)
-        self.custFlashBtn.setEnabled(False)
+        if self.__mode == 'tester':
+            self.pieFlashBtn.setEnabled(False)
+        elif self.__mode == 'custer':
+            self.custFlashBtn.setEnabled(False)
+
+        # self.pieFlashBtn.setEnabled(False)
+        # self.custFlashBtn.setEnabled(False)
         self.searchPortBtn.setEnabled(False)
         self.actVeriFw.setEnabled(False)
         self.actFlashFw.setEnabled(False)
@@ -346,6 +357,12 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
 
     def run(self):
         self.load_yaml()
+        if self.__mode == 'tester':
+            self.pieFlashBtn.setEnabled(True)
+            self.custFlashBtn.setEnabled(False)
+        elif self.__mode == 'custer':
+            self.pieFlashBtn.setEnabled(False)
+            self.custFlashBtn.setEnabled(True)
 
 class FlashWorkerThread(QThread):
     ''' The thread for GUI
