@@ -2,7 +2,7 @@
 @Author: Yixu Wang
 @Date: 2019-08-06 14:12:40
 @LastEditors: Yixu Wang
-@LastEditTime: 2019-08-30 17:45:17
+@LastEditTime: 2019-09-25 14:07:20
 @Description: The ESP32 Download tool GUI
 '''
 import os
@@ -10,7 +10,9 @@ import sys
 import codecs
 import shutil
 from enum import Enum
+import logging
 import yaml
+from time import sleep
 
 from PyQt5.QtCore import pyqtSlot
 from PyQt5.QtCore import QThread
@@ -26,9 +28,13 @@ from PyQt5.QtGui import QTextCursor
 
 import esptool
 
-from Ui_mainForm import Ui_MainWindow
-from Ui_childrenForm import Ui_Form
-from Ui_flashSetForm import Ui_flashSetForm
+from login import LoginForm
+from enter_mode import SelectMode
+from warning import WarnTip
+from PyQTUI.Ui_mainForm import Ui_MainWindow
+from PyQTUI.Ui_childrenForm import Ui_Form
+from PyQTUI.Ui_flashSetForm import Ui_flashSetForm
+from PyQTUI.Ui_modeForm import Ui_mode_obj
 
 class States(Enum):
     ''' State machine's states enumeration.
@@ -43,7 +49,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
     ''' Main window's class
     '''
 
-    ERASE_PASS = "Erase flash ------> PASS\n"
+    ERASE_PASS = "LoginFormErase flash ------> PASS\n"
     ERASE_FAIL = "Erase flash ------> FAIL\n"
     WRITE_PASS = "Write flash ------> PASS\n"
     WRITE_FAIL = "Write flash ------> FAIL\n"
@@ -55,7 +61,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
     TEST_FLASH = 'test'
     CUST_FLASH = 'customer'
 
-    def __init__(self, parent=None):
+    def __init__(self, parent=None, mode=None):
         super(MyMainWindow, self).__init__(parent)
         self.setupUi(self)
         self._default_yaml_name = './config/configDefault.yml'
@@ -64,6 +70,10 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.opt_bin_dir = None
         self.cur_port_location = None
         self.config = None
+        
+        self.__mode = mode
+        if self.__mode == 'close':
+            sys.exit(0)
 
         self.ver_bin_dict = {
             self.TEST_FLASH : {
@@ -90,10 +100,16 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.port = ''
         sys.stdout = EmittingStream(textWritten=self.output_written)
 
-        self.child = ChildrenForm()
+        self.warning = WarnTip()
+        self.login = LoginForm()
+        self.login.ResultSignal.connect(self.__login_in)
+        self.actVeriFw.setEnabled(False)
+        self.actFlashFw.setEnabled(False)
+
+        self.child = ChildrenForm(mode=self.__mode)
         self.child.CloseSignal.connect(self._enable_btn)
 
-        self.flash_set = FwSetForm()
+        self.flash_set = FwSetForm(self.__mode)
         self.flash_set.CloseSignal.connect(self._enable_btn)
 
         self.thread = FlashWorkerThread()
@@ -102,6 +118,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.resultTextBrowser.setReadOnly(True)
         self.resultBrowser.setReadOnly(True)
 
+        self.act_login.triggered.connect(self.login.show)
         self.actVeriFw.triggered.connect(self.child_show)
         self.actFlashFw.triggered.connect(self.flash_set_show)
         self.searchPortBtn.clicked.connect(self.search_var_port)
@@ -110,16 +127,35 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
     def __del__(self):
         sys.stdout = sys.__stdout__
 
+    def __login_in(self, result):
+        if result == 'login':
+            self._enable_btn()
+        elif result == 'close':
+            self.actVeriFw.setEnabled(False)
+            self.actFlashFw.setEnabled(False)
+        else:
+            self.resultTextBrowser.append("ERR: Login setting is error "+str(result))
+
     def _enable_btn(self):
-        self.pieFlashBtn.setEnabled(True)
-        self.custFlashBtn.setEnabled(True)
+        if self.__mode == 'tester':
+            self.pieFlashBtn.setEnabled(True)
+        elif self.__mode == 'custer':
+            self.custFlashBtn.setEnabled(True)
+
+        # self.pieFlashBtn.setEnabled(True)
+        # self.custFlashBtn.setEnabled(True)
         self.searchPortBtn.setEnabled(True)
         self.actVeriFw.setEnabled(True)
         self.actFlashFw.setEnabled(True)
 
     def _disable_btn(self):
-        self.pieFlashBtn.setEnabled(False)
-        self.custFlashBtn.setEnabled(False)
+        if self.__mode == 'tester':
+            self.pieFlashBtn.setEnabled(False)
+        elif self.__mode == 'custer':
+            self.custFlashBtn.setEnabled(False)
+
+        # self.pieFlashBtn.setEnabled(False)
+        # self.custFlashBtn.setEnabled(False)
         self.searchPortBtn.setEnabled(False)
         self.actVeriFw.setEnabled(False)
         self.actFlashFw.setEnabled(False)
@@ -327,6 +363,16 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
 
     def run(self):
         self.load_yaml()
+        if self.__mode == 'tester':
+            self.pieFlashBtn.setEnabled(True)
+            self.custFlashBtn.setEnabled(False)
+        elif self.__mode == 'custer':
+            self.warning.show()
+            sleep(1)
+            self.warning.countdown()
+            QApplication.exec_()
+            self.pieFlashBtn.setEnabled(False)
+            self.custFlashBtn.setEnabled(True)
 
 class FlashWorkerThread(QThread):
     ''' The thread for GUI
@@ -346,11 +392,13 @@ class FlashWorkerThread(QThread):
 
 class ChildrenForm(QWidget, Ui_Form):
     CloseSignal = pyqtSignal()
-    def __init__(self):
+    def __init__(self, mode):
         super(ChildrenForm, self).__init__()
         self.setupUi(self)
         self._default_yaml_name = 'config/configDefault.yml'
         self._user_yaml_name = 'config/configUser.yml'
+        
+        self.__mode = mode
 
         self.win_name = 'childrenForm'
         self._win_edit_dict = {
@@ -457,6 +505,36 @@ class ChildrenForm(QWidget, Ui_Form):
     def run(self):
         self.load_yaml()
         self.set_win()
+        if self.__mode == 'tester':
+            self.custBinOptBtn_1.setEnabled(False)
+            self.custBinOptBtn_2.setEnabled(False)
+            self.custBinOptBtn_3.setEnabled(False)
+            self.custBinOptBtn_4.setEnabled(False)
+
+            self.custBinOffset_1.setEnabled(False)
+            self.custBinOffset_2.setEnabled(False)
+            self.custBinOffset_3.setEnabled(False)
+            self.custBinOffset_4.setEnabled(False)
+
+            self.custBinDir_1.setEnabled(False)
+            self.custBinDir_2.setEnabled(False)
+            self.custBinDir_3.setEnabled(False)
+            self.custBinDir_4.setEnabled(False)
+        elif self.__mode == 'custer':
+            self.pieBinOptBtn_1.setEnabled(False)
+            self.pieBinOptBtn_2.setEnabled(False)
+            self.pieBinOptBtn_3.setEnabled(False)
+            self.pieBinOptBtn_4.setEnabled(False)
+            
+            self.pieBinOffset_1.setEnabled(False)
+            self.pieBinOffset_2.setEnabled(False)
+            self.pieBinOffset_3.setEnabled(False)
+            self.pieBinOffset_4.setEnabled(False)
+
+            self.pieBinDir_1.setEnabled(False)
+            self.pieBinDir_2.setEnabled(False)
+            self.pieBinDir_3.setEnabled(False)
+            self.pieBinDir_4.setEnabled(False)
 
 class EmittingStream(QObject):
     textWritten = pyqtSignal(str)
@@ -469,13 +547,14 @@ class EmittingStream(QObject):
 
 class FwSetForm(QWidget, Ui_flashSetForm):
     CloseSignal = pyqtSignal()
-    def __init__(self):
+    def __init__(self, mode):
         super(FwSetForm, self).__init__()
         self.setupUi(self)
         self.setWindowFlags(Qt.WindowMinimizeButtonHint)
         self.setFixedSize(self.width(), self.height())
         self._default_yaml_name = 'config/configDefault.yml'
         self._user_yaml_name = 'config/configUser.yml'
+        self.__mode = mode
 
         self.win_name = 'mainForm'
         self._win_edit_dict = {
@@ -542,14 +621,25 @@ class FwSetForm(QWidget, Ui_flashSetForm):
         self.load_yaml()
         self._set_win()
 
+        if self.__mode == 'tester':
+            self.custFwEdit.setEnabled(False)
+            self.custFwOptBtn.setEnabled(False)
+
+        elif self.__mode == 'custer':
+            self.pieFwEdit.setEnabled(False)
+            self.pieFwOptBtn.setEnabled(False)
+
 def main():
     app = QApplication(sys.argv)
     # app.aboutToQuit.connect(app.deleteLater)
-    my_win = MyMainWindow()
+    select_mode = SelectMode()
+    select_mode.show()
+    app.exec_()
+
+    my_win = MyMainWindow(mode=select_mode.mode)
     my_win.run()
     my_win.show()
     app.exec_()
 
 if __name__ == '__main__':
     main()
-    

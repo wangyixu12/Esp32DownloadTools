@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '/home/pi/Documents/Espressif/esptool_ui/mainForm.ui'
+# Form implementation generated from reading ui file '/home/pi/Documents/Espressif/esptool_ui/PyQTUI/mainForm.ui'
 #
 # Created by: PyQt5 UI code generator 5.9.2
 #
@@ -110,6 +110,7 @@ class Ui_MainWindow(object):
         self.baudComboBox.addItem("")
         self.baudComboBox.addItem("")
         self.baudComboBox.addItem("")
+        self.baudComboBox.addItem("")
         self.horizontalLayout.addWidget(self.baudComboBox)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
@@ -126,8 +127,11 @@ class Ui_MainWindow(object):
         self.actVeriFw.setObjectName("actVeriFw")
         self.actFlashFw = QtWidgets.QAction(MainWindow)
         self.actFlashFw.setObjectName("actFlashFw")
+        self.act_login = QtWidgets.QAction(MainWindow)
+        self.act_login.setObjectName("act_login")
         self.menuSetting.addAction(self.actVeriFw)
         self.menuSetting.addAction(self.actFlashFw)
+        self.menuSetting.addAction(self.act_login)
         self.menubar.addAction(self.menuSetting.menuAction())
         self.label_4.setBuddy(self.resultTextBrowser)
         self.label_3.setBuddy(self.portComBox)
@@ -151,13 +155,15 @@ class Ui_MainWindow(object):
         self.baudComboBox.setCurrentText(_translate("MainWindow", "2000000"))
         self.baudComboBox.setItemText(0, _translate("MainWindow", "2000000"))
         self.baudComboBox.setItemText(1, _translate("MainWindow", "1152000"))
-        self.baudComboBox.setItemText(2, _translate("MainWindow", "230400"))
-        self.baudComboBox.setItemText(3, _translate("MainWindow", "115200"))
-        self.baudComboBox.setItemText(4, _translate("MainWindow", "96000"))
+        self.baudComboBox.setItemText(2, _translate("MainWindow", "921600"))
+        self.baudComboBox.setItemText(3, _translate("MainWindow", "230400"))
+        self.baudComboBox.setItemText(4, _translate("MainWindow", "115200"))
+        self.baudComboBox.setItemText(5, _translate("MainWindow", "96000"))
         self.menuSetting.setTitle(_translate("MainWindow", "Configure"))
         self.setPieFwDir.setText(_translate("MainWindow", "Pie"))
         self.setPieFwDir.setShortcut(_translate("MainWindow", "Ctrl+S, Ctrl+P"))
         self.setCoutFwDir.setText(_translate("MainWindow", "Customer"))
         self.actVeriFw.setText(_translate("MainWindow", "Verify Firmware"))
         self.actFlashFw.setText(_translate("MainWindow", "Flash Firmware"))
+        self.act_login.setText(_translate("MainWindow", "Login"))
 

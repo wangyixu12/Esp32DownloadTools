@@ -285,6 +285,11 @@ Customer FW</string>
        </item>
        <item>
         <property name="text">
+         <string>921600</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
          <string>230400</string>
         </property>
        </item>
@@ -318,6 +323,7 @@ Customer FW</string>
     </property>
     <addaction name="actVeriFw"/>
     <addaction name="actFlashFw"/>
+    <addaction name="act_login"/>
    </widget>
    <addaction name="menuSetting"/>
   </widget>
@@ -342,6 +348,11 @@ Customer FW</string>
   <action name="actFlashFw">
    <property name="text">
     <string>Flash Firmware</string>
+   </property>
+  </action>
+  <action name="act_login">
+   <property name="text">
+    <string>Login</string>
    </property>
   </action>
  </widget>
