@@ -1,9 +1,9 @@
 '''
 @Author: Yixu Wang
 @Github: https://github.com/wangyixu12
-@Date: 2019-09-25 13:28:02
+@Date: 2019-09-25 16:33:28
 @LastEditors: Yixu Wang
-@LastEditTime: 2019-09-25 13:28:02
+@LastEditTime: 2019-09-25 16:33:28
 @Description: 
 '''
 # -*- coding: utf-8 -*-
@@ -46,5 +46,5 @@ class Ui_Warning_obj(object):
         _translate = QtCore.QCoreApplication.translate
         Warning_obj.setWindowTitle(_translate("Warning_obj", "Warning"))
         self.confirm_btn.setText(_translate("Warning_obj", "Confirm"))
-        self.label_2.setText(_translate("Warning_obj", "<html><head/><body><p><span style=\" font-size:20pt; font-weight:600; font-style:italic; color:#ff0000;\">WARNING: </span></p><p><span style=\" font-size:18pt; font-weight:600; color:#ff2222;\">Customer firmware is one-time burning. </span></p><p><span style=\" font-size:18pt; font-weight:600; color:#ff2222;\">Please pay special attention!</span></p></body></html>"))
+        self.label_2.setText(_translate("Warning_obj", "<html><head/><body><p><span style=\" font-size:20pt; font-weight:600; font-style:italic; color:#ff0000;\">WARNING: </span></p><p><span style=\" font-size:16pt; font-weight:600; color:#ff2222;\">Customer firmware is one-time burning. </span></p><p><span style=\" font-size:16pt; font-weight:600; color:#ff2222;\">Please pay special attention!</span></p></body></html>"))
 
