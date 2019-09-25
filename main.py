@@ -2,7 +2,7 @@
 @Author: Yixu Wang
 @Date: 2019-08-06 14:12:40
 @LastEditors: Yixu Wang
-@LastEditTime: 2019-09-24 17:16:13
+@LastEditTime: 2019-09-25 10:52:02
 @Description: The ESP32 Download tool GUI
 '''
 import os
@@ -68,7 +68,10 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.opt_bin_dir = None
         self.cur_port_location = None
         self.config = None
+        
         self.__mode = mode
+        if self.__mode == 'close':
+            sys.exit(0)
 
         self.ver_bin_dict = {
             self.TEST_FLASH : {

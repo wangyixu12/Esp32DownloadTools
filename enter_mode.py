@@ -3,7 +3,7 @@
 @Github: https://github.com/wangyixu12
 @Date: 2019-09-24 16:19:29
 @LastEditors: Yixu Wang
-@LastEditTime: 2019-09-24 16:42:17
+@LastEditTime: 2019-09-25 10:48:18
 @Description: Select download mode (1. Tester 2. Customer) 
 '''
 
@@ -18,7 +18,7 @@ from PyQTUI.Ui_modeForm import Ui_mode_obj
 class SelectMode(QWidget, Ui_mode_obj):
     def __init__(self):
         super(SelectMode, self).__init__()
-        self.mode = None
+        self.mode = "close"
         self.setupUi(self)
         self.setWindowFlag(Qt.WindowMinimizeButtonHint)
         self.setFixedSize(self.width(), self.height())
