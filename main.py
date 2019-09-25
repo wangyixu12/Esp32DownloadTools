@@ -2,7 +2,7 @@
 @Author: Yixu Wang
 @Date: 2019-08-06 14:12:40
 @LastEditors: Yixu Wang
-@LastEditTime: 2019-09-25 10:52:02
+@LastEditTime: 2019-09-25 14:07:20
 @Description: The ESP32 Download tool GUI
 '''
 import os
@@ -12,6 +12,7 @@ import shutil
 from enum import Enum
 import logging
 import yaml
+from time import sleep
 
 from PyQt5.QtCore import pyqtSlot
 from PyQt5.QtCore import QThread
@@ -29,6 +30,7 @@ import esptool
 
 from login import LoginForm
 from enter_mode import SelectMode
+from warning import WarnTip
 from PyQTUI.Ui_mainForm import Ui_MainWindow
 from PyQTUI.Ui_childrenForm import Ui_Form
 from PyQTUI.Ui_flashSetForm import Ui_flashSetForm
@@ -98,6 +100,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.port = ''
         sys.stdout = EmittingStream(textWritten=self.output_written)
 
+        self.warning = WarnTip()
         self.login = LoginForm()
         self.login.ResultSignal.connect(self.__login_in)
         self.actVeriFw.setEnabled(False)
@@ -364,6 +367,10 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
             self.pieFlashBtn.setEnabled(True)
             self.custFlashBtn.setEnabled(False)
         elif self.__mode == 'custer':
+            self.warning.show()
+            sleep(1)
+            self.warning.countdown()
+            QApplication.exec_()
             self.pieFlashBtn.setEnabled(False)
             self.custFlashBtn.setEnabled(True)
 

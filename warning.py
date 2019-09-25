@@ -3,7 +3,7 @@
 @Github: https://github.com/wangyixu12
 @Date: 2019-09-25 11:20:06
 @LastEditors: Yixu Wang
-@LastEditTime: 2019-09-25 13:56:27
+@LastEditTime: 2019-09-25 14:06:43
 @Description: Warning Form
 '''
 
@@ -23,14 +23,12 @@ class WarnTip(QWidget, Ui_Warning_obj):
         super(WarnTip, self).__init__()
         self.setupUi(self)
         self.setWindowFlags(Qt.WindowMaximizeButtonHint)
-        self.show()
         self._time = QTimer()
         self.confirm_btn.setEnabled(False)
-        self.countdown()
         self.confirm_btn.clicked.connect(self.close)
 
     def countdown(self,):
-        time = 5
+        time = 10
         for idx in range(time):
             self.confirm_btn.setText("wait "+str(time-idx)+'s')
             QApplication.processEvents()
@@ -42,5 +40,6 @@ class WarnTip(QWidget, Ui_Warning_obj):
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     win = WarnTip()
-    # win.show()
+    win.show()
+    win.countdown()
     app.exec_()
