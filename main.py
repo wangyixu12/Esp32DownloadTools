@@ -2,7 +2,7 @@
 @Author: Yixu Wang
 @Date: 2019-08-06 14:12:40
 @LastEditors: Yixu Wang
-@LastEditTime: 2019-09-25 14:07:20
+@LastEditTime: 2019-09-27 09:01:40
 @Description: The ESP32 Download tool GUI
 '''
 import os
@@ -164,6 +164,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         cursor = self.resultTextBrowser.textCursor()
         cursor.movePosition(QTextCursor.End)
         cursor.insertText(text)
+        # 插入比较text内容
         self.resultTextBrowser.setTextCursor(cursor)
         self.resultTextBrowser.ensureCursorVisible()
 

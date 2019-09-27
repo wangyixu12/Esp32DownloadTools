@@ -143,7 +143,7 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "Esp32 Download Tools"))
-        self.label_4.setText(_translate("MainWindow", "Flow"))
+        self.label_4.setText(_translate("MainWindow", "Terminal"))
         self.label_3.setText(_translate("MainWindow", "&PORT"))
         self.searchPortBtn.setText(_translate("MainWindow", "Search"))
         self.pieFlashBtn.setText(_translate("MainWindow", "Flash\n"
