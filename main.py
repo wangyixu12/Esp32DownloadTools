@@ -2,7 +2,7 @@
 @Author: Yixu Wang
 @Date: 2019-08-06 14:12:40
 @LastEditors: Yixu Wang
-@LastEditTime: 2019-09-27 17:00:11
+@LastEditTime: 2019-09-27 17:27:10
 @Description: The ESP32 Download tool GUI
 '''
 import os
@@ -405,6 +405,18 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
             QApplication.exec_()
             self.pieFlashBtn.setEnabled(False)
             self.custFlashBtn.setEnabled(True)
+
+class ListenPortThread(QThread):
+    ''' The thread for listen uart port
+    '''
+    def __init__(self, port):
+        self.port = port
+        pass
+
+    def run(self):
+        listener = serial.Serial(port=self.port)
+        if not listener.isOpen():
+            listener.open()
 
 class FlashWorkerThread(QThread):
     ''' The thread for GUI
