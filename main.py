@@ -2,7 +2,7 @@
 @Author: Yixu Wang
 @Date: 2019-08-06 14:12:40
 @LastEditors: Yixu Wang
-@LastEditTime: 2019-09-27 09:01:40
+@LastEditTime: 2019-09-27 14:47:29
 @Description: The ESP32 Download tool GUI
 '''
 import os
@@ -12,6 +12,7 @@ import shutil
 from enum import Enum
 import logging
 import yaml
+import serial
 from time import sleep
 
 from PyQt5.QtCore import pyqtSlot
@@ -43,7 +44,8 @@ class States(Enum):
     ERASE = 1
     WRITE = 2
     VERIFY = 3
-    RESULT = 4
+    RECEIVE= 4
+    RESULT = 5
 
 class MyMainWindow(QMainWindow, Ui_MainWindow):
     ''' Main window's class
@@ -95,6 +97,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
             States.ERASE.value : self.erase_flash,
             States.WRITE.value : self.write_flash,
             States.VERIFY.value : self.verify_flash,
+            States.RECEIVE.value: self.listen_log,
             States.RESULT.value : self._disp_result
         }
         self.port = ''
@@ -164,6 +167,11 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         cursor = self.resultTextBrowser.textCursor()
         cursor.movePosition(QTextCursor.End)
         cursor.insertText(text)
+        # def compare_text(target_str, text):
+        #     if target_str in text:
+        #         print("Find the target string!"+text)
+
+        # compare_text("boot: Disabling RNG early", text)
         # 插入比较text内容
         self.resultTextBrowser.setTextCursor(cursor)
         self.resultTextBrowser.ensureCursorVisible()
@@ -172,6 +180,8 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         # if result == 'FAIL':
         self._enable_btn()
         self.resultBrowser.setHtml("<img src='./img/"+result+".png'>")
+        QApplication.processEvents()
+        self.listen_log()
 
     def flash_thread(self, opt, data=None):
         # print(opt, data)
@@ -181,7 +191,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
             return
         elif data == 'PASS':
             self.resultTextBrowser.append(opt.name + ' --> PASS\n')
-        if opt == States.VERIFY:
+        if opt == States.RECEIVE:
             self._transitions[opt.value + 1](data)
         elif opt == States.CHECK:
             self._transitions[opt.value]()
@@ -281,6 +291,19 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.thread.state = States.VERIFY
         self.thread.command = cmd
         self.thread.start()
+
+    def listen_log(self):
+        print("enter listen\n")
+        listener = serial.Serial(port=self.port, baudrate=self.BAUD, timeout=0.5)
+        try:
+            listener.open()
+        except serial.serialutil.SerialException:
+            print("Port is already open.")
+            listener.close()
+            listener.open()
+        data = listener.readline()
+        print(data)
+        self.flash_thread(States.RECEIVE, "PASS")
 
     def flash_process(self):
         self.resultTextBrowser.clear()
