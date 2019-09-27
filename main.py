@@ -2,7 +2,7 @@
 @Author: Yixu Wang
 @Date: 2019-08-06 14:12:40
 @LastEditors: Yixu Wang
-@LastEditTime: 2019-09-27 14:47:29
+@LastEditTime: 2019-09-27 17:00:11
 @Description: The ESP32 Download tool GUI
 '''
 import os
@@ -167,12 +167,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         cursor = self.resultTextBrowser.textCursor()
         cursor.movePosition(QTextCursor.End)
         cursor.insertText(text)
-        # def compare_text(target_str, text):
-        #     if target_str in text:
-        #         print("Find the target string!"+text)
-
-        # compare_text("boot: Disabling RNG early", text)
-        # 插入比较text内容
+        
         self.resultTextBrowser.setTextCursor(cursor)
         self.resultTextBrowser.ensureCursorVisible()
 
@@ -181,7 +176,6 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self._enable_btn()
         self.resultBrowser.setHtml("<img src='./img/"+result+".png'>")
         QApplication.processEvents()
-        self.listen_log()
 
     def flash_thread(self, opt, data=None):
         # print(opt, data)
@@ -293,16 +287,30 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.thread.start()
 
     def listen_log(self):
-        print("enter listen\n")
-        listener = serial.Serial(port=self.port, baudrate=self.BAUD, timeout=0.5)
+        # print("enter listen\n")
+        listener = serial.Serial(port=self.port, baudrate=self.BAUD, timeout=5)
         try:
             listener.open()
         except serial.serialutil.SerialException:
-            print("Port is already open.")
+            # print("Port is already open.")
             listener.close()
             listener.open()
-        data = listener.readline()
-        print(data)
+            listener.setRTS(True)
+            sleep(0.2)
+            listener.setRTS(False)
+            
+        def compare_text(target_str, text):
+            if target_str in text:
+                print("Find the target string!"+text)
+                listener.close()
+                return True
+            return False
+        while(True):
+            data = listener.readline()
+            print(data)
+        # 插入比较text内容
+            if compare_text("boot: Disabling RNG early", data) is True:
+                break
         self.flash_thread(States.RECEIVE, "PASS")
 
     def flash_process(self):
