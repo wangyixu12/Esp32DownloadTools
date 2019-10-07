@@ -2,7 +2,7 @@
 @Author: Yixu Wang
 @Date: 2019-08-06 14:12:40
 @LastEditors: Yixu Wang
-@LastEditTime: 2019-09-27 17:27:10
+@LastEditTime: 2019-10-07 15:23:36
 @Description: The ESP32 Download tool GUI
 '''
 import os
@@ -44,7 +44,7 @@ class States(Enum):
     ERASE = 1
     WRITE = 2
     VERIFY = 3
-    RECEIVE= 4
+    LISTEN= 4
     RESULT = 5
 
 class MyMainWindow(QMainWindow, Ui_MainWindow):
@@ -97,7 +97,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
             States.ERASE.value : self.erase_flash,
             States.WRITE.value : self.write_flash,
             States.VERIFY.value : self.verify_flash,
-            States.RECEIVE.value: self.listen_log,
+            States.LISTEN.value: self.listen_log,
             States.RESULT.value : self._disp_result
         }
         self.port = ''
@@ -180,12 +180,14 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
     def flash_thread(self, opt, data=None):
         # print(opt, data)
         if data == 'FAIL':
-            self.resultTextBrowser.append(opt.name + ' --> FAIL\n')
+            self.resultTextBrowser.append(opt.name + ' --> FAIL')
+            print('\n')
             self._transitions[States.RESULT.value]("FAIL")
             return
         elif data == 'PASS':
-            self.resultTextBrowser.append(opt.name + ' --> PASS\n')
-        if opt == States.RECEIVE:
+            self.resultTextBrowser.append(opt.name + ' --> PASS')
+            print('\n')
+        if opt == States.LISTEN:
             self._transitions[opt.value + 1](data)
         elif opt == States.CHECK:
             self._transitions[opt.value]()
@@ -288,30 +290,43 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
 
     def listen_log(self):
         # print("enter listen\n")
-        listener = serial.Serial(port=self.port, baudrate=self.BAUD, timeout=5)
+        listener = serial.serial_for_url(self.port, 115200, do_not_open=True)
         try:
             listener.open()
         except serial.serialutil.SerialException:
-            # print("Port is already open.")
+            print("Port is already open.")
             listener.close()
             listener.open()
-            listener.setRTS(True)
-            sleep(0.2)
-            listener.setRTS(False)
-            
+        listener.dtr = False
+        # if not listener.isOpen():
+        #     listener.open()
         def compare_text(target_str, text):
+            assert(type(target_str)==str and type(text)==str)
             if target_str in text:
-                print("Find the target string!"+text)
-                listener.close()
+                print("Find the target string: "+text+"\n")
                 return True
             return False
+
+        listener.rts = True
+        sleep(0.2)
+        self.resultTextBrowser.append("The device will reseting\n")
+        listener.rts = False
         while(True):
-            data = listener.readline()
-            print(data)
+            data = str(listener.readline())
         # 插入比较text内容
-            if compare_text("boot: Disabling RNG early", data) is True:
+            if not data:
+                continue
+            else:
+                data = data.replace("b'", '')
+                data = data.replace("\\r\\n'", '')
+                data = data.replace('x1b[0m', '')
+                data = data.replace('x1b[0;32mI', '')
+            print(data +'\n')
+            QApplication.processEvents()
+            if compare_text('boot: Disabling RNG early', data) is True:
+                listener.close()
                 break
-        self.flash_thread(States.RECEIVE, "PASS")
+        self.flash_thread(States.LISTEN, "PASS")
 
     def flash_process(self):
         self.resultTextBrowser.clear()
