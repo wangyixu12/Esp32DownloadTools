@@ -2,7 +2,7 @@
 @Author: Yixu Wang
 @Date: 2019-08-06 14:12:40
 @LastEditors: Yixu Wang
-@LastEditTime: 2019-10-07 16:11:18
+@LastEditTime: 2019-10-07 17:29:06
 @Description: The ESP32 Download tool GUI
 '''
 import os
@@ -295,6 +295,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
     def listen_log(self):
         # print("enter listen\n")
         listener = serial.serial_for_url(self.port, 115200, do_not_open=True)
+        listener.timeout = 1
         try:
             listener.open()
         except serial.serialutil.SerialException:
@@ -315,22 +316,23 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         listener.rts = False
         result = None
         begin_time = time.time()
-        test_timeout = 5
+        test_timeout = 3
         cust_timeout = 35
         while(True):
             data = str(listener.readline())
-        # 插入比较text内容
-            if not data:
-                continue
-            else:
-                data = data.replace("b'", '')
-                data = data.replace("\\r\\n'", '')
-                data = data.replace('x1b[0m', '')
-                data = data.replace('x1b[0;32mI', '')
-            print(data +'\n')
             QApplication.processEvents()
+        # 插入比较text内容
+            data = data.replace('\\x00', '')
+            data = data.replace("b'", '')
+            data = data.replace("\\r\\n'", '')
+            data = data.replace('x1b[0m', '')
+            data = data.replace('x1b[0;32mI', '')
+            data = data.replace('\\', '')
+            data = data.replace('\'', '')
+            if data is not '':
+                print(data +'\n')
             if self.opt_choose is self.TEST_FLASH:
-                if compare_text(self.TEST_COMPARE_STR, data) is True:
+                if compare_text(self.TEST_COMPARE_STR, data) is True and data is not None:
                     result = 'PASS'
                     break
                 if self.timeout_fun(begin_time, test_timeout) is False:
@@ -349,7 +351,8 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.flash_thread(States.LISTEN, result)
 
     def timeout_fun(self, begin_time, timeout):
-        if time.time() - begin_time < timeout:
+        use_time = time.time() - begin_time
+        if use_time < timeout:
             return True
         return False
 
