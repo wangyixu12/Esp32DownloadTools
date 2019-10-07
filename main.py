@@ -2,7 +2,7 @@
 @Author: Yixu Wang
 @Date: 2019-08-06 14:12:40
 @LastEditors: Yixu Wang
-@LastEditTime: 2019-10-07 15:23:36
+@LastEditTime: 2019-10-07 16:11:18
 @Description: The ESP32 Download tool GUI
 '''
 import os
@@ -14,6 +14,7 @@ import logging
 import yaml
 import serial
 from time import sleep
+import time
 
 from PyQt5.QtCore import pyqtSlot
 from PyQt5.QtCore import QThread
@@ -62,6 +63,9 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
 
     TEST_FLASH = 'test'
     CUST_FLASH = 'customer'
+
+    TEST_COMPARE_STR = 'Version:'
+    CUST_COMPARE_STR = 'secure_boot: bootloader secure boot is already enabled, continuing..'
 
     def __init__(self, parent=None, mode=None):
         super(MyMainWindow, self).__init__(parent)
@@ -298,12 +302,10 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
             listener.close()
             listener.open()
         listener.dtr = False
-        # if not listener.isOpen():
-        #     listener.open()
         def compare_text(target_str, text):
             assert(type(target_str)==str and type(text)==str)
             if target_str in text:
-                print("Find the target string: "+text+"\n")
+                # print("Find the target string: "+text+"\n")
                 return True
             return False
 
@@ -311,6 +313,10 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         sleep(0.2)
         self.resultTextBrowser.append("The device will reseting\n")
         listener.rts = False
+        result = None
+        begin_time = time.time()
+        test_timeout = 5
+        cust_timeout = 35
         while(True):
             data = str(listener.readline())
         # 插入比较text内容
@@ -323,10 +329,29 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
                 data = data.replace('x1b[0;32mI', '')
             print(data +'\n')
             QApplication.processEvents()
-            if compare_text('boot: Disabling RNG early', data) is True:
-                listener.close()
-                break
-        self.flash_thread(States.LISTEN, "PASS")
+            if self.opt_choose is self.TEST_FLASH:
+                if compare_text(self.TEST_COMPARE_STR, data) is True:
+                    result = 'PASS'
+                    break
+                if self.timeout_fun(begin_time, test_timeout) is False:
+                    result = 'FAIL'
+                    print('Monitoring Timeout!!!\n')
+                    break
+            elif self.opt_choose is self.CUST_FLASH:
+                if compare_text(self.CUST_COMPARE_STR, data) is True:
+                    result = 'PASS'
+                    break
+                if self.timeout_fun(begin_time, cust_timeout) is False:
+                    result = 'FAIL'
+                    print('Monitoring Timeout!!!\n')
+                    break
+        listener.close()
+        self.flash_thread(States.LISTEN, result)
+
+    def timeout_fun(self, begin_time, timeout):
+        if time.time() - begin_time < timeout:
+            return True
+        return False
 
     def flash_process(self):
         self.resultTextBrowser.clear()
