@@ -2,7 +2,7 @@
 @Author: Yixu Wang
 @Date: 2019-08-06 14:12:40
 @LastEditors: Yixu Wang
-@LastEditTime: 2019-09-25 14:07:20
+@LastEditTime: 2019-10-07 17:29:06
 @Description: The ESP32 Download tool GUI
 '''
 import os
@@ -12,7 +12,9 @@ import shutil
 from enum import Enum
 import logging
 import yaml
+import serial
 from time import sleep
+import time
 
 from PyQt5.QtCore import pyqtSlot
 from PyQt5.QtCore import QThread
@@ -43,7 +45,8 @@ class States(Enum):
     ERASE = 1
     WRITE = 2
     VERIFY = 3
-    RESULT = 4
+    LISTEN= 4
+    RESULT = 5
 
 class MyMainWindow(QMainWindow, Ui_MainWindow):
     ''' Main window's class
@@ -60,6 +63,9 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
 
     TEST_FLASH = 'test'
     CUST_FLASH = 'customer'
+
+    TEST_COMPARE_STR = 'Version:'
+    CUST_COMPARE_STR = 'secure_boot: bootloader secure boot is already enabled, continuing..'
 
     def __init__(self, parent=None, mode=None):
         super(MyMainWindow, self).__init__(parent)
@@ -95,6 +101,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
             States.ERASE.value : self.erase_flash,
             States.WRITE.value : self.write_flash,
             States.VERIFY.value : self.verify_flash,
+            States.LISTEN.value: self.listen_log,
             States.RESULT.value : self._disp_result
         }
         self.port = ''
@@ -164,6 +171,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         cursor = self.resultTextBrowser.textCursor()
         cursor.movePosition(QTextCursor.End)
         cursor.insertText(text)
+        
         self.resultTextBrowser.setTextCursor(cursor)
         self.resultTextBrowser.ensureCursorVisible()
 
@@ -171,16 +179,19 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         # if result == 'FAIL':
         self._enable_btn()
         self.resultBrowser.setHtml("<img src='./img/"+result+".png'>")
+        QApplication.processEvents()
 
     def flash_thread(self, opt, data=None):
         # print(opt, data)
         if data == 'FAIL':
-            self.resultTextBrowser.append(opt.name + ' --> FAIL\n')
+            self.resultTextBrowser.append(opt.name + ' --> FAIL')
+            print('\n')
             self._transitions[States.RESULT.value]("FAIL")
             return
         elif data == 'PASS':
-            self.resultTextBrowser.append(opt.name + ' --> PASS\n')
-        if opt == States.VERIFY:
+            self.resultTextBrowser.append(opt.name + ' --> PASS')
+            print('\n')
+        if opt == States.LISTEN:
             self._transitions[opt.value + 1](data)
         elif opt == States.CHECK:
             self._transitions[opt.value]()
@@ -281,6 +292,70 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.thread.command = cmd
         self.thread.start()
 
+    def listen_log(self):
+        # print("enter listen\n")
+        listener = serial.serial_for_url(self.port, 115200, do_not_open=True)
+        listener.timeout = 1
+        try:
+            listener.open()
+        except serial.serialutil.SerialException:
+            print("Port is already open.")
+            listener.close()
+            listener.open()
+        listener.dtr = False
+        def compare_text(target_str, text):
+            assert(type(target_str)==str and type(text)==str)
+            if target_str in text:
+                # print("Find the target string: "+text+"\n")
+                return True
+            return False
+
+        listener.rts = True
+        sleep(0.2)
+        self.resultTextBrowser.append("The device will reseting\n")
+        listener.rts = False
+        result = None
+        begin_time = time.time()
+        test_timeout = 3
+        cust_timeout = 35
+        while(True):
+            data = str(listener.readline())
+            QApplication.processEvents()
+        # 插入比较text内容
+            data = data.replace('\\x00', '')
+            data = data.replace("b'", '')
+            data = data.replace("\\r\\n'", '')
+            data = data.replace('x1b[0m', '')
+            data = data.replace('x1b[0;32mI', '')
+            data = data.replace('\\', '')
+            data = data.replace('\'', '')
+            if data is not '':
+                print(data +'\n')
+            if self.opt_choose is self.TEST_FLASH:
+                if compare_text(self.TEST_COMPARE_STR, data) is True and data is not None:
+                    result = 'PASS'
+                    break
+                if self.timeout_fun(begin_time, test_timeout) is False:
+                    result = 'FAIL'
+                    print('Monitoring Timeout!!!\n')
+                    break
+            elif self.opt_choose is self.CUST_FLASH:
+                if compare_text(self.CUST_COMPARE_STR, data) is True:
+                    result = 'PASS'
+                    break
+                if self.timeout_fun(begin_time, cust_timeout) is False:
+                    result = 'FAIL'
+                    print('Monitoring Timeout!!!\n')
+                    break
+        listener.close()
+        self.flash_thread(States.LISTEN, result)
+
+    def timeout_fun(self, begin_time, timeout):
+        use_time = time.time() - begin_time
+        if use_time < timeout:
+            return True
+        return False
+
     def flash_process(self):
         self.resultTextBrowser.clear()
         self.resultBrowser.clear()
@@ -373,6 +448,18 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
             QApplication.exec_()
             self.pieFlashBtn.setEnabled(False)
             self.custFlashBtn.setEnabled(True)
+
+class ListenPortThread(QThread):
+    ''' The thread for listen uart port
+    '''
+    def __init__(self, port):
+        self.port = port
+        pass
+
+    def run(self):
+        listener = serial.Serial(port=self.port)
+        if not listener.isOpen():
+            listener.open()
 
 class FlashWorkerThread(QThread):
     ''' The thread for GUI
