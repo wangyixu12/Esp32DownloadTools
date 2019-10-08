@@ -17,7 +17,7 @@ class Ui_Warning_obj(object):
         self.warn_png = QtWidgets.QLabel(Warning_obj)
         self.warn_png.setGeometry(QtCore.QRect(20, 30, 71, 71))
         self.warn_png.setText("")
-        self.warn_png.setPixmap(QtGui.QPixmap("../img/readmeImg/waring.png"))
+        self.warn_png.setPixmap(QtGui.QPixmap("img/waring.png"))
         self.warn_png.setObjectName("warn_png")
         self.confirm_btn = QtWidgets.QPushButton(Warning_obj)
         self.confirm_btn.setGeometry(QtCore.QRect(230, 210, 98, 26))
