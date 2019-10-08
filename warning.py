@@ -3,7 +3,7 @@
 @Github: https://github.com/wangyixu12
 @Date: 2019-09-25 11:20:06
 @LastEditors: Yixu Wang
-@LastEditTime: 2019-09-25 14:06:43
+@LastEditTime: 2019-10-08 09:03:18
 @Description: Warning Form
 '''
 
@@ -35,7 +35,7 @@ class WarnTip(QWidget, Ui_Warning_obj):
             sleep(1)
         else:
             self.confirm_btn.setEnabled(True)
-            self.confirm_btn.setText("Confirm")
+            self.confirm_btn.setText("I KNOW")
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
