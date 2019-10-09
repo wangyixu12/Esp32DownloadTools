@@ -2,7 +2,7 @@
 @Author: Yixu Wang
 @Date: 2019-08-06 14:12:40
 @LastEditors: Yixu Wang
-@LastEditTime: 2019-10-07 17:29:06
+@LastEditTime: 2019-10-08 16:07:05
 @Description: The ESP32 Download tool GUI
 '''
 import os
