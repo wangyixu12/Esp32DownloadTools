@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>620</width>
+    <width>650</width>
     <height>263</height>
    </rect>
   </property>
@@ -18,7 +18,7 @@
   </property>
   <property name="maximumSize">
    <size>
-    <width>620</width>
+    <width>650</width>
     <height>300</height>
    </size>
   </property>
@@ -64,7 +64,7 @@
     <rect>
      <x>120</x>
      <y>10</y>
-     <width>491</width>
+     <width>531</width>
      <height>191</height>
     </rect>
    </property>
@@ -81,7 +81,7 @@
     </size>
    </property>
    <property name="text">
-    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:20pt; font-weight:600; font-style:italic; color:#ff0000;&quot;&gt;WARNING: &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:16pt; font-weight:600; color:#ff2222;&quot;&gt;Please pay special attention to the operation of&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:16pt; font-weight:600; color:#ff2222;&quot;&gt;burning the customer firmware. This operation&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:16pt; font-weight:600; color:#ff2222;&quot;&gt;will make the product unable to perform the&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:16pt; font-weight:600; color:#ff2222;&quot;&gt;second burning!&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:20pt; font-weight:600; font-style:italic; color:#ff0000;&quot;&gt;WARNING: &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:16pt; font-weight:600; color:#ca2d2d;&quot;&gt;Flashing of customer firmware is allowed only once.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:16pt; font-weight:600; color:#ca2d2d;&quot;&gt;The customer firmware is encrypted any further &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:16pt; font-weight:600; color:#ca2d2d;&quot;&gt;flashing operation will corrupt the units system!&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
   </widget>
  </widget>
