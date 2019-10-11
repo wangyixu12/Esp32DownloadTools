@@ -2,9 +2,11 @@
 @Author: Yixu Wang
 @Date: 2019-08-06 14:12:40
 @LastEditors: Yixu Wang
-@LastEditTime: 2019-10-11 14:53:19
+@LastEditTime: 2019-10-11 15:34:50
 @Description: The ESP32 Download tool GUI
 '''
+__version__ = 'v1.2.1'
+
 import os
 import sys
 import codecs
@@ -77,6 +79,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.cur_port_location = None
         self.config = None
         self.is_login = False
+        self.setWindowTitle("Esp32DownloadTools_"+__version__)        
         
         self.__mode = mode
         if self.__mode == 'close':
