@@ -2,7 +2,7 @@
 @Author: Yixu Wang
 @Date: 2019-08-06 14:12:40
 @LastEditors: Yixu Wang
-@LastEditTime: 2019-10-08 16:07:05
+@LastEditTime: 2019-10-11 14:53:19
 @Description: The ESP32 Download tool GUI
 '''
 import os
@@ -76,6 +76,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.opt_bin_dir = None
         self.cur_port_location = None
         self.config = None
+        self.is_login = False
         
         self.__mode = mode
         if self.__mode == 'close':
@@ -136,8 +137,10 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
 
     def __login_in(self, result):
         if result == 'login':
+            self.is_login = True
             self._enable_btn()
         elif result == 'close':
+            self.is_login = False
             self.actVeriFw.setEnabled(False)
             self.actFlashFw.setEnabled(False)
         else:
@@ -152,8 +155,9 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         # self.pieFlashBtn.setEnabled(True)
         # self.custFlashBtn.setEnabled(True)
         self.searchPortBtn.setEnabled(True)
-        self.actVeriFw.setEnabled(True)
-        self.actFlashFw.setEnabled(True)
+        if self.is_login is True:
+            self.actVeriFw.setEnabled(True)
+            self.actFlashFw.setEnabled(True)
 
     def _disable_btn(self):
         if self.__mode == 'tester':
