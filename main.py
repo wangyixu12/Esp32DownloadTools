@@ -2,10 +2,10 @@
 @Author: Yixu Wang
 @Date: 2019-08-06 14:12:40
 @LastEditors: Yixu Wang
-@LastEditTime: 2019-10-11 15:34:50
+@LastEditTime: 2019-10-22 11:56:41
 @Description: The ESP32 Download tool GUI
 '''
-__version__ = 'v1.2.1'
+__version__ = 'v1.2.2_beta.1'
 
 import os
 import sys
