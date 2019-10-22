@@ -63,9 +63,9 @@
    <property name="geometry">
     <rect>
      <x>120</x>
-     <y>10</y>
+     <y>20</y>
      <width>531</width>
-     <height>191</height>
+     <height>181</height>
     </rect>
    </property>
    <property name="minimumSize">
@@ -81,7 +81,7 @@
     </size>
    </property>
    <property name="text">
-    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:20pt; font-weight:600; font-style:italic; color:#ff0000;&quot;&gt;WARNING: &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:16pt; font-weight:600; color:#ca2d2d;&quot;&gt;Flashing of customer firmware is allowed only once.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:16pt; font-weight:600; color:#ca2d2d;&quot;&gt;The customer firmware is encrypted any further &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:16pt; font-weight:600; color:#ca2d2d;&quot;&gt;flashing operation will corrupt the units system!&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:20pt; font-weight:600; font-style:italic; color:#ff0000;&quot;&gt;WARNING: &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:14pt; font-weight:600; color:#ca2d2d;&quot;&gt;Flashing of customer firmware is allowed only once.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:14pt; font-weight:600; color:#ca2d2d;&quot;&gt;The customer firmware is encrypted any further &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:14pt; font-weight:600; color:#ca2d2d;&quot;&gt;flashing operation will corrupt the units system!&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
   </widget>
  </widget>

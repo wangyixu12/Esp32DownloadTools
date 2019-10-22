@@ -2,7 +2,7 @@
 @Author: Yixu Wang
 @Date: 2019-08-06 14:12:40
 @LastEditors: Yixu Wang
-@LastEditTime: 2019-10-22 22:16:30
+@LastEditTime: 2019-10-22 22:28:55
 @Description: The ESP32 Download tool GUI
 '''
 __version__ = 'v1.3.0_beta.1'
@@ -12,11 +12,11 @@ import sys
 import codecs
 import shutil
 from enum import Enum
-import logging
-import yaml
-import serial
 from time import sleep
 import time
+import serial
+import yaml
+
 
 from PyQt5.QtCore import pyqtSlot
 from PyQt5.QtCore import QThread
@@ -38,7 +38,6 @@ from enter_mode import SelectMode
 from warning import WarnTip
 from PyQTUI.Ui_mainForm import Ui_MainWindow
 from PyQTUI.Ui_childrenForm import Ui_Form
-from PyQTUI.Ui_modeForm import Ui_mode_obj
 
 DEBUG = False
 
@@ -454,7 +453,6 @@ class ListenPortThread(QThread):
     '''
     def __init__(self, port):
         self.port = port
-        pass
 
     def run(self):
         listener = serial.Serial(port=self.port)
@@ -483,13 +481,13 @@ class ChildrenForm(QWidget, Ui_Form):
     _TESTER_CFG_PATH = _HIDE_DIR_PATH + 'tester/'
     _CUST_CFG_PATH = _HIDE_DIR_PATH + 'cust/'
     _CFG_YAML_NAME = 'config.yml'
-    
+
     def __init__(self, mode):
         super(ChildrenForm, self).__init__()
         self.setupUi(self)
         self._default_yaml_name = 'config/configDefault.yml'
         self._user_yaml_name = 'config/configUser.yml'
-        
+
         self.__mode = mode
 
         self.win_name = 'childrenForm'
@@ -505,7 +503,7 @@ class ChildrenForm(QWidget, Ui_Form):
             self.custBinOffset_2: "custBinOffset_2",
             self.custBinOffset_3: "custBinOffset_3",
             self.custBinOffset_4: "custBinOffset_4",
-            
+
             self.pieFwEdit: 'pieFwEdit',
 
             self.pieBinDir_1: "pieBinDir_1",
@@ -563,7 +561,7 @@ class ChildrenForm(QWidget, Ui_Form):
 
     def full_in_editbox(self, config, path):
         if self.__mode == 'tester':
-            bin_dir_list = [self.pieBinDir_1, 
+            bin_dir_list = [self.pieBinDir_1,
                             self.pieBinDir_2,
                             self.pieBinDir_3,
                             self.pieBinDir_4]
