@@ -54,7 +54,7 @@
   <widget class="QLabel" name="label_3">
    <property name="geometry">
     <rect>
-     <x>470</x>
+     <x>420</x>
      <y>230</y>
      <width>41</width>
      <height>16</height>
@@ -67,7 +67,7 @@
   <widget class="QLabel" name="label_4">
    <property name="geometry">
     <rect>
-     <x>470</x>
+     <x>420</x>
      <y>390</y>
      <width>41</width>
      <height>16</height>
@@ -127,36 +127,7 @@
      </layout>
     </item>
     <item>
-     <layout class="QVBoxLayout" name="verticalLayout_3">
-      <item>
-       <widget class="QToolButton" name="custBinOptBtn_1">
-        <property name="text">
-         <string>...</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QToolButton" name="custBinOptBtn_2">
-        <property name="text">
-         <string>...</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QToolButton" name="custBinOptBtn_3">
-        <property name="text">
-         <string>...</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QToolButton" name="custBinOptBtn_4">
-        <property name="text">
-         <string>...</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
+     <layout class="QVBoxLayout" name="verticalLayout_3"/>
     </item>
     <item>
      <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -264,36 +235,7 @@
        </layout>
       </item>
       <item>
-       <layout class="QVBoxLayout" name="verticalLayout_8">
-        <item>
-         <widget class="QToolButton" name="pieBinOptBtn_1">
-          <property name="text">
-           <string>...</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QToolButton" name="pieBinOptBtn_2">
-          <property name="text">
-           <string>...</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QToolButton" name="pieBinOptBtn_3">
-          <property name="text">
-           <string>...</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QToolButton" name="pieBinOptBtn_4">
-          <property name="text">
-           <string>...</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
+       <layout class="QVBoxLayout" name="verticalLayout_8"/>
       </item>
       <item>
        <layout class="QVBoxLayout" name="verticalLayout_9">
@@ -369,7 +311,7 @@
     <rect>
      <x>20</x>
      <y>10</y>
-     <width>511</width>
+     <width>481</width>
      <height>60</height>
     </rect>
    </property>
@@ -429,28 +371,20 @@
  </widget>
  <tabstops>
   <tabstop>custBinDir_1</tabstop>
-  <tabstop>custBinOptBtn_1</tabstop>
   <tabstop>custBinOffset_1</tabstop>
   <tabstop>custBinDir_2</tabstop>
-  <tabstop>custBinOptBtn_2</tabstop>
   <tabstop>custBinOffset_2</tabstop>
   <tabstop>custBinDir_3</tabstop>
-  <tabstop>custBinOptBtn_3</tabstop>
   <tabstop>custBinOffset_3</tabstop>
   <tabstop>custBinDir_4</tabstop>
-  <tabstop>custBinOptBtn_4</tabstop>
   <tabstop>custBinOffset_4</tabstop>
   <tabstop>pieBinDir_1</tabstop>
-  <tabstop>pieBinOptBtn_1</tabstop>
   <tabstop>pieBinOffset_1</tabstop>
   <tabstop>pieBinDir_2</tabstop>
-  <tabstop>pieBinOptBtn_2</tabstop>
   <tabstop>pieBinOffset_2</tabstop>
   <tabstop>pieBinDir_3</tabstop>
-  <tabstop>pieBinOptBtn_3</tabstop>
   <tabstop>pieBinOffset_3</tabstop>
   <tabstop>pieBinDir_4</tabstop>
-  <tabstop>pieBinOptBtn_4</tabstop>
   <tabstop>pieBinOffset_4</tabstop>
  </tabstops>
  <resources/>

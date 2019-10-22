@@ -2,7 +2,7 @@
 @Author: Yixu Wang
 @Date: 2019-08-06 14:12:40
 @LastEditors: Yixu Wang
-@LastEditTime: 2019-10-22 11:56:41
+@LastEditTime: 2019-10-22 15:31:02
 @Description: The ESP32 Download tool GUI
 '''
 __version__ = 'v1.2.2_beta.1'
@@ -531,16 +531,6 @@ class ChildrenForm(QWidget, Ui_Form):
         self.pieBinDir_3.setReadOnly(True)
         self.pieBinDir_4.setReadOnly(True)
 
-        self.custBinOptBtn_1.clicked.connect(self.open_dir)
-        self.custBinOptBtn_2.clicked.connect(self.open_dir)
-        self.custBinOptBtn_3.clicked.connect(self.open_dir)
-        self.custBinOptBtn_4.clicked.connect(self.open_dir)
-
-        self.pieBinOptBtn_1.clicked.connect(self.open_dir)
-        self.pieBinOptBtn_2.clicked.connect(self.open_dir)
-        self.pieBinOptBtn_3.clicked.connect(self.open_dir)
-        self.pieBinOptBtn_4.clicked.connect(self.open_dir)
-
         self.binFileComfirm.button(self.binFileComfirm.Save).clicked.connect(self._save)
         self.binFileComfirm.button(self.binFileComfirm.Discard).clicked.connect(self._discard)
 
@@ -568,23 +558,6 @@ class ChildrenForm(QWidget, Ui_Form):
         yaml.dump(data, config_file_edit, yaml.SafeDumper)
         config_file_edit.close()
 
-    def open_dir(self):
-        btn_dict = {
-            self.custBinOptBtn_1: self.custBinDir_1,
-            self.custBinOptBtn_2: self.custBinDir_2,
-            self.custBinOptBtn_3: self.custBinDir_3,
-            self.custBinOptBtn_4: self.custBinDir_4,
-
-            self.pieBinOptBtn_1: self.pieBinDir_1,
-            self.pieBinOptBtn_2: self.pieBinDir_2,
-            self.pieBinOptBtn_3: self.pieBinDir_3,
-            self.pieBinOptBtn_4: self.pieBinDir_4,
-        }
-        assert self.sender() in btn_dict.keys()
-        file, ok = QFileDialog.getOpenFileName(self, "Open", './', 'Binary Files(*.bin)')
-        btn_dict[self.sender()].setText(file)
-        # self.edit_yaml(self.win_name, self._win_edit_dict[btn_dict[self.sender()]], file)
-
     def set_win(self):
         for key, file in self._win_edit_dict.items():
             key.setText(self.config[self.win_name][file])
@@ -600,11 +573,6 @@ class ChildrenForm(QWidget, Ui_Form):
         self.load_yaml()
         self.set_win()
         if self.__mode == 'tester':
-            self.custBinOptBtn_1.setEnabled(False)
-            self.custBinOptBtn_2.setEnabled(False)
-            self.custBinOptBtn_3.setEnabled(False)
-            self.custBinOptBtn_4.setEnabled(False)
-
             self.custBinOffset_1.setEnabled(False)
             self.custBinOffset_2.setEnabled(False)
             self.custBinOffset_3.setEnabled(False)
@@ -615,11 +583,6 @@ class ChildrenForm(QWidget, Ui_Form):
             self.custBinDir_3.setEnabled(False)
             self.custBinDir_4.setEnabled(False)
         elif self.__mode == 'custer':
-            self.pieBinOptBtn_1.setEnabled(False)
-            self.pieBinOptBtn_2.setEnabled(False)
-            self.pieBinOptBtn_3.setEnabled(False)
-            self.pieBinOptBtn_4.setEnabled(False)
-            
             self.pieBinOffset_1.setEnabled(False)
             self.pieBinOffset_2.setEnabled(False)
             self.pieBinOffset_3.setEnabled(False)
