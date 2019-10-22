@@ -2,7 +2,7 @@
 @Author: Yixu Wang
 @Date: 2019-08-06 14:12:40
 @LastEditors: Yixu Wang
-@LastEditTime: 2019-10-22 21:53:14
+@LastEditTime: 2019-10-22 22:14:51
 @Description: The ESP32 Download tool GUI
 '''
 __version__ = 'v1.3.0_beta.1'
@@ -38,7 +38,6 @@ from enter_mode import SelectMode
 from warning import WarnTip
 from PyQTUI.Ui_mainForm import Ui_MainWindow
 from PyQTUI.Ui_childrenForm import Ui_Form
-from PyQTUI.Ui_flashSetForm import Ui_flashSetForm
 from PyQTUI.Ui_modeForm import Ui_mode_obj
 
 DEBUG = True
@@ -125,8 +124,6 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.child = ChildrenForm(mode=self.__mode)
         self.child.CloseSignal.connect(self._enable_btn)
 
-        self.flash_set = FwSetForm(self.__mode)
-        self.flash_set.CloseSignal.connect(self._enable_btn)
 
         self.thread = FlashWorkerThread()
         self.thread.finish.connect(self.flash_thread)
@@ -136,7 +133,6 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
 
         self.act_login.triggered.connect(self.login.show)
         self.actVeriFw.triggered.connect(self.child_show)
-        self.actFlashFw.triggered.connect(self.flash_set_show)
         self.searchPortBtn.clicked.connect(self.search_var_port)
         self.portComBox.currentIndexChanged.connect(self.select_com_port)
 
@@ -386,8 +382,6 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         print(yaml_config)
         config_file.close()
 
-        # self.opt_bin_dir = self.custFwEdit.text()
-        self.opt_bin_dir = yaml_config[self.flash_set.win_name]["custFwEdit"]
         self.flash_process()
 
     @pyqtSlot()
@@ -400,7 +394,6 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         config_file.close()
 
         # self.opt_bin_dir = self.pieFwEdit.text()
-        self.opt_bin_dir = yaml_config[self.flash_set.win_name]["pieFwEdit"]
         self.flash_process()
 
     def search_var_port(self):
@@ -442,11 +435,6 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.child.show()
         self._disable_btn()
         self.child.run()
-
-    def flash_set_show(self):
-        self.flash_set.show()
-        self._disable_btn()
-        self.flash_set.run()
 
     def run(self):
         self.load_yaml()
@@ -692,88 +680,8 @@ class EmittingStream(QObject):
     def flush(self):
         pass
 
-class FwSetForm(QWidget, Ui_flashSetForm):
-    CloseSignal = pyqtSignal()
-    def __init__(self, mode):
-        super(FwSetForm, self).__init__()
-        self.setupUi(self)
-        self.setWindowFlags(Qt.WindowMinimizeButtonHint)
-        self.setFixedSize(self.width(), self.height())
-        self._default_yaml_name = 'config/configDefault.yml'
-        self._user_yaml_name = 'config/configUser.yml'
-        self.__mode = mode
 
-        self.win_name = 'childrenForm'
-        self._win_edit_dict = {
-            self.custFwEdit: 'custFwEdit',
-            self.pieFwEdit: 'pieFwEdit',
-        }
 
-        self.pieFwEdit.setReadOnly(True)
-        self.custFwEdit.setReadOnly(True)
-
-        self.pieFwOptBtn.clicked.connect(self._open_dir)
-        self.custFwOptBtn.clicked.connect(self._open_dir)
-
-        self.binFileComfirm.button(self.binFileComfirm.Save).clicked.connect(self._save)
-        self.binFileComfirm.button(self.binFileComfirm.Discard).clicked.connect(self._discard)
-
-    def __del__(self):
-        self.close()
-        self.CloseSignal.emit()
-
-    def _save(self):
-        for edit_key in self._win_edit_dict:
-            text = edit_key.text()
-            self.edit_yaml(self.win_name, self._win_edit_dict[edit_key], text)
-        # self.close()
-        self._close_win()
-
-    def _discard(self):
-        # self.close()
-        self._close_win()
-
-    def _close_win(self):
-        self.close()
-        self.CloseSignal.emit()
-
-    def edit_yaml(self, win_name, key, value):
-        config_file_edit = codecs.open(self._user_yaml_name, 'w', encoding='utf-8')
-        data = self.config
-        data[win_name][key] = value
-        data.update()
-        yaml.dump(data, config_file_edit, yaml.SafeDumper)
-        config_file_edit.close()
-
-    def _open_dir(self):
-        btn_dict = {self.custFwOptBtn: self.custFwEdit, self.pieFwOptBtn: self.pieFwEdit}
-        assert self.sender() in btn_dict.keys()
-        file_path, _ = QFileDialog.getOpenFileName(self, "Open", "./", "Binary Files(*.bin)")
-        btn_dict[self.sender()].setText(file_path)
-        # self.edit_yaml(self.win_name, self._win_edit_dict[btn_dict[self.sender()]], file)
-
-    def _set_win(self):
-        for key, file in self._win_edit_dict.items():
-            key.setText(self.config[self.win_name][file])
-
-    def load_yaml(self):
-        if not os.path.exists(self._user_yaml_name):
-            shutil.copyfile(self._default_yaml_name, self._user_yaml_name)
-        self.config_file = codecs.open(self._user_yaml_name, 'r', encoding='utf-8')
-        self.config = yaml.load(self.config_file, yaml.Loader)
-        self.config_file.close()
-
-    def run(self):
-        self.load_yaml()
-        self._set_win()
-
-        if self.__mode == 'tester':
-            self.custFwEdit.setEnabled(False)
-            self.custFwOptBtn.setEnabled(False)
-
-        elif self.__mode == 'custer':
-            self.pieFwEdit.setEnabled(False)
-            self.pieFwOptBtn.setEnabled(False)
 
 def main():
     app = QApplication(sys.argv)
