@@ -2,7 +2,7 @@
 @Author: Yixu Wang
 @Date: 2019-08-06 14:12:40
 @LastEditors: Yixu Wang
-@LastEditTime: 2019-10-22 22:14:51
+@LastEditTime: 2019-10-22 22:16:30
 @Description: The ESP32 Download tool GUI
 '''
 __version__ = 'v1.3.0_beta.1'
@@ -40,7 +40,7 @@ from PyQTUI.Ui_mainForm import Ui_MainWindow
 from PyQTUI.Ui_childrenForm import Ui_Form
 from PyQTUI.Ui_modeForm import Ui_mode_obj
 
-DEBUG = True
+DEBUG = False
 
 class States(Enum):
     ''' State machine's states enumeration.
@@ -679,9 +679,6 @@ class EmittingStream(QObject):
 
     def flush(self):
         pass
-
-
-
 
 def main():
     app = QApplication(sys.argv)
