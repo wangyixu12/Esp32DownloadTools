@@ -2,12 +2,12 @@
 @Author: Yixu Wang
 @Date: 2019-10-22 13:40:46
 @LastEditors: Yixu Wang
-@LastEditTime: 2019-10-22 14:41:59
+@LastEditTime: 2019-10-22 14:49:54
 @Version: v0.0.1
 @Description: unzip file
 '''
 import zipfile
-# import yaml
+import yaml
 import os
 
 def unzip(file_name, dir_name):
@@ -21,9 +21,20 @@ def unzip(file_name, dir_name):
     zip_file.extractall(dir_name, zip_member)
     zip_file.close()
 
+def load_yaml(file_name):
+    '''
+        load yaml file
+    '''
+    file = open(file_name)
+    yfile = yaml.load(file)
+    return yfile
+
 if __name__ == "__main__":
     FILE_DIR = './data/50FW-000W0-P1C-0200-118_0x03F52E3D/'
     FILE_NAME = 'ubuntu_download_tool_config.zip'
-    __HIDE_DIR_PATH = './.data/'
-    __TESTER_DIR_NAME = __HIDE_DIR_PATH + 'tester'
+    __HIDE_DIR_PATH = '.data/'
+    __TESTER_DIR_NAME = __HIDE_DIR_PATH + 'tester/'
     unzip(FILE_DIR+FILE_NAME, __TESTER_DIR_NAME)
+    CONFIG_NAME = 'config.yml'
+    y = load_yaml(__TESTER_DIR_NAME+CONFIG_NAME)
+    print(y)
