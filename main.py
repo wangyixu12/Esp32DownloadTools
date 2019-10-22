@@ -2,7 +2,7 @@
 @Author: Yixu Wang
 @Date: 2019-08-06 14:12:40
 @LastEditors: Yixu Wang
-@LastEditTime: 2019-10-22 16:32:27
+@LastEditTime: 2019-10-22 17:39:31
 @Description: The ESP32 Download tool GUI
 '''
 __version__ = 'v1.3.0_beta.1'
@@ -487,14 +487,16 @@ class FlashWorkerThread(QThread):
 
 class ChildrenForm(QWidget, Ui_Form):
     CloseSignal = pyqtSignal()
+    _HIDE_DIR_PATH = '.data/'
+    _TESTER_CFG_PATH = _HIDE_DIR_PATH + 'tester/'
+    _CUST_CFG_PATH = _HIDE_DIR_PATH + 'cust/'
+    _CFG_YAML_NAME = 'config.yml'
+    
     def __init__(self, mode):
         super(ChildrenForm, self).__init__()
         self.setupUi(self)
         self._default_yaml_name = 'config/configDefault.yml'
         self._user_yaml_name = 'config/configUser.yml'
-        __HIDE_DIR_PATH = '.data/'
-        _TESTER_CFG_PATH = __HIDE_DIR_PATH + 'tester/'
-        _CUST_CFG_PATH = __HIDE_DIR_PATH + 'cust/'
         
         self.__mode = mode
 
@@ -529,8 +531,8 @@ class ChildrenForm(QWidget, Ui_Form):
 
         self.binFileComfirm.button(self.binFileComfirm.Save).clicked.connect(self._save)
         self.binFileComfirm.button(self.binFileComfirm.Discard).clicked.connect(self._discard)
-        self.tester_zip_btn.clicked.connect(lambda: self.load_config(_TESTER_CFG_PATH))
-        self.cust_zip_btn.clicked.connect(lambda: self.load_config(_CUST_CFG_PATH))
+        self.tester_zip_btn.clicked.connect(lambda: self.load_config(self._TESTER_CFG_PATH))
+        self.cust_zip_btn.clicked.connect(lambda: self.load_config(self._CUST_CFG_PATH))
 
     def _save(self):
         for edit_key in self._win_edit_dict:
@@ -553,10 +555,52 @@ class ChildrenForm(QWidget, Ui_Form):
             self.cust_zip_btn: self.cust_zip_edit,
         }
         assert self.sender() in btn_dict.keys()
-        print("Yeah\n")
         file_path, _ = QFileDialog.getOpenFileName(self, "Open", "./", 'Binary Files(*.zip)')
+        if file_path is '':
+            return
         btn_dict[self.sender()].setText(file_path)
         assist_fun.unzip(file_path, cfg_path)
+        yaml_path = cfg_path + self._CFG_YAML_NAME
+        cfg_file = assist_fun.load_yaml(yaml_path)
+        # print(cfg_file)
+        self.full_in_editbox(cfg_file, cfg_path)
+
+    def full_in_editbox(self, config, path):
+        if self.__mode == 'tester':
+            bin_dir_list = [self.pieBinDir_1, 
+                            self.pieBinDir_2,
+                            self.pieBinDir_3,
+                            self.pieBinDir_4]
+            offset_dir_list = [self.pieBinOffset_1,
+                               self.pieBinOffset_2,
+                               self.pieBinOffset_3,
+                               self.pieBinOffset_4]
+            for dir_edit in bin_dir_list:
+                dir_edit.clear()
+            for offset_edit in offset_dir_list:
+                offset_edit.clear()
+            for index, bin_config in enumerate(config["origin_bin_name"]):
+                bin_path = path + config["origin_bin_path"]
+                bin_dir_list[index].setText(bin_path+bin_config)
+                offset_dir_list[index].setText(config["origin_bin_offset"][index])
+        elif self.__mdoe == 'custer':
+            bin_dir_list = [self.custBinDir_1, 
+                            self.custBinDir_2,
+                            self.custBinDir_3,
+                            self.custBinDir_4]
+            offset_dir_list = [self.custBinOffset_1,
+                               self.custBinOffset_2,
+                               self.custBinOffset_3,
+                               self.custBinOffset_4]
+            for dir_edit in bin_dir_list:
+                dir_edit.clear()
+            for offset_edit in offset_dir_list:
+                offset_edit.clear()
+            for index, bin_config in enumerate(config["origin_bin_name"]):
+                bin_path = path + config["origin_bin_path"]
+                bin_dir_list[index].setText(bin_path+bin_config)
+                offset_dir_list[index].setText(config["origin_bin_offset"][index])
+
 
     def edit_yaml(self, win_name, key, value):
         # self.config = yaml.load(self.config_file, yaml.Loader)

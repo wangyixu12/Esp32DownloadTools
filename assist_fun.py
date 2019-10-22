@@ -2,7 +2,7 @@
 @Author: Yixu Wang
 @Date: 2019-10-22 13:40:46
 @LastEditors: Yixu Wang
-@LastEditTime: 2019-10-22 14:52:52
+@LastEditTime: 2019-10-22 17:04:40
 @Version: v0.0.1
 @Description: unzip file
 '''
@@ -26,7 +26,7 @@ def load_yaml(file_name):
         load yaml file
     '''
     file = open(file_name)
-    yfile = yaml.load(file)
+    yfile = yaml.load(file, Loader=yaml.FullLoader)
     return yfile
 
 if __name__ == "__main__":
