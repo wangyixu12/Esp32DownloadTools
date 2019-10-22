@@ -1,8 +1,6 @@
-mainForm:
-  custFwEdit: 
-  pieFwEdit: 
-    
 childrenForm:
+  custFwEdit: 
+
   custBinDir_1: 
   custBinDir_2: 
   custBinDir_3: 
@@ -12,6 +10,8 @@ childrenForm:
   custBinOffset_2: 
   custBinOffset_3: 
   custBinOffset_4: 
+
+  pieFwEdit: 
 
   pieBinDir_1:
   pieBinDir_2: 

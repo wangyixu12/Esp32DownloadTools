@@ -2,7 +2,7 @@
 @Author: Yixu Wang
 @Date: 2019-08-06 14:12:40
 @LastEditors: Yixu Wang
-@LastEditTime: 2019-10-22 19:55:53
+@LastEditTime: 2019-10-22 21:36:19
 @Description: The ESP32 Download tool GUI
 '''
 __version__ = 'v1.3.0_beta.1'
@@ -40,6 +40,8 @@ from PyQTUI.Ui_mainForm import Ui_MainWindow
 from PyQTUI.Ui_childrenForm import Ui_Form
 from PyQTUI.Ui_flashSetForm import Ui_flashSetForm
 from PyQTUI.Ui_modeForm import Ui_mode_obj
+
+DEBUG = True
 
 class States(Enum):
     ''' State machine's states enumeration.
@@ -115,8 +117,10 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.warning = WarnTip()
         self.login = LoginForm()
         self.login.ResultSignal.connect(self.__login_in)
-        self.actVeriFw.setEnabled(False)
-        self.actFlashFw.setEnabled(False)
+        
+        if not DEBUG:
+            self.actVeriFw.setEnabled(False)
+            self.actFlashFw.setEnabled(False)
 
         self.child = ChildrenForm(mode=self.__mode)
         self.child.CloseSignal.connect(self._enable_btn)
@@ -502,6 +506,8 @@ class ChildrenForm(QWidget, Ui_Form):
 
         self.win_name = 'childrenForm'
         self._win_edit_dict = {
+            self.custFwEdit: 'custFwEdit',
+
             self.custBinDir_1: "custBinDir_1",
             self.custBinDir_2: "custBinDir_2",
             self.custBinDir_3: "custBinDir_3",
@@ -511,6 +517,8 @@ class ChildrenForm(QWidget, Ui_Form):
             self.custBinOffset_2: "custBinOffset_2",
             self.custBinOffset_3: "custBinOffset_3",
             self.custBinOffset_4: "custBinOffset_4",
+            
+            self.pieFwEdit: 'pieFwEdit',
 
             self.pieBinDir_1: "pieBinDir_1",
             self.pieBinDir_2: "pieBinDir_2",
