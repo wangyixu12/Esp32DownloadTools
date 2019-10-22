@@ -2,7 +2,7 @@
 @Author: Yixu Wang
 @Date: 2019-08-06 14:12:40
 @LastEditors: Yixu Wang
-@LastEditTime: 2019-10-22 17:39:31
+@LastEditTime: 2019-10-22 19:55:53
 @Description: The ESP32 Download tool GUI
 '''
 __version__ = 'v1.3.0_beta.1'
@@ -584,7 +584,7 @@ class ChildrenForm(QWidget, Ui_Form):
                 bin_dir_list[index].setText(bin_path+bin_config)
                 offset_dir_list[index].setText(config["origin_bin_offset"][index])
         elif self.__mdoe == 'custer':
-            bin_dir_list = [self.custBinDir_1, 
+            bin_dir_list = [self.custBinDir_1,
                             self.custBinDir_2,
                             self.custBinDir_3,
                             self.custBinDir_4]
