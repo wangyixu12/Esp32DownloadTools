@@ -2,13 +2,13 @@
 @Author: Yixu Wang
 @Date: 2019-10-22 13:40:46
 @LastEditors: Yixu Wang
-@LastEditTime: 2019-10-22 14:49:54
+@LastEditTime: 2019-10-22 14:52:52
 @Version: v0.0.1
 @Description: unzip file
 '''
+import os
 import zipfile
 import yaml
-import os
 
 def unzip(file_name, dir_name):
     '''
@@ -36,5 +36,6 @@ if __name__ == "__main__":
     __TESTER_DIR_NAME = __HIDE_DIR_PATH + 'tester/'
     unzip(FILE_DIR+FILE_NAME, __TESTER_DIR_NAME)
     CONFIG_NAME = 'config.yml'
-    y = load_yaml(__TESTER_DIR_NAME+CONFIG_NAME)
-    print(y)
+    Y = load_yaml(__TESTER_DIR_NAME+CONFIG_NAME)
+    print(Y)
+    
