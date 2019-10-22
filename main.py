@@ -2,7 +2,7 @@
 @Author: Yixu Wang
 @Date: 2019-08-06 14:12:40
 @LastEditors: Yixu Wang
-@LastEditTime: 2019-10-22 15:34:38
+@LastEditTime: 2019-10-22 15:59:23
 @Description: The ESP32 Download tool GUI
 '''
 __version__ = 'v1.2.2_beta.1'
@@ -517,11 +517,16 @@ class ChildrenForm(QWidget, Ui_Form):
             self.pieBinOffset_4: "pieBinOffset_4",
         }
 
+        self.tester_zip_edit.setReadOnly(True)
+        self.cust_zip_edit.setReadOnly(True)
+
         self.setWindowFlags(Qt.WindowMinimizeButtonHint)
         self.setFixedSize(self.width(), self.height())
 
         self.binFileComfirm.button(self.binFileComfirm.Save).clicked.connect(self._save)
         self.binFileComfirm.button(self.binFileComfirm.Discard).clicked.connect(self._discard)
+        self.tester_zip_btn.clicked.connect(self.load_config)
+        self.cust_zip_btn.clicked.connect(self.load_config)
 
     def _save(self):
         for edit_key in self._win_edit_dict:
@@ -537,6 +542,9 @@ class ChildrenForm(QWidget, Ui_Form):
     def _close_win(self):
         self.close()
         self.CloseSignal.emit()
+
+    def load_config(self):
+        print("Yeah\n")
 
     def edit_yaml(self, win_name, key, value):
         # self.config = yaml.load(self.config_file, yaml.Loader)
@@ -562,6 +570,9 @@ class ChildrenForm(QWidget, Ui_Form):
         self.load_yaml()
         self.set_win()
         if self.__mode == 'tester':
+            self.cust_zip_edit.setEnabled(False)
+            self.cust_zip_btn.setEnabled(False)
+
             self.pieBinDir_1.setReadOnly(True)
             self.pieBinDir_2.setReadOnly(True)
             self.pieBinDir_3.setReadOnly(True)
@@ -581,6 +592,9 @@ class ChildrenForm(QWidget, Ui_Form):
             self.custBinDir_3.setEnabled(False)
             self.custBinDir_4.setEnabled(False)
         elif self.__mode == 'custer':
+            self.tester_zip_edit.setEnabled(False)
+            self.tester_zip_btn.setEnabled(False)
+
             self.custBinDir_1.setReadOnly(True)
             self.custBinDir_2.setReadOnly(True)
             self.custBinDir_3.setReadOnly(True)
