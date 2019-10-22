@@ -2,7 +2,7 @@
 @Author: Yixu Wang
 @Date: 2019-08-06 14:12:40
 @LastEditors: Yixu Wang
-@LastEditTime: 2019-10-22 21:36:19
+@LastEditTime: 2019-10-22 21:53:14
 @Description: The ESP32 Download tool GUI
 '''
 __version__ = 'v1.3.0_beta.1'
@@ -223,12 +223,12 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
             ret = False
 
         if choose == self.TEST_FLASH:
-            if yaml_config["mainForm"]["pieFwEdit"] == '':
+            if yaml_config["childrenForm"]["pieFwEdit"] == '':
                 self.resultTextBrowser.append(self.WRITE_FAIL+"Err: Tester firmware isn't set\n")
                 ret = ret & False
 
         elif choose == self.CUST_FLASH:
-            if yaml_config["mainForm"]["custFwEdit"] == '':
+            if yaml_config["childrenForm"]["custFwEdit"] == '':
                 self.resultTextBrowser.append(self.WRITE_FAIL+"Err: Customer firmware isn't set\n")
                 ret = ret & False
 
@@ -591,6 +591,7 @@ class ChildrenForm(QWidget, Ui_Form):
                 bin_path = path + config["origin_bin_path"]
                 bin_dir_list[index].setText(bin_path+bin_config)
                 offset_dir_list[index].setText(config["origin_bin_offset"][index])
+            self.pieFwEdit.setText(bin_path+config["combine_bin"])
         elif self.__mdoe == 'custer':
             bin_dir_list = [self.custBinDir_1,
                             self.custBinDir_2,
@@ -608,7 +609,7 @@ class ChildrenForm(QWidget, Ui_Form):
                 bin_path = path + config["origin_bin_path"]
                 bin_dir_list[index].setText(bin_path+bin_config)
                 offset_dir_list[index].setText(config["origin_bin_offset"][index])
-
+            self.custFwEdit.setText(bin_path+config["combine_bin"])
 
     def edit_yaml(self, win_name, key, value):
         # self.config = yaml.load(self.config_file, yaml.Loader)
@@ -637,6 +638,7 @@ class ChildrenForm(QWidget, Ui_Form):
             self.cust_zip_edit.setEnabled(False)
             self.cust_zip_btn.setEnabled(False)
 
+            self.pieFwEdit.setReadOnly(True)
             self.pieBinDir_1.setReadOnly(True)
             self.pieBinDir_2.setReadOnly(True)
             self.pieBinDir_3.setReadOnly(True)
@@ -646,6 +648,7 @@ class ChildrenForm(QWidget, Ui_Form):
             self.pieBinOffset_3.setReadOnly(True)
             self.pieBinOffset_4.setReadOnly(True)
 
+            self.custFwEdit.setEnabled(False)
             self.custBinOffset_1.setEnabled(False)
             self.custBinOffset_2.setEnabled(False)
             self.custBinOffset_3.setEnabled(False)
@@ -659,6 +662,7 @@ class ChildrenForm(QWidget, Ui_Form):
             self.tester_zip_edit.setEnabled(False)
             self.tester_zip_btn.setEnabled(False)
 
+            self.custFwEdit.setReadOnly(True)
             self.custBinDir_1.setReadOnly(True)
             self.custBinDir_2.setReadOnly(True)
             self.custBinDir_3.setReadOnly(True)
@@ -668,6 +672,7 @@ class ChildrenForm(QWidget, Ui_Form):
             self.custBinOffset_3.setReadOnly(True)
             self.custBinOffset_4.setReadOnly(True)
 
+            self.pieFwEdit.setEnabled(False)
             self.pieBinOffset_1.setEnabled(False)
             self.pieBinOffset_2.setEnabled(False)
             self.pieBinOffset_3.setEnabled(False)
@@ -698,12 +703,11 @@ class FwSetForm(QWidget, Ui_flashSetForm):
         self._user_yaml_name = 'config/configUser.yml'
         self.__mode = mode
 
-        self.win_name = 'mainForm'
+        self.win_name = 'childrenForm'
         self._win_edit_dict = {
             self.custFwEdit: 'custFwEdit',
             self.pieFwEdit: 'pieFwEdit',
         }
-
 
         self.pieFwEdit.setReadOnly(True)
         self.custFwEdit.setReadOnly(True)
