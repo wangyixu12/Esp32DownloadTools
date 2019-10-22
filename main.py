@@ -2,7 +2,7 @@
 @Author: Yixu Wang
 @Date: 2019-08-06 14:12:40
 @LastEditors: Yixu Wang
-@LastEditTime: 2019-10-22 15:31:02
+@LastEditTime: 2019-10-22 15:34:38
 @Description: The ESP32 Download tool GUI
 '''
 __version__ = 'v1.2.2_beta.1'
@@ -517,19 +517,8 @@ class ChildrenForm(QWidget, Ui_Form):
             self.pieBinOffset_4: "pieBinOffset_4",
         }
 
-
         self.setWindowFlags(Qt.WindowMinimizeButtonHint)
         self.setFixedSize(self.width(), self.height())
-
-        self.custBinDir_1.setReadOnly(True)
-        self.custBinDir_2.setReadOnly(True)
-        self.custBinDir_3.setReadOnly(True)
-        self.custBinDir_4.setReadOnly(True)
-
-        self.pieBinDir_1.setReadOnly(True)
-        self.pieBinDir_2.setReadOnly(True)
-        self.pieBinDir_3.setReadOnly(True)
-        self.pieBinDir_4.setReadOnly(True)
 
         self.binFileComfirm.button(self.binFileComfirm.Save).clicked.connect(self._save)
         self.binFileComfirm.button(self.binFileComfirm.Discard).clicked.connect(self._discard)
@@ -573,6 +562,15 @@ class ChildrenForm(QWidget, Ui_Form):
         self.load_yaml()
         self.set_win()
         if self.__mode == 'tester':
+            self.pieBinDir_1.setReadOnly(True)
+            self.pieBinDir_2.setReadOnly(True)
+            self.pieBinDir_3.setReadOnly(True)
+            self.pieBinDir_4.setReadOnly(True)
+            self.pieBinOffset_1.setReadOnly(True)
+            self.pieBinOffset_2.setReadOnly(True)
+            self.pieBinOffset_3.setReadOnly(True)
+            self.pieBinOffset_4.setReadOnly(True)
+
             self.custBinOffset_1.setEnabled(False)
             self.custBinOffset_2.setEnabled(False)
             self.custBinOffset_3.setEnabled(False)
@@ -583,6 +581,15 @@ class ChildrenForm(QWidget, Ui_Form):
             self.custBinDir_3.setEnabled(False)
             self.custBinDir_4.setEnabled(False)
         elif self.__mode == 'custer':
+            self.custBinDir_1.setReadOnly(True)
+            self.custBinDir_2.setReadOnly(True)
+            self.custBinDir_3.setReadOnly(True)
+            self.custBinDir_4.setReadOnly(True)
+            self.custBinOffset_1.setReadOnly(True)
+            self.custBinOffset_2.setReadOnly(True)
+            self.custBinOffset_3.setReadOnly(True)
+            self.custBinOffset_4.setReadOnly(True)
+
             self.pieBinOffset_1.setEnabled(False)
             self.pieBinOffset_2.setEnabled(False)
             self.pieBinOffset_3.setEnabled(False)
