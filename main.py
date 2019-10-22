@@ -2,10 +2,10 @@
 @Author: Yixu Wang
 @Date: 2019-08-06 14:12:40
 @LastEditors: Yixu Wang
-@LastEditTime: 2019-10-22 15:59:23
+@LastEditTime: 2019-10-22 16:14:02
 @Description: The ESP32 Download tool GUI
 '''
-__version__ = 'v1.2.2_beta.1'
+__version__ = 'v1.3.0_beta.1'
 
 import os
 import sys
@@ -32,6 +32,7 @@ from PyQt5.QtGui import QTextCursor
 
 import esptool
 
+import assist_fun
 from login import LoginForm
 from enter_mode import SelectMode
 from warning import WarnTip
@@ -544,7 +545,15 @@ class ChildrenForm(QWidget, Ui_Form):
         self.CloseSignal.emit()
 
     def load_config(self):
+        btn_dict = {
+            self.tester_zip_btn: self.tester_zip_edit,
+            self.cust_zip_btn: self.cust_zip_edit,
+        }
+        assert self.sender() in btn_dict.keys()
         print("Yeah\n")
+        file_path, _ = QFileDialog.getOpenFileName(self, "Open", "./", 'Binary Files(*.zip)')
+        btn_dict[self.sender()].setText(file_path)
+        # assist_fun.unzip()
 
     def edit_yaml(self, win_name, key, value):
         # self.config = yaml.load(self.config_file, yaml.Loader)
@@ -680,8 +689,8 @@ class FwSetForm(QWidget, Ui_flashSetForm):
     def _open_dir(self):
         btn_dict = {self.custFwOptBtn: self.custFwEdit, self.pieFwOptBtn: self.pieFwEdit}
         assert self.sender() in btn_dict.keys()
-        file, ok = QFileDialog.getOpenFileName(self, "Open", "./", "Binary Files(*.bin)")
-        btn_dict[self.sender()].setText(file)
+        file_path, _ = QFileDialog.getOpenFileName(self, "Open", "./", "Binary Files(*.bin)")
+        btn_dict[self.sender()].setText(file_path)
         # self.edit_yaml(self.win_name, self._win_edit_dict[btn_dict[self.sender()]], file)
 
     def _set_win(self):
