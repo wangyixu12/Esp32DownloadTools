@@ -2,7 +2,7 @@
 @Author: Yixu Wang
 @Date: 2019-08-06 14:12:40
 @LastEditors: Yixu Wang
-@LastEditTime: 2019-10-22 16:14:02
+@LastEditTime: 2019-10-22 16:32:27
 @Description: The ESP32 Download tool GUI
 '''
 __version__ = 'v1.3.0_beta.1'
@@ -492,6 +492,9 @@ class ChildrenForm(QWidget, Ui_Form):
         self.setupUi(self)
         self._default_yaml_name = 'config/configDefault.yml'
         self._user_yaml_name = 'config/configUser.yml'
+        __HIDE_DIR_PATH = '.data/'
+        _TESTER_CFG_PATH = __HIDE_DIR_PATH + 'tester/'
+        _CUST_CFG_PATH = __HIDE_DIR_PATH + 'cust/'
         
         self.__mode = mode
 
@@ -526,8 +529,8 @@ class ChildrenForm(QWidget, Ui_Form):
 
         self.binFileComfirm.button(self.binFileComfirm.Save).clicked.connect(self._save)
         self.binFileComfirm.button(self.binFileComfirm.Discard).clicked.connect(self._discard)
-        self.tester_zip_btn.clicked.connect(self.load_config)
-        self.cust_zip_btn.clicked.connect(self.load_config)
+        self.tester_zip_btn.clicked.connect(lambda: self.load_config(_TESTER_CFG_PATH))
+        self.cust_zip_btn.clicked.connect(lambda: self.load_config(_CUST_CFG_PATH))
 
     def _save(self):
         for edit_key in self._win_edit_dict:
@@ -544,7 +547,7 @@ class ChildrenForm(QWidget, Ui_Form):
         self.close()
         self.CloseSignal.emit()
 
-    def load_config(self):
+    def load_config(self, cfg_path):
         btn_dict = {
             self.tester_zip_btn: self.tester_zip_edit,
             self.cust_zip_btn: self.cust_zip_edit,
@@ -553,7 +556,7 @@ class ChildrenForm(QWidget, Ui_Form):
         print("Yeah\n")
         file_path, _ = QFileDialog.getOpenFileName(self, "Open", "./", 'Binary Files(*.zip)')
         btn_dict[self.sender()].setText(file_path)
-        # assist_fun.unzip()
+        assist_fun.unzip(file_path, cfg_path)
 
     def edit_yaml(self, win_name, key, value):
         # self.config = yaml.load(self.config_file, yaml.Loader)
