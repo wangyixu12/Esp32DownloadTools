@@ -2,7 +2,7 @@
 @Author: Yixu Wang
 @Date: 2019-08-06 14:12:40
 @LastEditors: Yixu Wang
-@LastEditTime: 2019-10-22 22:30:21
+@LastEditTime: 2019-10-23 09:21:54
 @Description: The ESP32 Download tool GUI
 '''
 __version__ = 'v1.3.0_beta.1'
@@ -256,6 +256,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
 
     def write_flash(self):
         bin_file_path = self.opt_bin_dir
+        print(bin_file_path)
         try:
             assert os.path.exists(bin_file_path)
         except OSError:
@@ -381,6 +382,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         print(yaml_config)
         config_file.close()
 
+        self.opt_bin_dir = yaml_config['childrenForm']["custFwEdit"]        
         self.flash_process()
 
     @pyqtSlot()
@@ -392,7 +394,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         yaml_config = yaml.load(config_file, yaml.Loader)
         config_file.close()
 
-        # self.opt_bin_dir = self.pieFwEdit.text()
+        self.opt_bin_dir = yaml_config['childrenForm']["pieFwEdit"]        
         self.flash_process()
 
     def search_var_port(self):
@@ -549,7 +551,7 @@ class ChildrenForm(QWidget, Ui_Form):
             self.cust_zip_btn: self.cust_zip_edit,
         }
         assert self.sender() in btn_dict.keys()
-        file_path, _ = QFileDialog.getOpenFileName(self, "Open", "./", 'Binary Files(*.zip)')
+        file_path, _ = QFileDialog.getOpenFileName(self, "Open", "./", 'Zip Files(*.zip)')
         if file_path is '':
             return
         btn_dict[self.sender()].setText(file_path)
@@ -557,6 +559,7 @@ class ChildrenForm(QWidget, Ui_Form):
         yaml_path = cfg_path + self._CFG_YAML_NAME
         cfg_file = assist_fun.load_yaml(yaml_path)
         # print(cfg_file)
+        cfg_path = os.path.realpath(cfg_path) + '/'
         self.full_in_editbox(cfg_file, cfg_path)
 
     def full_in_editbox(self, config, path):
@@ -577,7 +580,7 @@ class ChildrenForm(QWidget, Ui_Form):
                 bin_path = path + config["origin_bin_path"]
                 bin_dir_list[index].setText(bin_path+bin_config)
                 offset_dir_list[index].setText(config["origin_bin_offset"][index])
-            self.pieFwEdit.setText(bin_path+config["combine_bin"])
+            self.pieFwEdit.setText(path+config["combine_bin"])
         elif self.__mode == 'custer':
             bin_dir_list = [self.custBinDir_1,
                             self.custBinDir_2,
@@ -595,7 +598,7 @@ class ChildrenForm(QWidget, Ui_Form):
                 bin_path = path + config["origin_bin_path"]
                 bin_dir_list[index].setText(bin_path+bin_config)
                 offset_dir_list[index].setText(config["origin_bin_offset"][index])
-            self.custFwEdit.setText(bin_path+config["combine_bin"])
+            self.custFwEdit.setText(path+config["combine_bin"])
 
     def edit_yaml(self, win_name, key, value):
         # self.config = yaml.load(self.config_file, yaml.Loader)
