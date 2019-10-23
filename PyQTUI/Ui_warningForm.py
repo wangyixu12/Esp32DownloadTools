@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '/home/pi/Documents/Espressif/esptool_ui/PyQTUI/warningForm.ui'
+# Form implementation generated from reading ui file '/home/wyx/Documents/pi/DC5270/Esp32DownloadTools/PyQTUI/warningForm.ui'
 #
-# Created by: PyQt5 UI code generator 5.9.2
+# Created by: PyQt5 UI code generator 5.13.0
 #
 # WARNING! All changes made in this file will be lost!
 
+
 from PyQt5 import QtCore, QtGui, QtWidgets
+
 
 class Ui_Warning_obj(object):
     def setupUi(self, Warning_obj):
@@ -26,7 +28,7 @@ class Ui_Warning_obj(object):
         self.confirm_btn.setFont(font)
         self.confirm_btn.setObjectName("confirm_btn")
         self.label_2 = QtWidgets.QLabel(Warning_obj)
-        self.label_2.setGeometry(QtCore.QRect(120, 10, 531, 191))
+        self.label_2.setGeometry(QtCore.QRect(120, 20, 531, 181))
         self.label_2.setMinimumSize(QtCore.QSize(461, 121))
         self.label_2.setMaximumSize(QtCore.QSize(600, 200))
         self.label_2.setObjectName("label_2")
@@ -38,5 +40,4 @@ class Ui_Warning_obj(object):
         _translate = QtCore.QCoreApplication.translate
         Warning_obj.setWindowTitle(_translate("Warning_obj", "Warning"))
         self.confirm_btn.setText(_translate("Warning_obj", "I KNOW"))
-        self.label_2.setText(_translate("Warning_obj", "<html><head/><body><p><span style=\" font-size:20pt; font-weight:600; font-style:italic; color:#ff0000;\">WARNING: </span></p><p><span style=\" font-size:16pt; font-weight:600; color:#ca2d2d;\">Flashing of customer firmware is allowed only once.</span></p><p><span style=\" font-size:16pt; font-weight:600; color:#ca2d2d;\">The customer firmware is encrypted any further </span></p><p><span style=\" font-size:16pt; font-weight:600; color:#ca2d2d;\">flashing operation will corrupt the units system!</span></p></body></html>"))
-
+        self.label_2.setText(_translate("Warning_obj", "<html><head/><body><p><span style=\" font-size:20pt; font-weight:600; font-style:italic; color:#ff0000;\">WARNING: </span></p><p><span style=\" font-size:14pt; font-weight:600; color:#ca2d2d;\">Flashing of customer firmware is allowed only once.</span></p><p><span style=\" font-size:14pt; font-weight:600; color:#ca2d2d;\">The customer firmware is encrypted any further </span></p><p><span style=\" font-size:14pt; font-weight:600; color:#ca2d2d;\">flashing operation will corrupt the units system!</span></p></body></html>"))

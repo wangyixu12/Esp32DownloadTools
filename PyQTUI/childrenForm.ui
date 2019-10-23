@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>548</width>
-    <height>362</height>
+    <height>550</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -19,69 +19,17 @@
   <property name="maximumSize">
    <size>
     <width>548</width>
-    <height>362</height>
+    <height>550</height>
    </size>
   </property>
   <property name="windowTitle">
-   <string>Origin Bin Firmware Setting</string>
+   <string>Settings</string>
   </property>
-  <widget class="QLabel" name="label_2">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>10</y>
-     <width>141</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Tester bin file dir</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>170</y>
-     <width>151</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Customer bin file dir</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_3">
-   <property name="geometry">
-    <rect>
-     <x>470</x>
-     <y>10</y>
-     <width>41</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>offset</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_4">
-   <property name="geometry">
-    <rect>
-     <x>470</x>
-     <y>170</y>
-     <width>41</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>offset</string>
-   </property>
-  </widget>
   <widget class="QDialogButtonBox" name="binFileComfirm">
    <property name="geometry">
     <rect>
      <x>130</x>
-     <y>330</y>
+     <y>510</y>
      <width>251</width>
      <height>26</height>
     </rect>
@@ -96,133 +44,249 @@
   <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>190</y>
-     <width>521</width>
-     <height>122</height>
+     <x>20</x>
+     <y>10</y>
+     <width>481</width>
+     <height>64</height>
     </rect>
    </property>
-   <layout class="QHBoxLayout" name="horizontalLayout">
+   <layout class="QHBoxLayout" name="horizontalLayout_6">
     <item>
-     <layout class="QVBoxLayout" name="verticalLayout">
+     <layout class="QVBoxLayout" name="verticalLayout_5">
       <item>
-       <widget class="QLineEdit" name="custBinDir_1"/>
+       <widget class="QLabel" name="label_5">
+        <property name="text">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Tester Zip Path&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+       </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="custBinDir_2">
+       <widget class="QLabel" name="label_6">
+        <property name="text">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Customer Zip Path&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QVBoxLayout" name="verticalLayout_4">
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_4">
+        <item>
+         <widget class="QLineEdit" name="tester_zip_edit"/>
+        </item>
+        <item>
+         <widget class="QToolButton" name="tester_zip_btn">
+          <property name="text">
+           <string>...</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_5">
+        <item>
+         <widget class="QLineEdit" name="cust_zip_edit"/>
+        </item>
+        <item>
+         <widget class="QToolButton" name="cust_zip_btn">
+          <property name="text">
+           <string>...</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QLabel" name="label_9">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>80</y>
+     <width>541</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#2e3436;&quot;&gt;---------------------------------------------------------------------------------------------------------------------------------------&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_10">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>290</y>
+     <width>541</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#2e3436;&quot;&gt;---------------------------------------------------------------------------------------------------------------------------------------&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+  </widget>
+  <widget class="QWidget" name="layoutWidget">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>100</y>
+     <width>496</width>
+     <height>188</height>
+    </rect>
+   </property>
+   <layout class="QVBoxLayout" name="verticalLayout_6">
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_11">
+      <item>
+       <widget class="QLabel" name="label_7">
         <property name="minimumSize">
          <size>
-          <width>390</width>
+          <width>210</width>
           <height>0</height>
          </size>
         </property>
+        <property name="text">
+         <string>Tester Flash Firmware Path</string>
+        </property>
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="custBinDir_3"/>
-      </item>
-      <item>
-       <widget class="QLineEdit" name="custBinDir_4"/>
+       <layout class="QHBoxLayout" name="horizontalLayout_7">
+        <item>
+         <widget class="QLineEdit" name="pieFwEdit"/>
+        </item>
+       </layout>
       </item>
      </layout>
     </item>
     <item>
-     <layout class="QVBoxLayout" name="verticalLayout_3">
+     <layout class="QVBoxLayout" name="verticalLayout_11">
       <item>
-       <widget class="QToolButton" name="custBinOptBtn_1">
-        <property name="text">
-         <string>...</string>
-        </property>
-       </widget>
+       <layout class="QHBoxLayout" name="horizontalLayout_9">
+        <item>
+         <widget class="QLabel" name="label_2">
+          <property name="text">
+           <string>Tester Origin Bin Path</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_3">
+          <property name="maximumSize">
+           <size>
+            <width>80</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>Offset</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </item>
       <item>
-       <widget class="QToolButton" name="custBinOptBtn_2">
-        <property name="text">
-         <string>...</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QToolButton" name="custBinOptBtn_3">
-        <property name="text">
-         <string>...</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QToolButton" name="custBinOptBtn_4">
-        <property name="text">
-         <string>...</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </item>
-    <item>
-     <layout class="QVBoxLayout" name="verticalLayout_2">
-      <property name="sizeConstraint">
-       <enum>QLayout::SetNoConstraint</enum>
-      </property>
-      <item>
-       <widget class="QLineEdit" name="custBinOffset_1">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>80</width>
-          <height>16777215</height>
-         </size>
-        </property>
-        <property name="layoutDirection">
-         <enum>Qt::LeftToRight</enum>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLineEdit" name="custBinOffset_2">
-        <property name="maximumSize">
-         <size>
-          <width>80</width>
-          <height>16777215</height>
-         </size>
-        </property>
-        <property name="layoutDirection">
-         <enum>Qt::LeftToRight</enum>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLineEdit" name="custBinOffset_3">
-        <property name="maximumSize">
-         <size>
-          <width>80</width>
-          <height>16777215</height>
-         </size>
-        </property>
-        <property name="layoutDirection">
-         <enum>Qt::LeftToRight</enum>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLineEdit" name="custBinOffset_4">
-        <property name="maximumSize">
-         <size>
-          <width>80</width>
-          <height>16777215</height>
-         </size>
-        </property>
-        <property name="layoutDirection">
-         <enum>Qt::LeftToRight</enum>
-        </property>
-       </widget>
+       <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_3">
+          <item>
+           <layout class="QVBoxLayout" name="verticalLayout_7">
+            <item>
+             <widget class="QLineEdit" name="pieBinDir_1"/>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="pieBinDir_2">
+              <property name="minimumSize">
+               <size>
+                <width>390</width>
+                <height>0</height>
+               </size>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="pieBinDir_3"/>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="pieBinDir_4"/>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QVBoxLayout" name="verticalLayout_8"/>
+          </item>
+          <item>
+           <layout class="QVBoxLayout" name="verticalLayout_9">
+            <property name="sizeConstraint">
+             <enum>QLayout::SetNoConstraint</enum>
+            </property>
+            <item>
+             <widget class="QLineEdit" name="pieBinOffset_1">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>80</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="layoutDirection">
+               <enum>Qt::LeftToRight</enum>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="pieBinOffset_2">
+              <property name="maximumSize">
+               <size>
+                <width>80</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="layoutDirection">
+               <enum>Qt::LeftToRight</enum>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="pieBinOffset_3">
+              <property name="maximumSize">
+               <size>
+                <width>80</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="layoutDirection">
+               <enum>Qt::LeftToRight</enum>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="pieBinOffset_4">
+              <property name="maximumSize">
+               <size>
+                <width>80</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="layoutDirection">
+               <enum>Qt::LeftToRight</enum>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </item>
+       </layout>
       </item>
      </layout>
     </item>
@@ -231,132 +295,154 @@
   <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>30</y>
-     <width>521</width>
-     <height>124</height>
+     <x>20</x>
+     <y>310</y>
+     <width>494</width>
+     <height>184</height>
     </rect>
    </property>
-   <layout class="QHBoxLayout" name="horizontalLayout_2">
+   <layout class="QVBoxLayout" name="verticalLayout_10">
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout_3">
+     <layout class="QHBoxLayout" name="horizontalLayout_8">
       <item>
-       <layout class="QVBoxLayout" name="verticalLayout_7">
-        <item>
-         <widget class="QLineEdit" name="pieBinDir_1"/>
-        </item>
-        <item>
-         <widget class="QLineEdit" name="pieBinDir_2">
-          <property name="minimumSize">
-           <size>
-            <width>390</width>
-            <height>0</height>
-           </size>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLineEdit" name="pieBinDir_3"/>
-        </item>
-        <item>
-         <widget class="QLineEdit" name="pieBinDir_4"/>
-        </item>
-       </layout>
-      </item>
-      <item>
-       <layout class="QVBoxLayout" name="verticalLayout_8">
-        <item>
-         <widget class="QToolButton" name="pieBinOptBtn_1">
-          <property name="text">
-           <string>...</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QToolButton" name="pieBinOptBtn_2">
-          <property name="text">
-           <string>...</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QToolButton" name="pieBinOptBtn_3">
-          <property name="text">
-           <string>...</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QToolButton" name="pieBinOptBtn_4">
-          <property name="text">
-           <string>...</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-      <item>
-       <layout class="QVBoxLayout" name="verticalLayout_9">
-        <property name="sizeConstraint">
-         <enum>QLayout::SetNoConstraint</enum>
+       <widget class="QLabel" name="label_8">
+        <property name="minimumSize">
+         <size>
+          <width>210</width>
+          <height>0</height>
+         </size>
         </property>
+        <property name="text">
+         <string>Customer Flash Firmware Path</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="custFwEdit"/>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QVBoxLayout" name="verticalLayout_12">
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_10">
         <item>
-         <widget class="QLineEdit" name="pieBinOffset_1">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>80</width>
-            <height>16777215</height>
-           </size>
-          </property>
-          <property name="layoutDirection">
-           <enum>Qt::LeftToRight</enum>
+         <widget class="QLabel" name="label">
+          <property name="text">
+           <string>Customer Origin Bin Path</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="pieBinOffset_2">
+         <widget class="QLabel" name="label_4">
           <property name="maximumSize">
            <size>
             <width>80</width>
             <height>16777215</height>
            </size>
           </property>
-          <property name="layoutDirection">
-           <enum>Qt::LeftToRight</enum>
+          <property name="text">
+           <string>Offset</string>
           </property>
          </widget>
         </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout">
         <item>
-         <widget class="QLineEdit" name="pieBinOffset_3">
-          <property name="maximumSize">
-           <size>
-            <width>80</width>
-            <height>16777215</height>
-           </size>
-          </property>
-          <property name="layoutDirection">
-           <enum>Qt::LeftToRight</enum>
-          </property>
-         </widget>
+         <layout class="QVBoxLayout" name="verticalLayout">
+          <item>
+           <widget class="QLineEdit" name="custBinDir_1"/>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="custBinDir_2">
+            <property name="minimumSize">
+             <size>
+              <width>390</width>
+              <height>0</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="custBinDir_3"/>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="custBinDir_4"/>
+          </item>
+         </layout>
         </item>
         <item>
-         <widget class="QLineEdit" name="pieBinOffset_4">
-          <property name="maximumSize">
-           <size>
-            <width>80</width>
-            <height>16777215</height>
-           </size>
+         <layout class="QVBoxLayout" name="verticalLayout_3"/>
+        </item>
+        <item>
+         <layout class="QVBoxLayout" name="verticalLayout_2">
+          <property name="sizeConstraint">
+           <enum>QLayout::SetNoConstraint</enum>
           </property>
-          <property name="layoutDirection">
-           <enum>Qt::LeftToRight</enum>
-          </property>
-         </widget>
+          <item>
+           <widget class="QLineEdit" name="custBinOffset_1">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>80</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="layoutDirection">
+             <enum>Qt::LeftToRight</enum>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="custBinOffset_2">
+            <property name="maximumSize">
+             <size>
+              <width>80</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="layoutDirection">
+             <enum>Qt::LeftToRight</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="custBinOffset_3">
+            <property name="maximumSize">
+             <size>
+              <width>80</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="layoutDirection">
+             <enum>Qt::LeftToRight</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="custBinOffset_4">
+            <property name="maximumSize">
+             <size>
+              <width>80</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="layoutDirection">
+             <enum>Qt::LeftToRight</enum>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </item>
        </layout>
       </item>
@@ -367,28 +453,20 @@
  </widget>
  <tabstops>
   <tabstop>custBinDir_1</tabstop>
-  <tabstop>custBinOptBtn_1</tabstop>
   <tabstop>custBinOffset_1</tabstop>
   <tabstop>custBinDir_2</tabstop>
-  <tabstop>custBinOptBtn_2</tabstop>
   <tabstop>custBinOffset_2</tabstop>
   <tabstop>custBinDir_3</tabstop>
-  <tabstop>custBinOptBtn_3</tabstop>
   <tabstop>custBinOffset_3</tabstop>
   <tabstop>custBinDir_4</tabstop>
-  <tabstop>custBinOptBtn_4</tabstop>
   <tabstop>custBinOffset_4</tabstop>
   <tabstop>pieBinDir_1</tabstop>
-  <tabstop>pieBinOptBtn_1</tabstop>
   <tabstop>pieBinOffset_1</tabstop>
   <tabstop>pieBinDir_2</tabstop>
-  <tabstop>pieBinOptBtn_2</tabstop>
   <tabstop>pieBinOffset_2</tabstop>
   <tabstop>pieBinDir_3</tabstop>
-  <tabstop>pieBinOptBtn_3</tabstop>
   <tabstop>pieBinOffset_3</tabstop>
   <tabstop>pieBinDir_4</tabstop>
-  <tabstop>pieBinOptBtn_4</tabstop>
   <tabstop>pieBinOffset_4</tabstop>
  </tabstops>
  <resources/>
